@@ -1,4 +1,4 @@
-package Task1;
+package Project;
 
 public class University {
 }
