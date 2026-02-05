@@ -14,6 +14,10 @@ public class University {
         this.universityAddress = universityAddress;
     }
 
+    public void addUniversity(University university){
+
+    }
+
     public String getUniversityName() {
         return universityName;
     }
@@ -28,5 +32,15 @@ public class University {
 
     public String getUniversityAddress() {
         return universityAddress;
+    }
+
+    @Override
+    public String toString() {
+        return "University{" +
+                "universityName='" + universityName + '\'' +
+                ", universityShortName='" + universityShortName + '\'' +
+                ", city='" + city + '\'' +
+                ", universityAddress='" + universityAddress + '\'' +
+                '}';
     }
 }
