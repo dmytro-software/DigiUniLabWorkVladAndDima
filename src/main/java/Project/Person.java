@@ -35,5 +35,14 @@ public abstract class Person {
     public int getPhoneNumber() {
         return phoneNumber;
     }
+
+    @Override
+    public String toString() {
+        return  "idPerson=" + idPerson +
+                ", pib='" + pib + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber=" + phoneNumber;
+    }
 }
 
