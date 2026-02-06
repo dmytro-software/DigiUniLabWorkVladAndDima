@@ -21,6 +21,26 @@ public class FacultyRegistry {
         faculties[numOfFaculties++] = faculty;
     }
 
+    //метод щоб видалити факультет, шляхом знаходження по айді
+    public void removeFaculty(int id) {
+        for (int i = 0; i < numOfFaculties; i++) {
+            //шукаємо за айді
+            if (faculties[i].getIdFaculty() == id) {
+                Faculty[] newArray = new Faculty[numOfFaculties - 1];
+                // пояснення для себе
+                // копіювання все до вибраного елементу
+                System.arraycopy(faculties, 0, newArray, 0, i);
+                // копіювання все після вибраного елементу
+                System.arraycopy(faculties, i + 1, newArray, i, numOfFaculties - i - 1);
+
+                faculties = newArray;
+                numOfFaculties--;
+                return;
+            }
+        }
+        throw new IllegalArgumentException("ФАКУЛЬТЕТ НЕ ЗНАЙДЕНО");
+    }
+
     //метод для збільшення масиву
     private void resizeArray(int i) {
         Faculty[] newArray = new Faculty[i];

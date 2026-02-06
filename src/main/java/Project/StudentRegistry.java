@@ -1,5 +1,7 @@
 package Project;
 
+import java.util.Arrays;
+
 public class StudentRegistry {
     private Student[] students;
     private int numberOfStudents;
@@ -13,6 +15,26 @@ public class StudentRegistry {
         }
         students[numberOfStudents++] = student;
     }
+
+    public void removeStudent(int id) {
+        for (int i = 0; i < numberOfStudents; i++) {
+            //шукаємо за айді
+            if (students[i].getIdPerson() == id) {
+                Student[] newArray = new Student[numberOfStudents - 1];
+                // пояснення для себе
+                // копіювання все до вибраного елементу
+                System.arraycopy(students, 0, newArray, 0, i);
+                // копіювання все після вибраного елементу
+                System.arraycopy(students, i + 1, newArray, i, numberOfStudents - i - 1);
+
+                students = newArray;
+                numberOfStudents--;
+                return;
+            }
+        }
+        throw new IllegalArgumentException("СТУДЕНТА НЕ ЗНАЙДЕНО");
+    }
+
     public void resizeArray(int i){
         Student[] newarray = new Student[i];
         System.arraycopy(students, 0, newarray, 0, students.length);
@@ -25,5 +47,13 @@ public class StudentRegistry {
 
     public int getNumberOfStudents() {
         return numberOfStudents;
+    }
+
+    @Override
+    public String toString() {
+        return "StudentRegistry{" +
+                "students=" + Arrays.toString(students) +
+                ", numberOfStudents=" + numberOfStudents +
+                '}';
     }
 }

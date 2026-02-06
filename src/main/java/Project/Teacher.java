@@ -39,7 +39,7 @@ public class Teacher extends Person{
 
     @Override
     public String toString() {
-        return "Teacher{" +
+        return super.toString() + "Teacher{" +
                 "position='" + position + '\'' +
                 ", academicDegree='" + academicDegree + '\'' +
                 ", academicRank='" + academicRank + '\'' +

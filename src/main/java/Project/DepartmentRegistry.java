@@ -20,6 +20,25 @@ public class DepartmentRegistry {
         departments[numOfDepartments++] = department;
     }
 
+    public void removeDepartment(int id) {
+        for (int i = 0; i < numOfDepartments; i++) {
+            //шукаємо за айді
+            if (departments[i].getIdDepartment() == id) {
+                Department[] newArray = new Department[numOfDepartments - 1];
+                // пояснення для себе
+                // копіювання все до вибраного елементу
+                System.arraycopy(departments, 0, newArray, 0, i);
+                // копіювання все після вибраного елементу
+                System.arraycopy(departments, i + 1, newArray, i, numOfDepartments - i - 1);
+
+                departments = newArray;
+                numOfDepartments--;
+                return;
+            }
+        }
+        throw new IllegalArgumentException("КАФЕДРУ НЕ ЗНАЙДЕНО");
+    }
+
     //метод для збільшення масиву
     private void resizeArray(int i){
         Department[] newArray = new Department[i];

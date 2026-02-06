@@ -43,7 +43,7 @@ public class Student extends Person {
 
     @Override
     public String toString() {
-        return "grateBookId=" + grateBookId +
+        return super.toString() + "grateBookId=" + grateBookId +
                 ", course=" + course +
                 ", group=" + group +
                 ", enrollmentYear=" + enrollmentYear +
