@@ -14,9 +14,9 @@ public class University {
         this.universityAddress = universityAddress;
     }
 
-    public void addUniversity(University university){
-
-    }
+//    public void addUniversity(University university){
+//
+//    }
 
     public String getUniversityName() {
         return universityName;

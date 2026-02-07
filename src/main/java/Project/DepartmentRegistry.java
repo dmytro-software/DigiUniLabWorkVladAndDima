@@ -39,6 +39,25 @@ public class DepartmentRegistry {
         throw new IllegalArgumentException("КАФЕДРУ НЕ ЗНАЙДЕНО");
     }
 
+    public void editDepartment(int idDepartment,
+                            String departmentName,
+                               Faculty faculty,
+                            String headOfDepartment,
+                            int roomNumberOfDepartment) {
+
+        for (int i = 0; i < numOfDepartments; i++) {
+            if (departments[i].getIdDepartment() == idDepartment) {
+
+                departments[i].setDepartmentName(departmentName);
+                departments[i].setFaculty(faculty);
+                departments[i].setHeadOfDepartment(headOfDepartment);
+                departments[i].setRoomNumberOfDepartment(roomNumberOfDepartment);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Department not found");
+    }
+
     //метод для збільшення масиву
     private void resizeArray(int i){
         Department[] newArray = new Department[i];

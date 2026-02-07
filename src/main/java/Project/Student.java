@@ -25,8 +25,16 @@ public class Student extends Person {
         return course;
     }
 
+    public void setCourse(int course) {
+        this.course = course;
+    }
+
     public int getGroup(){
         return group;
+    }
+
+    public void setGroup(int group) {
+        this.group = group;
     }
 
     public int getEnrollmentYear() {
@@ -37,8 +45,16 @@ public class Student extends Person {
         return formOfEducation;
     }
 
+    public void setFormOfEducation(String formOfEducation) {
+        this.formOfEducation = formOfEducation;
+    }
+
     public String getStudentStatus() {
         return studentStatus;
+    }
+
+    public void setStudentStatus(String studentStatus) {
+        this.studentStatus = studentStatus;
     }
 
     @Override

@@ -32,7 +32,27 @@ public class StudentRegistry {
                 return;
             }
         }
-        throw new IllegalArgumentException("СТУДЕНТА НЕ ЗНАЙДЕНО");
+        throw new IllegalArgumentException("Student not found");
+    }
+
+    public void editStudent(int grateBookId,
+                            int course,
+                            int group,
+                            String formOfEducation,
+                            String studentStatus) {
+
+        for (int i = 0; i < numberOfStudents; i++) {
+            if (students[i].getGrateBookId() == grateBookId) {
+
+                students[i].setCourse(course);
+                students[i].setGroup(group);
+                students[i].setFormOfEducation(formOfEducation);
+                students[i].setStudentStatus(studentStatus);
+
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Student not found");
     }
 
     public void resizeArray(int i){

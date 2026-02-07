@@ -33,6 +33,24 @@ public class TeacherRegistry {
         throw new IllegalArgumentException("КАФЕДРУ НЕ ЗНАЙДЕНО");
     }
 
+    public void editTeacher(int teacherId,
+                            String position,
+                            String academicDegree,
+                            String academicRank,
+                            String hireDate,
+                            double fullTimeEquivalent){
+        for(int i = 0; i < numberOfTeachers; i++) {
+            if(teachers[i].getTeacherId() == teacherId){
+                teachers[i].setPosition(position);
+                teachers[i].setAcademicDegree(academicDegree);
+                teachers[i].setAcademicRank(academicRank);
+                teachers[i].setHireDate(hireDate);
+                teachers[i].setFullTimeEquivalent(fullTimeEquivalent);
+                return;
+            }
+            throw new IllegalArgumentException("Teacher not found");
+        }
+    }
 
     public void resizeArray(int i){
         Teacher[] newarray = new Teacher[i];

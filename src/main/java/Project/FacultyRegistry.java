@@ -41,6 +41,26 @@ public class FacultyRegistry {
         throw new IllegalArgumentException("ФАКУЛЬТЕТ НЕ ЗНАЙДЕНО");
     }
 
+    public void editFaculty(int id,
+                            String facultyName,
+                            String facultyShortName,
+                            String headOfFaculty,
+                            String contactsOfFaculty) {
+
+        for (int i = 0; i < numOfFaculties; i++) {
+            if (faculties[i].getIdFaculty() == id) {
+
+                faculties[i].setFacultyName(facultyName);
+                faculties[i].setFacultyShortName(facultyShortName);
+                faculties[i].setHeadOfFaculty(headOfFaculty);
+                faculties[i].setContactsOfFaculty(contactsOfFaculty);
+
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Faculty not found");
+    }
+
     //метод для збільшення масиву
     private void resizeArray(int i) {
         Faculty[] newArray = new Faculty[i];

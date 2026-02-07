@@ -24,16 +24,32 @@ public class Faculty {
         return facultyName;
     }
 
+    public void setFacultyName(String facultyName) {
+        this.facultyName = facultyName;
+    }
+
     public String getFacultyShortName() {
         return facultyShortName;
+    }
+
+    public void setFacultyShortName(String facultyShortName) {
+        this.facultyShortName = facultyShortName;
     }
 
     public String getHeadOfFaculty() {
         return headOfFaculty;
     }
 
+    public void setHeadOfFaculty(String headOfFaculty) {
+        this.headOfFaculty = headOfFaculty;
+    }
+
     public String getContactsOfFaculty() {
         return contactsOfFaculty;
+    }
+
+    public void setContactsOfFaculty(String contactsOfFaculty) {
+        this.contactsOfFaculty = contactsOfFaculty;
     }
 
     @Override

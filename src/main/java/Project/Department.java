@@ -24,16 +24,32 @@ public class Department {
         return departmentName;
     }
 
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
     public Faculty getFaculty() {
         return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
     }
 
     public String getHeadOfDepartment() {
         return headOfDepartment;
     }
 
+    public void setHeadOfDepartment(String headOfDepartment) {
+        this.headOfDepartment = headOfDepartment;
+    }
+
     public int getRoomNumberOfDepartment() {
         return roomNumberOfDepartment;
+    }
+
+    public void setRoomNumberOfDepartment(int roomNumberOfDepartment) {
+        this.roomNumberOfDepartment = roomNumberOfDepartment;
     }
 
     @Override
