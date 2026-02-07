@@ -9,6 +9,7 @@ public class StudentRegistry {
     public StudentRegistry() {
         this.students = new Student[10];
     }
+
     public void addStudent(Student student){
         if(numberOfStudents >= students.length){
             resizeArray(numberOfStudents + 1);
