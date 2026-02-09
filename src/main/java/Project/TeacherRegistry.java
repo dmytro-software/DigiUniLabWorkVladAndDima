@@ -52,6 +52,15 @@ public class TeacherRegistry {
         }
     }
 
+    public Teacher findByPib(String pib){
+        for(int i = 0; i < numberOfTeachers; i++) {
+            if (teachers[i] != null && teachers[i].getPib().equals(pib)){
+                return teachers[i];
+            }
+        }
+        return null;
+    }
+
     public void resizeArray(int i){
         Teacher[] newarray = new Teacher[i];
         System.arraycopy(teachers, 0, newarray, 0, teachers.length);

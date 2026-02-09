@@ -10,6 +10,8 @@ public class Main {
     private static FacultyRegistry facultyRegistry = new FacultyRegistry();
     private static DepartmentRegistry departmentRegistry = new DepartmentRegistry();
     private static StudentRegistry studentRegistry = new StudentRegistry();
+    private static TeacherRegistry teacherRegistry = new TeacherRegistry();
+    private static UniversityRegistry universityRegistry = new UniversityRegistry();
 
     public static void main(String[] args) throws Exception {
 
@@ -110,16 +112,17 @@ public class Main {
                         break;
 
                     case "student edit":
-                        editFaculty(reader, role);
+                        editStudent(reader, role);
                         break;
 
                     case "student remove":
-                        removeFaculty(reader, role);
+                        removeStudent(reader, role);
                         break;
 
                     case "student show":
-                        System.out.println(facultyRegistry);
+                        System.out.println(studentRegistry);
                         break;
+
                     case "exit":
                         System.out.println("Bye!");
                         return;
@@ -131,7 +134,8 @@ public class Main {
             }
         }
 
-        private static void userMenu (LineReader reader, String role){
+
+    private static void userMenu (LineReader reader, String role){
             while (true) {
                 String line = reader.readLine("User>> ").trim();
                 if (line.isEmpty()) continue;
@@ -162,7 +166,7 @@ public class Main {
                         break;
                     case "teacher show":
                         System.out.println("Teachers list");
-                        break; // додати реальний список
+                        break;
                     case "exit":
                         System.out.println("Bye!");
                         return;
@@ -253,14 +257,16 @@ public class Main {
 
         try {
             int id = Integer.parseInt(reader.readLine("Department id: "));
-            String name = reader.readLine("Name: ");
-            int facultyId = Integer.parseInt(reader.readLine("Faculty id: "));
-            Faculty faculty = findFaculty(facultyId);
-            String head = reader.readLine("Head: ");
-            int room = Integer.parseInt(reader.readLine("Room: "));
+            String name = reader.readLine("Department name: ");
 
-            departmentRegistry.addDepartment(new Department(id, name, faculty, head, room));
-            System.out.println("Department added.");
+            int facultyId = Integer.parseInt(reader.readLine("Enter Faculty ID for this department: "));
+            Faculty faculty = findFaculty(facultyId);
+
+            String headOfDepartment = reader.readLine("Head of department: ");
+            int roomNumber = Integer.parseInt(reader.readLine("Room number: "));
+
+            departmentRegistry.addDepartment(new Department(id, name, faculty, headOfDepartment, roomNumber));
+            System.out.println("Department added successfully.");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -282,8 +288,119 @@ public class Main {
     }
 
     private static void editDepartment(LineReader reader, String role) {
+        if (!role.equals("manager")) {
+            System.out.println("No permission");
+            return;
+        }
 
+        try {
+            int id = Integer.parseInt(reader.readLine("Enter Department ID to edit: "));
 
+            Department dept = departmentRegistry.findDepartmentById(id);
+
+            System.out.println("Editing department. Press Enter to keep current value.");
+
+            String name = reader.readLine("Name (" + dept.getDepartmentName() + "): ");
+            if (!name.isBlank()) dept.setDepartmentName(name);
+
+            String facultyIdStr = reader.readLine("New Faculty ID (Current: " + dept.getFaculty().getFacultyName() + "): ");
+            if (!facultyIdStr.isBlank()) {
+                Faculty newFaculty = findFaculty(Integer.parseInt(facultyIdStr));
+                dept.setFaculty(newFaculty);
+            }
+
+            String head = reader.readLine("Head (" + dept.getHeadOfDepartment() + "): ");
+            if (!head.isBlank()) dept.setHeadOfDepartment(head);
+
+            String roomStr = reader.readLine("Room (" + dept.getRoomNumberOfDepartment() + "): ");
+            if (!roomStr.isBlank()) dept.setRoomNumberOfDepartment(Integer.parseInt(roomStr));
+
+            System.out.println("Department updated successfully.");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private static void addStudent(LineReader reader, String role) {
+        if (!role.equals("manager")) {
+            System.out.println("No permission");
+            return;
+        }
+
+        try {
+            int idPerson = Integer.parseInt(reader.readLine("Person ID: "));
+            String pib = reader.readLine("Full Name (PIB): ");
+            String birthDate = reader.readLine("Birth Date: ");
+            String email = reader.readLine("Email: ");
+            int phoneNumber = Integer.parseInt(reader.readLine("Phone Number: "));
+
+            int gradeBookId = Integer.parseInt(reader.readLine("GradeBook ID: "));
+            int course = Integer.parseInt(reader.readLine("Course: "));
+            int group = Integer.parseInt(reader.readLine("Group: "));
+            int enrollmentYear = Integer.parseInt(reader.readLine("Enrollment year: "));
+            String formOfEducation = reader.readLine("Form of Education: ");
+            String studentStatus = reader.readLine("Student status: ");
+
+            studentRegistry.addStudent(new Student(idPerson, pib, birthDate, email, phoneNumber,
+                    gradeBookId, course, group, enrollmentYear, formOfEducation, studentStatus));
+            System.out.println("Student added successfully.");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+    private static void editStudent(LineReader reader, String role) {
+        if (!role.equals("manager")) {
+            System.out.println("No permission");
+            return;
+        }
+
+        try {
+            int id = Integer.parseInt(reader.readLine("Enter GradeBook ID of student to edit: "));
+            Student student = studentRegistry.findStudentByGradeBook(id);
+
+            System.out.println("Editing student. Press Enter to keep current value.");
+
+            String courseStr = reader.readLine("Course (" + student.getCourse() + "): ");
+            if (!courseStr.isBlank()) student.setCourse(Integer.parseInt(courseStr));
+
+            String groupStr = reader.readLine("Group (" + student.getGroup() + "): ");
+            if (!groupStr.isBlank()) student.setGroup(Integer.parseInt(groupStr));
+
+            String form = reader.readLine("Form of Education (" + student.getFormOfEducation() + "): ");
+            if (!form.isBlank()) student.setFormOfEducation(form);
+
+            String status = reader.readLine("Status (" + student.getStudentStatus() + "): ");
+            if (!status.isBlank()) student.setStudentStatus(status);
+
+            System.out.println("Student record updated.");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private static void removeStudent(LineReader reader, String role) {
+        if (!role.equals("manager")) {
+            System.out.println("No permission");
+            return;
+        }
+
+        try {
+            int id = Integer.parseInt(reader.readLine("Enter GradeBook ID to remove: "));
+            studentRegistry.removeStudent(id);
+            System.out.println("Student removed successfully.");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private static void searchStudent(LineReader reader) {
+        String pib = reader.readLine("Enter your pib for search: ");
+
+        studentRegistry.findByPib(pib)
+                .ifPresentOrElse(
+                        student -> System.out.println("Знайдено: " + student),
+                        () -> System.out.println("Student not found.")
+                );
     }
 
     private static Faculty findFaculty(int id) {
@@ -292,24 +409,5 @@ public class Main {
                 return f;
         }
         throw new IllegalArgumentException("Faculty not found");
-    }
-    private static void addStudent(LineReader reader, String role) {
-        if (!role.equals("manager")) {
-            System.out.println("No permission");
-            return;
-        }
-
-        try {
-            int id = Integer.parseInt(reader.readLine("Faculty id: "));
-            String name = reader.readLine("Name: ");
-            String shortName = reader.readLine("Short name: ");
-            String head = reader.readLine("Head: ");
-            String contacts = reader.readLine("Contacts: ");
-
-            facultyRegistry.addFaculty(new Faculty(id, name, shortName, head, contacts));
-            System.out.println("Faculty added.");
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
     }
 }

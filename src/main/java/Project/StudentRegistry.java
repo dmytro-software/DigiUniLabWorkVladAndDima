@@ -1,6 +1,7 @@
 package Project;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public class StudentRegistry {
     private Student[] students;
@@ -36,6 +37,22 @@ public class StudentRegistry {
         throw new IllegalArgumentException("Student not found");
     }
 
+
+    public Optional<Student> findByPib(String pib) {
+
+        if (pib == null || pib.isBlank()) {
+            return Optional.empty();
+        }
+
+        for (int i = 0; i < numberOfStudents; i++) {
+            if (students[i] != null && students[i].getPib().equalsIgnoreCase(pib.trim())) {
+                return Optional.of(students[i]);
+            }
+        }
+
+        return Optional.empty();
+    }
+
     public void editStudent(int grateBookId,
                             int course,
                             int group,
@@ -54,6 +71,15 @@ public class StudentRegistry {
             }
         }
         throw new IllegalArgumentException("Student not found");
+    }
+
+    public Student findStudentByGradeBook(int id) {
+        for (Student s : students) {
+            if (s.getGrateBookId() == id) {
+                return s;
+            }
+        }
+        throw new IllegalArgumentException("Student with GradeBook ID " + id + " not found.");
     }
 
     public void resizeArray(int i){

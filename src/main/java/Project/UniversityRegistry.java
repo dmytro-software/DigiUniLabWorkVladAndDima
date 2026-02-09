@@ -5,7 +5,7 @@ public class UniversityRegistry {
     private University university;
     private int numOfUniversities;
 
-    public UniversityRegistry(University university) {
+    public UniversityRegistry() {
         this.university = university;
     }
 

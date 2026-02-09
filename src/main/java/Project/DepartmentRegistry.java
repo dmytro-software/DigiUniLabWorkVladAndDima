@@ -58,6 +58,15 @@ public class DepartmentRegistry {
         throw new IllegalArgumentException("Department not found");
     }
 
+    public Department findDepartmentById(int idDepartment) {
+        for (Department department : departments) {
+            if (department.getIdDepartment() == idDepartment) {
+                return department;
+            }
+        }
+        throw new IllegalArgumentException("Department with department ID " + idDepartment + " not found.");
+    }
+
     //метод для збільшення масиву
     private void resizeArray(int i){
         Department[] newArray = new Department[i];
@@ -65,7 +74,7 @@ public class DepartmentRegistry {
         departments = newArray;
     }
 
-    //повернути масив кафдер(клонований)
+
     public Department[] getDepartments() {
         return departments.clone();
     }
