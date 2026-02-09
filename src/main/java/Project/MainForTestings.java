@@ -11,13 +11,8 @@ public class MainForTestings {
         StudentRegistry studentRegistry = new StudentRegistry();
         studentRegistry.addStudent(student1);
         studentRegistry.addStudent(student2);
-        studentRegistry.addStudent(student3);
 
         System.out.println(studentRegistry);
-
-        System.out.println(Arrays.toString(studentRegistry.findByGroup(2)));
-        System.out.println(Arrays.toString(studentRegistry.findByPib("")));
-        System.out.println(Arrays.toString(studentRegistry.findByCourse(2)));
 
     }
 }

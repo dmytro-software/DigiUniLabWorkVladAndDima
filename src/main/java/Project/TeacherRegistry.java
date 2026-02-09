@@ -1,5 +1,7 @@
 package Project;
 
+import java.util.Arrays;
+
 public class TeacherRegistry {
     private Teacher[] teachers;
     private int numberOfTeachers;
@@ -73,5 +75,15 @@ public class TeacherRegistry {
 
     public int getNumberOfTeachers() {
         return numberOfTeachers;
+    }
+
+    @Override
+    public String toString() {
+        String result = " РЕЄСТР ВЧИТЕЛІВ (Всього: " + numberOfTeachers + ") \n";
+        for (int i = 0; i < numberOfTeachers; i++) {
+            result = result + (i + 1) + ". " + teachers[i].toString() + "\n";
+            result = result + "--------------------------------------------------\n";
+        }
+        return result;
     }
 }

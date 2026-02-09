@@ -59,12 +59,12 @@ public class Student extends Person {
 
     @Override
     public String toString() {
-        return super.toString() + ", grateBookId=" + grateBookId +
-                ", course=" + course +
-                ", group=" + group +
-                ", enrollmentYear=" + enrollmentYear +
-                ", formOfEducation='" + formOfEducation + '\'' +
-                ", studentStatus='" + studentStatus + '\'' +
-                '}';
+        return super.toString() +
+                " | Заліковка: " + grateBookId +
+                "\n | Курс: " + course +
+                "\n | Група: " + group +
+                "\n | Рік: " + enrollmentYear +
+                "\n | Форма: " + formOfEducation +
+                "\n | Статус: " + studentStatus;
     }
 }

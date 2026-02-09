@@ -8,11 +8,11 @@ public class StudentRegistry {
     private int numberOfStudents;
 
     public StudentRegistry() {
-        this.students = new Student[10];
+        this.students = new Student[1];
     }
 
-    public void addStudent(Student student){
-        if(numberOfStudents >= students.length){
+    public void addStudent(Student student) {
+        if (numberOfStudents >= students.length) {
             resizeArray(numberOfStudents + 1);
         }
         students[numberOfStudents++] = student;
@@ -37,21 +37,6 @@ public class StudentRegistry {
         throw new IllegalArgumentException("Student not found");
     }
 
-
-    public Optional<Student> findByPib(String pib) {
-
-        if (pib == null || pib.isBlank()) {
-            return Optional.empty();
-        }
-
-        for (int i = 0; i < numberOfStudents; i++) {
-            if (students[i] != null && students[i].getPib().equalsIgnoreCase(pib.trim())) {
-                return Optional.of(students[i]);
-            }
-        }
-
-        return Optional.empty();
-    }
 
     public void editStudent(int grateBookId,
                             int course,
@@ -82,7 +67,7 @@ public class StudentRegistry {
         throw new IllegalArgumentException("Student with GradeBook ID " + id + " not found.");
     }
 
-    public void resizeArray(int i){
+    public void resizeArray(int i) {
         Student[] newarray = new Student[i];
         System.arraycopy(students, 0, newarray, 0, students.length);
         students = newarray;
@@ -100,18 +85,18 @@ public class StudentRegistry {
             }
         }
 
-        System.out.println("Результат по пошуку ПІБ: " + pib );
+        System.out.println("Результат по пошуку ПІБ: " + pib);
         return Arrays.copyOf(newArray, foundCount);
     }
 
-    public Student[] findByGroup(int group){
-        if(group < 0 || group >6){
+    public Student[] findByGroup(int group) {
+        if (group < 0 || group > 6) {
             throw new IllegalArgumentException("Cannot be higher 6 or lower 0");
         }
         Student[] newArray = new Student[numberOfStudents];
         int foundCount = 0;
-        for(int i = 0; i < numberOfStudents;i++){
-            if(students[i].getGroup() == group){
+        for (int i = 0; i < numberOfStudents; i++) {
+            if (students[i].getGroup() == group) {
                 newArray[foundCount++] = students[i];
             }
         }
@@ -119,14 +104,14 @@ public class StudentRegistry {
         return Arrays.copyOf(newArray, foundCount);
     }
 
-    public Student[] findByCourse(int course){
-        if(course < 0 || course >4){
+    public Student[] findByCourse(int course) {
+        if (course < 0 || course > 4) {
             throw new IllegalArgumentException("Cannot be higher 4 or lower 0");
         }
         Student[] newArray = new Student[numberOfStudents];
         int foundCount = 0;
-        for(int i = 0; i < numberOfStudents;i++){
-            if(students[i].getCourse() == course){
+        for (int i = 0; i < numberOfStudents; i++) {
+            if (students[i].getCourse() == course) {
                 newArray[foundCount++] = students[i];
             }
         }
@@ -144,9 +129,12 @@ public class StudentRegistry {
 
     @Override
     public String toString() {
-        return "StudentRegistry{" +
-                "students=" + Arrays.toString(students) +
-                ", numberOfStudents=" + numberOfStudents +
-                '}';
+        String result = " РЕЄСТР СТУДЕНТІВ (Всього: " + numberOfStudents + ") \n";
+        for (int i = 0; i < numberOfStudents; i++) {
+            result = result + (i + 1) + ". " + students[i].toString() + "\n";
+            result = result + "--------------------------------------------------\n";
+        }
+        return result;
     }
 }
+

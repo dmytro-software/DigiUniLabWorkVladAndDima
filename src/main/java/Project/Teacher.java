@@ -65,13 +65,11 @@ public class Teacher extends Person{
 
     @Override
     public String toString() {
-        return super.toString() + "Teacher{" +
-                "teacher id='" + teacherId + '\'' +
-                "position='" + position + '\'' +
-                ", academicDegree='" + academicDegree + '\'' +
-                ", academicRank='" + academicRank + '\'' +
-                ", hireDate='" + hireDate + '\'' +
-                ", fullTimeEquivalent=" + fullTimeEquivalent +
-                '}';
+        return super.toString() + " | [Викладач] ID: " + teacherId +
+                "\n | Посада: " + position +
+                "\n | Ступінь: " + academicDegree +
+                "\n | Звання: " + academicRank +
+                "\n | Дата найму: " + hireDate +
+                "\n | Ставка: " + fullTimeEquivalent;
     }
 }

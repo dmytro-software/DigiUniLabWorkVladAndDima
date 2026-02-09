@@ -8,7 +8,7 @@ public abstract class Person {
     private int phoneNumber;
 
 
-    public Person(int idPerson, String pib, String birthDate, String email, int phoneNumber ) {
+    public Person(int idPerson, String pib, String birthDate, String email, int phoneNumber) {
         this.idPerson = idPerson;
         this.pib = pib;
         this.birthDate = birthDate;
@@ -38,11 +38,11 @@ public abstract class Person {
 
     @Override
     public String toString() {
-        return  "idPerson=" + idPerson +
-                ", pib='" + pib + '\'' +
-                ", birthDate='" + birthDate + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber=" + phoneNumber;
+        return "ID: " + idPerson +
+                "\n | ПІБ: " + pib +
+                "\n | Дата народж: " + birthDate +
+                "\n | Email: " + email +
+                "\n | Тел: " + phoneNumber;
     }
 }
 
