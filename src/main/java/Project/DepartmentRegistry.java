@@ -85,9 +85,12 @@ public class DepartmentRegistry {
 
     @Override
     public String toString() {
-        return "DepartmentRegistry{" +
-                "departments=" + Arrays.toString(departments) +
-                ", numOfDepartments=" + numOfDepartments +
-                '}';
+        String result = "РЕЄСТР КАФЕДР (Всього:" + numOfDepartments + ") \n";
+
+        for(int i = 0 ;i<numOfDepartments;i++){
+            result = result + (i + 1) + ". " + departments[i].toString() + "\n";
+            result = result + "--------------------------------------------------\n";
+        }
+        return result;
     }
 }

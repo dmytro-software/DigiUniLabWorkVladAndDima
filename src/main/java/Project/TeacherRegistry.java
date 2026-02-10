@@ -63,6 +63,17 @@ public class TeacherRegistry {
         return null;
     }
 
+
+    //додав цей метод що за айді тічера шукало
+    public Teacher findByTeacherId(int id) {
+        for (Teacher tch : teachers) {
+            if (tch.getTeacherId() == id) {
+                return tch;
+            }
+        }
+        throw new IllegalArgumentException("Teacher with TeacherID " + id + " not found.");
+    }
+
     public void resizeArray(int i){
         Teacher[] newarray = new Teacher[i];
         System.arraycopy(teachers, 0, newarray, 0, teachers.length);

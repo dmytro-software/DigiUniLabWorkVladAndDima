@@ -54,12 +54,8 @@ public class Faculty {
 
     @Override
     public String toString() {
-        return "Faculty{" +
-                "idFaculty=" + idFaculty +
-                ", facultyName='" + facultyName + '\'' +
-                ", facultyShortName='" + facultyShortName + '\'' +
-                ", headOfFaculty='" + headOfFaculty + '\'' +
-                ", contactsOfFaculty='" + contactsOfFaculty + '\'' +
-                '}';
+        return  " |Факультет: " + facultyName + " (коротко: " + facultyShortName + ")" +
+                " | Декан: " + headOfFaculty +
+                " | Контакти: " + contactsOfFaculty;
     }
 }

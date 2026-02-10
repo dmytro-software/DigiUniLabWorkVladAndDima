@@ -5,6 +5,8 @@ import org.jline.reader.LineReaderBuilder;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
+import java.io.IOException;
+
 public class Main {
 
     private static FacultyRegistry facultyRegistry = new FacultyRegistry();
@@ -44,8 +46,6 @@ public class Main {
             while (true) {
                 String line = reader.readLine("Manager>> ").trim();
                 if (line.isEmpty()) continue;
-
-
                 switch (line) {
                     case "help -menager":
                         System.out.println("""
@@ -121,6 +121,22 @@ public class Main {
 
                     case "student show":
                         System.out.println(studentRegistry);
+                        break;
+
+                    case "teacher add":
+                        addTeacher(reader, role);
+                        break;
+
+                    case "teacher edit":
+                        editTeacher(reader, role);
+                        break;
+
+                    case "teacher remove":
+                        removeTeacher(reader, role);
+                        break;
+
+                    case "teacher show":
+                        System.out.println(teacherRegistry);
                         break;
 
                     case "exit":
@@ -393,15 +409,93 @@ public class Main {
         }
     }
 
-    private static void searchStudent(LineReader reader) {
-        String pib = reader.readLine("Enter your pib for search: ");
+    private static void addTeacher(LineReader reader, String role){
+        if(!role.equals("manager")){
+            System.out.println("No permission");
+        }
 
-        studentRegistry.findByPib(pib)
-                .ifPresentOrElse(
-                        student -> System.out.println("Знайдено: " + student),
-                        () -> System.out.println("Student not found.")
-                );
+        try {
+
+            int idPerson = Integer.parseInt(reader.readLine("Person ID: "));
+            String pib = reader.readLine("Full Name (PIB): ");
+            String birthDate = reader.readLine("Birth Date: ");
+            String email = reader.readLine("Email: ");
+            int phoneNumber = Integer.parseInt(reader.readLine("Phone Number: "));
+
+            int teacherId = Integer.parseInt(reader.readLine("Teacher ID: "));
+            String position = reader.readLine("Position: ");
+            String academicDegree = reader.readLine("Academic Degree: ");
+            String academicRank = reader.readLine("Academic Rank: ");
+            String hireDate = reader.readLine("Hire date: ");
+            double fullTimeEquivalent = Integer.parseInt(reader.readLine("Full time equivalent: "));
+
+            teacherRegistry.addTeacher(new Teacher(idPerson,pib,birthDate,email,phoneNumber,teacherId,position,academicDegree,academicRank,
+                   hireDate,fullTimeEquivalent));
+            System.out.println("Teacher added successfully.");
+        } catch (Exception e) {
+            System.out.println("Error:"+ e.getMessage());
+        }
     }
+
+    private static void editTeacher(LineReader reader,String role){
+        if(!role.equals("manager")){
+            System.out.println("No permission");
+            return;
+        }
+
+        try {
+
+            int teacherId = Integer.parseInt(reader.readLine("Enter TeacherID: "));
+
+            Teacher teacher = teacherRegistry.findByTeacherId(teacherId);
+
+            System.out.println("Editing teacher. Press Enter to keep current value.");
+
+            String positionEdt = reader.readLine("Position (" + teacher.getPosition() + "): ");
+            if(!positionEdt.isBlank()) teacher.setPosition(positionEdt);
+
+            String academicDegreeEdt = reader.readLine("Academic degree("+ teacher.getAcademicDegree()+"): ");
+            if(!academicDegreeEdt.isBlank()) teacher.setAcademicDegree(academicDegreeEdt);
+
+            String acacdemicRankEdt = reader.readLine("Acacdemic Rank("+teacher.getAcademicRank()+"): ");
+            if(!acacdemicRankEdt.isBlank()) teacher.setAcademicRank(acacdemicRankEdt);
+
+            String fullTimeEquivalentEdt = reader.readLine("Full time equivalent:("+teacher.getFullTimeEquivalent()+"): ");
+            if (!fullTimeEquivalentEdt.isBlank()) teacher.setFullTimeEquivalent(Integer.parseInt(fullTimeEquivalentEdt));
+
+            System.out.println("Teacher record updated.");
+
+
+        } catch (Exception e) {
+            System.out.println("Error: "+ e.getMessage());
+        }
+    }
+
+    public static void removeTeacher(LineReader reader,String role ){
+        if (!role.equals("manager")) {
+            System.out.println("No permission");
+            return;
+        }
+
+        try {
+            int id = Integer.parseInt(reader.readLine("Enter TeacherId to remove: "));
+            teacherRegistry.removeTeacher(id);
+            System.out.println("Teacher removed successfully");
+        }catch (Exception e){
+            System.out.println("Error" + e.getMessage());
+        }
+    }
+
+
+//    private static void searchStudent(LineReader reader) {
+//        String pib = reader.readLine("Enter your pib for search: ");
+//
+//        studentRegistry.findByPib(pib)
+//                .ifPresentOrElse(
+//                        student -> System.out.println("Знайдено: " + student),
+//                        () -> System.out.println("Student not found.")
+//                );
+//    }
 
     private static Faculty findFaculty(int id) {
         for (Faculty f : facultyRegistry.getFaculties()) {

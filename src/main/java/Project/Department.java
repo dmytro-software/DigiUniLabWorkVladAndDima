@@ -54,12 +54,10 @@ public class Department {
 
     @Override
     public String toString() {
-        return "Department{" +
-                "idDepartment=" + idDepartment +
-                ", departmentName='" + departmentName + '\'' +
-                ", faculty=" + faculty +
-                ", headOfDepartment='" + headOfDepartment + '\'' +
-                ", roomNumberOfDepartment=" + roomNumberOfDepartment +
-                '}';
+        return "  |Кафедра ID: " + idDepartment +
+                "\n | Назва: " + departmentName +
+                "\n | Завідувач: " + headOfDepartment +
+                "\n | Ауд: " + roomNumberOfDepartment +
+                "\n   └─ " + faculty;
     }
 }

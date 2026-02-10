@@ -15,9 +15,12 @@ public class UniversityRegistry {
 
     @Override
     public String toString() {
-        return "UniversityRegistry{" +
-                "university=" + university +
-                ", numOfUniversities=" + numOfUniversities +
-                '}';
+        String result = "УНІВЕРСИТЕТ\n";
+
+        for(int i = 0 ;i<numOfUniversities;i++){
+            result = result + (i + 1) + ". " + university + "\n";
+            result = result + "--------------------------------------------------\n";
+        }
+        return result;
     }
 }

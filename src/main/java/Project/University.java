@@ -14,10 +14,6 @@ public class University {
         this.universityAddress = universityAddress;
     }
 
-//    public void addUniversity(University university){
-//
-//    }
-
     public String getUniversityName() {
         return universityName;
     }
@@ -36,11 +32,8 @@ public class University {
 
     @Override
     public String toString() {
-        return "University{" +
-                "universityName='" + universityName + '\'' +
-                ", universityShortName='" + universityShortName + '\'' +
-                ", city='" + city + '\'' +
-                ", universityAddress='" + universityAddress + '\'' +
-                '}';
+        return  " УНІВЕРСИТЕТ: " + universityName + " (коротко: " + universityShortName + ")" +
+                "\n Місто: " + city +
+                "\n Адреса: " + universityAddress;
     }
 }

@@ -79,9 +79,12 @@ public class FacultyRegistry {
 
     @Override
     public String toString() {
-        return "FacultyRegistry{" +
-                "faculties=" + Arrays.toString(faculties) +
-                ", numOfFaculties=" + numOfFaculties +
-                '}';
+        String result = "РЕЄСТР КАФЕДР (Всього:" + numOfFaculties + ") \n";
+
+        for(int i = 0 ;i<numOfFaculties;i++){
+            result = result + (i + 1) + ". " + faculties[i].toString() + "\n";
+            result = result + "--------------------------------------------------\n";
+        }
+        return result;
     }
 }
