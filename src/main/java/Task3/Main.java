@@ -7,6 +7,6 @@ public class Main {
         notifier.send("Ваше замовлення готове");
 
         SmsNotifier smsOnly = notifier;
-        smsOnly.send("Викликається SMS");
+        smsOnly.send("Замовлення куплено");
     }
 }
