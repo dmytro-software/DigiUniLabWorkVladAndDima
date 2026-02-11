@@ -1,5 +1,7 @@
 package Project;
 
+import java.util.Arrays;
+
 public class Faculty {
 
     private final int idFaculty;
@@ -8,12 +10,50 @@ public class Faculty {
     private String headOfFaculty;
     private String contactsOfFaculty;
 
-    public Faculty(int idFaculty, String facultyName, String facultyShortName, String headOfFaculty, String contactsOfFaculty) {
+
+    private Student[] students = new Student[1];
+    private int numberOfStudents;
+
+    public Faculty(int idFaculty, String facultyName, String facultyShortName,
+                   String headOfFaculty, String contactsOfFaculty) {
         this.idFaculty = idFaculty;
         this.facultyName = facultyName;
         this.facultyShortName = facultyShortName;
         this.headOfFaculty = headOfFaculty;
         this.contactsOfFaculty = contactsOfFaculty;
+    }
+
+
+    public void addStudent(Student student) {
+        if (numberOfStudents >= students.length) {
+            Student[] newArray = new Student[numberOfStudents + 1];
+            System.arraycopy(students, 0, newArray, 0, students.length);
+            students = newArray;
+        }
+        students[numberOfStudents++] = student;
+    }
+
+    public void removeStudent(Student student) {
+        boolean found = false;
+        for (int i = 0; i < numberOfStudents; i++) {
+            if (students[i] == student) {
+                found = true;
+                // Зсув всіх елементів після видаленого
+                for (int j = i; j < numberOfStudents - 1; j++) {
+                    students[j] = students[j + 1];
+                }
+                students[numberOfStudents - 1] = null;
+                numberOfStudents--;
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("Student not found in this faculty.");
+        }
+    }
+
+    public Student[] getStudents() {
+        return Arrays.copyOf(students, numberOfStudents);
     }
 
     public int getIdFaculty() {
@@ -54,12 +94,39 @@ public class Faculty {
 
     @Override
     public String toString() {
-        return "Faculty{" +
-                "idFaculty=" + idFaculty +
-                ", facultyName='" + facultyName + '\'' +
-                ", facultyShortName='" + facultyShortName + '\'' +
-                ", headOfFaculty='" + headOfFaculty + '\'' +
-                ", contactsOfFaculty='" + contactsOfFaculty + '\'' +
-                '}';
-    }
-}
+        StringBuilder sb = new StringBuilder();
+
+        // Шапка факультету
+        sb.append("\n╔══════════════════════════════════════════════════════╗\n");
+        sb.append(String.format("║ ФАКУЛЬТЕТ №%-5d                                 ║\n", idFaculty));
+        sb.append("╠══════════════════════════════════════════════════════╣\n");
+
+        // Основні дані
+        sb.append(String.format("  Повна назва:  %s\n", facultyName));
+        sb.append(String.format("  Абревіатура:  %s\n", facultyShortName));
+        sb.append(String.format("  Декан:        %s\n", headOfFaculty));
+        sb.append(String.format("  Контакти:     %s\n", contactsOfFaculty));
+
+        // Статистика
+        sb.append("------------------------------------------------------\n");
+        sb.append(String.format("  Студентів зареєстровано: %d\n", numberOfStudents));
+        sb.append("------------------------------------------------------\n");
+
+        // Список студентів
+        sb.append("  СПИСОК СТУДЕНТІВ:\n");
+        if (numberOfStudents == 0) {
+            sb.append("    [ на даний момент студентів немає ]\n");
+        } else {
+            for (int i = 0; i < numberOfStudents; i++) {
+                // Використовуємо методи getPib() та getGroup() класу Student
+                sb.append(String.format("    %2d. %-25s | Група: %s\n",
+                        (i + 1),
+                        students[i].getPib(),
+                        students[i].getGroup()));
+            }
+        }
+
+        sb.append("╚══════════════════════════════════════════════════════╝\n");
+
+        return sb.toString();
+    }}

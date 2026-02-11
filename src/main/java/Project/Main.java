@@ -2,6 +2,8 @@ package Project;
 
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.impl.DefaultParser;
+import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
@@ -15,8 +17,20 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        Terminal terminal = TerminalBuilder.builder().system(true).build();
-        LineReader reader = LineReaderBuilder.builder().terminal(terminal).build();
+            universityRegistry.setUniversity(
+                    new University("Kyiv-Mohyla Academy або просто Mohyla Academy",
+                            "NaUkma",
+                            "Kyiv",
+                            "Volodymyrska 60")
+            );
+
+        Terminal terminal = TerminalBuilder.terminal();
+
+        LineReader reader = LineReaderBuilder.builder()
+                .terminal(terminal)
+                .parser(new DefaultParser())
+                .history(new DefaultHistory())
+                .build();
 
         System.out.print("Login: ");
         String login = reader.readLine();
@@ -32,7 +46,7 @@ public class Main {
         }
 
         System.out.println("Logged as: " + role);
-        System.out.println("Type 'help' to see commands");
+        System.out.println("Type 'help -manager' to see commands");
 
         if (role.equals("manager")) {
             managerMenu(reader, role);
@@ -40,18 +54,19 @@ public class Main {
             userMenu(reader, role);
         }
     }
-        private static void managerMenu (LineReader reader, String role){
-            while (true) {
-                String line = reader.readLine("Manager>> ").trim();
-                if (line.isEmpty()) continue;
+    private static void managerMenu (LineReader reader, String role){
+        while (true) {
+            String line = reader.readLine("Manager>> ").trim();
+            if (line.isEmpty()) continue;
 
-
-                switch (line) {
-                    case "help -menager":
-                        System.out.println("""
+            switch (line) {
+                case "help -manager":
+                    System.out.println("""
                                 ==============================================
                                 |               Commands:                    |
                                 ==============================================
+                                | university show   | - Show university      |
+                                |============================================|
                                 | faculty add       | - Add a faculty        |
                                 | faculty edit      | - Edit a faculty       |
                                 | faculty remove    | - Remove a faculty     |
@@ -66,6 +81,7 @@ public class Main {
                                 | student edit      | - Edit a student       |
                                 | student remove    | - Remove a student     |
                                 | student show      | - Show all students    |
+                                | student transfer  | - Show all students    |
                                 |============================================|
                                 | teacher add       | - Add a teacher        |
                                 | teacher remove    | - Remove a teacher     |
@@ -75,74 +91,88 @@ public class Main {
                                 | exit              | - Exit program         |
                                 ==============================================
                                 """);
-                        break;
-                    case "faculty add":
-                        addFaculty(reader, role);
-                        break;
+                    break;
 
-                    case "faculty edit":
-                        editFaculty(reader, role);
-                        break;
+                case "university show":
+                    System.out.println(universityRegistry.getUniversity());
+                    break;
 
-                    case "faculty remove":
-                        removeFaculty(reader, role);
-                        break;
+                case "faculty add":
+                    addFaculty(reader, role);
+                    break;
 
-                    case "faculty show":
-                        System.out.println(facultyRegistry);
-                        break;
+                case "faculty edit":
+                    editFaculty(reader, role);
+                    break;
 
-                    case "department add":
-                        addDepartment(reader, role);
-                        break;
+                case "faculty remove":
+                    removeFaculty(reader, role);
+                    break;
 
-                    case "department remove":
-                        removeDepartment(reader, role);
-                        break;
+                case "faculty show":
+                    System.out.println(facultyRegistry);
+                    break;
 
-                    case "department edit":
-                        editDepartment(reader, role);
+                case "department add":
+                    addDepartment(reader, role);
+                    break;
 
-                    case "department show":
-                        System.out.println(departmentRegistry);
-                        break;
+                case "department remove":
+                    removeDepartment(reader, role);
+                    break;
 
-                    case "student add":
-                        addStudent(reader, role);
-                        break;
+                case "department edit":
+                    editDepartment(reader, role);
 
-                    case "student edit":
-                        editStudent(reader, role);
-                        break;
+                case "department show":
+                    System.out.println(departmentRegistry);
+                    break;
 
-                    case "student remove":
-                        removeStudent(reader, role);
-                        break;
+                case "student add":
+                    addStudent(reader, role);
+                    break;
 
-                    case "student show":
-                        System.out.println(studentRegistry);
-                        break;
+                case "student edit":
+                    editStudent(reader, role);
+                    break;
 
-                    case "exit":
-                        System.out.println("Bye!");
-                        return;
+                case "student remove":
+                    removeStudent(reader, role);
+                    break;
 
-                    default:
-                        System.out.println("Unknown command.");
-                        break;
-                }
+                case "student show":
+                    System.out.println(studentRegistry);
+                    break;
+
+                case "student transfer":
+                    transferStudent(reader);
+                    break;
+                case "teacher add":
+                    addTeacher(reader, role);
+                    break;
+                case "teacher show":
+                    System.out.println(teacherRegistry);
+                case "exit":
+                    System.out.println("Bye!");
+                    return;
+
+                default:
+                    System.out.println("Unknown command.");
+                    break;
             }
         }
+    }
 
 
     private static void userMenu (LineReader reader, String role){
-            while (true) {
-                String line = reader.readLine("User>> ").trim();
-                if (line.isEmpty()) continue;
+        while (true) {
+            String line = reader.readLine("User>> ").trim();
+            if (line.isEmpty()) continue;
 
-                switch (line) {
-                    case "help":
-                        System.out.println("""
+
+            switch (line) {
+                case "help":
+                    System.out.println("""
                                 ==============================================
                                 |               Commands:                    |
                                 ==============================================
@@ -153,57 +183,63 @@ public class Main {
                                 | exit              | - Exit program         |
                                 ==============================================
                                 """);
-                        break;
+                    break;
 
-                    case "faculty show":
-                        System.out.println(facultyRegistry);
-                        break;
-                    case "department show":
-                        System.out.println(departmentRegistry);
-                        break;
-                    case "student show":
-                        System.out.println(studentRegistry);
-                        break;
-                    case "teacher show":
-                        System.out.println("Teachers list");
-                        break;
-                    case "exit":
-                        System.out.println("Bye!");
-                        return;
-                    default:
-                        System.out.println("Unknown command.");
-                        break;
-                }
+                case "faculty show":
+                    System.out.println(facultyRegistry);
+                    break;
+                case "department show":
+                    System.out.println(departmentRegistry);
+                    break;
+                case "student show":
+                    System.out.println(studentRegistry);
+                    break;
+                case "teacher show":
+                    System.out.println("Teachers list");
+                    break;
+                case "exit":
+                    System.out.println("Bye!");
+                    return;
+                default:
+                    System.out.println("Unknown command.");
+                    break;
             }
         }
+    }
 
-        private static String authorize(String login, String password) {
-             if (login.equals("admin") && password.equals("123"))
-                 return "manager";
-             if (login.equals("user") && password.equals("123"))
-                 return "user";
-             return null;
+    private static String authorize(String login, String password) {
+        if (login.equals("admin") && password.equals("123"))
+            return "manager";
+        if (login.equals("user") && password.equals("123"))
+            return "user";
+        return null;
+    }
+
+    private static void addFaculty(LineReader reader, String role) {
+        if (!role.equals("manager")) {
+            System.out.println("No permission");
+            return;
         }
 
-         private static void addFaculty(LineReader reader, String role) {
-             if (!role.equals("manager")) {
-                 System.out.println("No permission");
-                 return;
-             }
+        try {
+            int id = Integer.parseInt(reader.readLine("Faculty id: "));
+            String name = reader.readLine("Name: ");
+            String shortName = reader.readLine("Short name: ");
+            String head = reader.readLine("Head: ");
+            String contacts = reader.readLine("Contacts: ");
 
-             try {
-                 int id = Integer.parseInt(reader.readLine("Faculty id: "));
-                 String name = reader.readLine("Name: ");
-                 String shortName = reader.readLine("Short name: ");
-                 String head = reader.readLine("Head: ");
-                 String contacts = reader.readLine("Contacts: ");
+            Faculty faculty = new Faculty(id, name, shortName, head, contacts);
 
-                 facultyRegistry.addFaculty(new Faculty(id, name, shortName, head, contacts));
-                 System.out.println("Faculty added.");
-             } catch (Exception e) {
-                 System.out.println("Error: " + e.getMessage());
-             }
-         }
+            universityRegistry.getUniversity().addFaculty(faculty);
+            facultyRegistry.addFaculty(faculty);
+
+            System.out.println("Faculty added to university.");
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
 
     private static void editFaculty(LineReader reader, String role) {
         if (!role.equals("manager")) {
@@ -216,18 +252,23 @@ public class Main {
             Faculty faculty = findFaculty(id);
 
             String name = reader.readLine("Name (" + faculty.getFacultyName() + "): ");
-            if (name.isBlank()) name = faculty.getFacultyName();
+            if (name.isBlank())
+                name = faculty.getFacultyName();
 
             String shortName = reader.readLine("Short name (" + faculty.getFacultyShortName() + "): ");
-            if (shortName.isBlank()) shortName = faculty.getFacultyShortName();
+            if (shortName.isBlank())
+                shortName = faculty.getFacultyShortName();
 
             String head = reader.readLine("Head (" + faculty.getHeadOfFaculty() + "): ");
-            if (head.isBlank()) head = faculty.getHeadOfFaculty();
+            if (head.isBlank())
+                head = faculty.getHeadOfFaculty();
 
             String contacts = reader.readLine("Contacts (" + faculty.getContactsOfFaculty() + "): ");
-            if (contacts.isBlank()) contacts = faculty.getContactsOfFaculty();
+            if (contacts.isBlank())
+                contacts = faculty.getContactsOfFaculty();
 
             facultyRegistry.editFaculty(id, name, shortName, head, contacts);
+
             System.out.println("Faculty updated.");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -259,18 +300,26 @@ public class Main {
             int id = Integer.parseInt(reader.readLine("Department id: "));
             String name = reader.readLine("Department name: ");
 
-            int facultyId = Integer.parseInt(reader.readLine("Enter Faculty ID for this department: "));
-            Faculty faculty = findFaculty(facultyId);
+            int facultyName = Integer.parseInt(reader.readLine("Enter Faculty name for this department: "));
+            Faculty faculty = findFaculty(facultyName);
 
             String headOfDepartment = reader.readLine("Head of department: ");
+
             int roomNumber = Integer.parseInt(reader.readLine("Room number: "));
 
-            departmentRegistry.addDepartment(new Department(id, name, faculty, headOfDepartment, roomNumber));
-            System.out.println("Department added successfully.");
+            Department department = new Department(id, name, faculty, headOfDepartment, roomNumber);
+
+            departmentRegistry.addDepartment(department);
+
+            universityRegistry.getUniversity().addDepartment(department);
+
+            System.out.println("Department added successfully and attached to university.");
+
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
+
 
     private static void removeDepartment(LineReader reader, String role) {
         if (!role.equals("manager")) {
@@ -301,7 +350,8 @@ public class Main {
             System.out.println("Editing department. Press Enter to keep current value.");
 
             String name = reader.readLine("Name (" + dept.getDepartmentName() + "): ");
-            if (!name.isBlank()) dept.setDepartmentName(name);
+            if (!name.isBlank())
+                dept.setDepartmentName(name);
 
             String facultyIdStr = reader.readLine("New Faculty ID (Current: " + dept.getFaculty().getFacultyName() + "): ");
             if (!facultyIdStr.isBlank()) {
@@ -341,13 +391,70 @@ public class Main {
             String formOfEducation = reader.readLine("Form of Education: ");
             String studentStatus = reader.readLine("Student status: ");
 
-            studentRegistry.addStudent(new Student(idPerson, pib, birthDate, email, phoneNumber,
-                    gradeBookId, course, group, enrollmentYear, formOfEducation, studentStatus));
-            System.out.println("Student added successfully.");
+            int facultyName = Integer.parseInt(reader.readLine("Faculty name: "));
+            Faculty faculty = findFaculty(facultyName);
+
+            Student student = new Student(idPerson, pib, birthDate, email, phoneNumber,
+                    gradeBookId, course, faculty, group, enrollmentYear,
+                    formOfEducation, studentStatus);
+
+            studentRegistry.addStudent(student);
+
+            faculty.addStudent(student);
+
+            System.out.println("Student added and attached to faculty.");
+
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
+    private static void transferStudent(LineReader reader) {
+        try {
+            int gradeBookId = Integer.parseInt(reader.readLine("Enter GradeBook ID of student: "));
+            Student student = studentRegistry.findStudentByGradeBook(gradeBookId);
+
+            System.out.println("Current Faculty: " + student.getFaculty().getFacultyName());
+            System.out.println("Current Group: " + student.getGroup());
+            System.out.println("Current Course: " + student.getCourse());
+
+            String transferDeptStr = reader.readLine("Enter new Department name to transfer: ");
+            if (!transferDeptStr.isBlank()) {
+                int newDeptName = Integer.parseInt(transferDeptStr);
+                Department newDept = departmentRegistry.findDepartmentById(newDeptName);
+
+                student.getFaculty().removeStudent(student);
+
+                // Прив'язуємо студента до нового факультету кафедри
+                student.setFaculty(newDept.getFaculty());
+                newDept.getFaculty().addStudent(student);
+
+                System.out.println("Student transferred to department: " + newDept.getDepartmentName() +
+                        " | Faculty: " + newDept.getFaculty().getFacultyName());
+            }
+
+            // Зміна групи
+            String groupStr = reader.readLine("Enter new group number (or Enter to skip): ");
+            if (!groupStr.isBlank()) {
+                int newGroup = Integer.parseInt(groupStr);
+                student.setGroup(newGroup);
+                System.out.println("Student group changed to: " + newGroup);
+            }
+
+            // Зміна курсу
+            String courseStr = reader.readLine("Enter new course (or Enter to skip): ");
+            if (!courseStr.isBlank()) {
+                int newCourse = Integer.parseInt(courseStr);
+                student.setCourse(newCourse);
+                System.out.println("Student course changed to: " + newCourse);
+            }
+
+            System.out.println("Transfer and updates completed successfully.");
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
     private static void editStudent(LineReader reader, String role) {
         if (!role.equals("manager")) {
             System.out.println("No permission");
@@ -377,6 +484,44 @@ public class Main {
             System.out.println("Error: " + e.getMessage());
         }
     }
+    private static void addTeacher(LineReader reader, String role) {
+        if (!role.equals("manager")) {
+            System.out.println("No permission");
+            return;
+        }
+
+        try {
+            int idPerson = Integer.parseInt(reader.readLine("Person ID: "));
+            String pib = reader.readLine("Full Name: ");
+            String birthDate = reader.readLine("Birth Date (YYYYMMDD): ");
+            String email = reader.readLine("Email: ");
+            int phoneNumber = Integer.parseInt(reader.readLine("Phone Number: "));
+            int teacherId = Integer.parseInt(reader.readLine("Teacher ID: "));
+            String position = reader.readLine("Position: ");
+            String academicDegree = reader.readLine("Academic Degree: ");
+            String academicRank = reader.readLine("Academic Rank: ");
+            String hireDate = reader.readLine("Hire Date (YYYYMMDD): ");
+
+            System.out.print("Full Time Equivalent: ");
+            String input = reader.readLine().replace(',', '.');
+            double fullTimeEquivalent = Double.parseDouble(input);
+
+            int deptId = Integer.parseInt(reader.readLine("Department ID: "));
+            Department department = departmentRegistry.findDepartmentById(deptId);
+
+
+            Teacher teacher = new Teacher(idPerson, pib, birthDate, email, phoneNumber,
+                    teacherId, position, department, academicDegree, academicRank, hireDate, fullTimeEquivalent);
+
+            teacherRegistry.addTeacher(teacher);
+            department.addTeacher(teacher);
+
+            System.out.println("Teacher added and attached to department: " + department.getDepartmentName());
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
 
     private static void removeStudent(LineReader reader, String role) {
         if (!role.equals("manager")) {
@@ -391,16 +536,6 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
-    }
-
-    private static void searchStudent(LineReader reader) {
-        String pib = reader.readLine("Enter your pib for search: ");
-
-        studentRegistry.findByPib(pib)
-                .ifPresentOrElse(
-                        student -> System.out.println("Знайдено: " + student),
-                        () -> System.out.println("Student not found.")
-                );
     }
 
     private static Faculty findFaculty(int id) {

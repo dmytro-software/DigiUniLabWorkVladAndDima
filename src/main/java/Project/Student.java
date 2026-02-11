@@ -2,14 +2,16 @@ package Project;
 public class Student extends Person {
     private final int grateBookId;
     private int course;
+    private Faculty faculty;
     private int group;
     private final int enrollmentYear;
     private String formOfEducation;
     private String studentStatus;
 
-    public Student(int idPerson, String pib, String birthDate, String email, int phoneNumber, int grateBookId, int course, int group, int  enrollmentYear, String formOfEducation, String studentStatus) {
+    public Student(int idPerson, String pib, String birthDate, String email, int phoneNumber, int grateBookId, int course, Faculty faculty, int group, int  enrollmentYear, String formOfEducation, String studentStatus) {
         super(idPerson, pib, birthDate, email, phoneNumber);
         this.course = course;
+        this.faculty = faculty;
         this.group = group;
         this.grateBookId = grateBookId;
         this.enrollmentYear = enrollmentYear;
@@ -23,6 +25,14 @@ public class Student extends Person {
 
     public int getCourse() {
         return course;
+    }
+
+    public Faculty getFaculty(){
+        return  faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
     }
 
     public void setCourse(int course) {

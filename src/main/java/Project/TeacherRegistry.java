@@ -32,7 +32,7 @@ public class TeacherRegistry {
                 return;
             }
         }
-        throw new IllegalArgumentException("КАФЕДРУ НЕ ЗНАЙДЕНО");
+        throw new IllegalArgumentException("TEACHER НЕ ЗНАЙДЕНО");
     }
 
     public void editTeacher(int teacherId,

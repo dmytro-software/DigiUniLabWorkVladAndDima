@@ -3,16 +3,18 @@ package Project;
 public class Teacher extends Person{
     private final int teacherId;
     private String position;
+    private Department department;
     private String academicDegree;
     private String academicRank;
     private String hireDate;
     private double fullTimeEquivalent;
 
     public Teacher(int idPerson, String pib, String birthDate, String email,
-                   int phoneNumber, int teacherId, String position, String academicDegree, String academicRank, String hireDate, double fullTimeEquivalent) {
+                   int phoneNumber, int teacherId, String position, Department department, String academicDegree, String academicRank, String hireDate, double fullTimeEquivalent) {
         super(idPerson, pib, birthDate, email, phoneNumber);
         this.teacherId = teacherId;
         this.position = position;
+        this.department = department;
         this.academicDegree = academicDegree;
         this.academicRank = academicRank;
         this.hireDate = hireDate;
@@ -29,6 +31,14 @@ public class Teacher extends Person{
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
     public String getAcademicDegree() {

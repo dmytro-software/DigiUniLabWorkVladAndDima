@@ -3,9 +3,8 @@ package Project;
 public class UniversityRegistry {
 
     private University university;
-    private int numOfUniversities;
 
-    public UniversityRegistry() {
+    public void setUniversity(University university) {
         this.university = university;
     }
 
@@ -15,9 +14,6 @@ public class UniversityRegistry {
 
     @Override
     public String toString() {
-        return "UniversityRegistry{" +
-                "university=" + university +
-                ", numOfUniversities=" + numOfUniversities +
-                '}';
+        return university.toString();
     }
 }
