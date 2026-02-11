@@ -96,37 +96,32 @@ public class Faculty {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        // Шапка факультету
-        sb.append("\n╔══════════════════════════════════════════════════════╗\n");
-        sb.append(String.format("║ ФАКУЛЬТЕТ №%-5d                                 ║\n", idFaculty));
-        sb.append("╠══════════════════════════════════════════════════════╣\n");
 
-        // Основні дані
+        sb.append("============================================================");
+        sb.append(String.format(String.valueOf(idFaculty)));
+        sb.append("============================================================");
+
         sb.append(String.format("  Повна назва:  %s\n", facultyName));
         sb.append(String.format("  Абревіатура:  %s\n", facultyShortName));
         sb.append(String.format("  Декан:        %s\n", headOfFaculty));
         sb.append(String.format("  Контакти:     %s\n", contactsOfFaculty));
 
-        // Статистика
         sb.append("------------------------------------------------------\n");
         sb.append(String.format("  Студентів зареєстровано: %d\n", numberOfStudents));
         sb.append("------------------------------------------------------\n");
 
-        // Список студентів
         sb.append("  СПИСОК СТУДЕНТІВ:\n");
         if (numberOfStudents == 0) {
-            sb.append("    [ на даний момент студентів немає ]\n");
+            sb.append("На даний момент студентів немає");
         } else {
             for (int i = 0; i < numberOfStudents; i++) {
-                // Використовуємо методи getPib() та getGroup() класу Student
+
                 sb.append(String.format("    %2d. %-25s | Група: %s\n",
                         (i + 1),
                         students[i].getPib(),
                         students[i].getGroup()));
             }
         }
-
-        sb.append("╚══════════════════════════════════════════════════════╝\n");
-
+        sb.append("============================================================");
         return sb.toString();
     }}
