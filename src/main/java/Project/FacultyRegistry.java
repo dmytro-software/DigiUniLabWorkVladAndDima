@@ -45,7 +45,8 @@ public class FacultyRegistry {
                             String facultyName,
                             String facultyShortName,
                             String headOfFaculty,
-                            String contactsOfFaculty) {
+                            String email,
+                            String phone) {
 
         for (int i = 0; i < numOfFaculties; i++) {
             if (faculties[i].getIdFaculty() == id) {
@@ -53,7 +54,8 @@ public class FacultyRegistry {
                 faculties[i].setFacultyName(facultyName);
                 faculties[i].setFacultyShortName(facultyShortName);
                 faculties[i].setHeadOfFaculty(headOfFaculty);
-                faculties[i].setContactsOfFaculty(contactsOfFaculty);
+                faculties[i].setEmail(email);
+                faculties[i].setPhoneNumber(phone);
 
                 return;
             }

@@ -74,9 +74,6 @@ public class StudentRegistry {
     }
 
     public Student[] findByPib(String pib) {
-        if (pib.isEmpty() || pib.isBlank() || pib == null) {
-            throw new IllegalArgumentException("EMPTY");
-        }
         Student[] newArray = new Student[numberOfStudents];
         int foundCount = 0;
         for (int i = 0; i < numberOfStudents; i++) {
@@ -84,15 +81,10 @@ public class StudentRegistry {
                 newArray[foundCount++] = students[i];
             }
         }
-
-        System.out.println("Результат по пошуку ПІБ: " + pib);
         return Arrays.copyOf(newArray, foundCount);
     }
 
     public Student[] findByGroup(int group) {
-        if (group < 0 || group > 6) {
-            throw new IllegalArgumentException("Cannot be higher 6 or lower 0");
-        }
         Student[] newArray = new Student[numberOfStudents];
         int foundCount = 0;
         for (int i = 0; i < numberOfStudents; i++) {
@@ -100,14 +92,10 @@ public class StudentRegistry {
                 newArray[foundCount++] = students[i];
             }
         }
-        System.out.println("Студенти групи " + group);
         return Arrays.copyOf(newArray, foundCount);
     }
 
     public Student[] findByCourse(int course) {
-        if (course < 0 || course > 4) {
-            throw new IllegalArgumentException("Cannot be higher 4 or lower 0");
-        }
         Student[] newArray = new Student[numberOfStudents];
         int foundCount = 0;
         for (int i = 0; i < numberOfStudents; i++) {
@@ -115,7 +103,6 @@ public class StudentRegistry {
                 newArray[foundCount++] = students[i];
             }
         }
-        System.out.println("Студенти курсу " + course);
         return Arrays.copyOf(newArray, foundCount);
     }
 

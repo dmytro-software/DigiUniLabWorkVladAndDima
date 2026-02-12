@@ -8,19 +8,21 @@ public class Faculty {
     private String facultyName;
     private String facultyShortName;
     private String headOfFaculty;
-    private String contactsOfFaculty;
+    private String email;
+    private String phoneNumber;
 
 
     private Student[] students = new Student[1];
     private int numberOfStudents;
 
     public Faculty(int idFaculty, String facultyName, String facultyShortName,
-                   String headOfFaculty, String contactsOfFaculty) {
+                   String headOfFaculty, String email, String phoneNumber) {
         this.idFaculty = idFaculty;
         this.facultyName = facultyName;
         this.facultyShortName = facultyShortName;
         this.headOfFaculty = headOfFaculty;
-        this.contactsOfFaculty = contactsOfFaculty;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
 
@@ -80,16 +82,27 @@ public class Faculty {
         return headOfFaculty;
     }
 
+    public String getEmail() { return email; }
+
+    public String getPhoneNumber() { return phoneNumber; }
+
     public void setHeadOfFaculty(String headOfFaculty) {
         this.headOfFaculty = headOfFaculty;
     }
 
-    public String getContactsOfFaculty() {
-        return contactsOfFaculty;
+    public void setEmail(String email) {
+        if (email == null || !email.contains("@") || !email.contains(".")) {
+            throw new IllegalArgumentException("Некоректний формат Email (має містити @ та крапку)");
+        }
+        this.email = email;
     }
 
-    public void setContactsOfFaculty(String contactsOfFaculty) {
-        this.contactsOfFaculty = contactsOfFaculty;
+    public void setPhoneNumber(String phoneNumber) {
+        // Перевірка: тільки цифри, довжина від 10 до 13 символів (наприклад, +380...)
+        if (phoneNumber == null || !phoneNumber.matches("\\+?\\d+")) {
+            throw new IllegalArgumentException("Некоректний номер телефону (має бути від 10 до 13 цифр)");
+        }
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
@@ -104,7 +117,8 @@ public class Faculty {
         sb.append(String.format("  Повна назва:  %s\n", facultyName));
         sb.append(String.format("  Абревіатура:  %s\n", facultyShortName));
         sb.append(String.format("  Декан:        %s\n", headOfFaculty));
-        sb.append(String.format("  Контакти:     %s\n", contactsOfFaculty));
+        sb.append(String.format("  Контакти:     %s\n", email));
+        sb.append(String.format("  Контакти:     %s\n", phoneNumber));
 
         sb.append("------------------------------------------------------\n");
         sb.append(String.format("  Студентів зареєстровано: %d\n", numberOfStudents));
