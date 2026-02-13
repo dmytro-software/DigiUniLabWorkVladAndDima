@@ -75,7 +75,8 @@ public class Teacher extends Person{
 
     @Override
     public String toString() {
-        return super.toString() + " | [Викладач] ID: " + teacherId +
+        return super.toString() +
+                "\n | ID: " + teacherId +
                 "\n | Посада: " + position +
                 "\n | Ступінь: " + academicDegree +
                 "\n | Звання: " + academicRank +

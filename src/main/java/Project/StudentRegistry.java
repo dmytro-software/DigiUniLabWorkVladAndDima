@@ -18,25 +18,9 @@ public class StudentRegistry {
         students[numberOfStudents++] = student;
     }
 
-    public void removeStudent(int id) {
-        for (int i = 0; i < numberOfStudents; i++) {
-            //шукаємо за айді
-            if (students[i].getIdPerson() == id) {
-                Student[] newArray = new Student[numberOfStudents - 1];
-                // пояснення для себе
-                // копіювання все до вибраного елементу
-                System.arraycopy(students, 0, newArray, 0, i);
-                // копіювання все після вибраного елементу
-                System.arraycopy(students, i + 1, newArray, i, numberOfStudents - i - 1);
-
-                students = newArray;
-                numberOfStudents--;
-                return;
-            }
-        }
-        throw new IllegalArgumentException("Student not found");
+    public void setNumberOfStudents(int numberOfStudents) {
+        this.numberOfStudents = numberOfStudents;
     }
-
 
     public void editStudent(int grateBookId,
                             int course,
@@ -45,7 +29,7 @@ public class StudentRegistry {
                             String studentStatus) {
 
         for (int i = 0; i < numberOfStudents; i++) {
-            if (students[i].getGrateBookId() == grateBookId) {
+            if (students[i].getGradeBookId() == grateBookId) {
 
                 students[i].setCourse(course);
                 students[i].setGroup(group);
@@ -58,14 +42,25 @@ public class StudentRegistry {
         throw new IllegalArgumentException("Student not found");
     }
 
-    public Student findStudentByGradeBook(int id) {
+    public Student findStudentByGradeBook(int gradeBookId) {
         for (Student s : students) {
-            if (s.getGrateBookId() == id) {
+            if (s != null && s.getGradeBookId() == gradeBookId) {
                 return s;
             }
         }
-        throw new IllegalArgumentException("Student with GradeBook ID " + id + " not found.");
+        return null;
     }
+
+    public void removeStudent(int gradeBookId) {
+        for (int i = 0; i < numberOfStudents; i++) {
+            if (students[i] != null && students[i].getGradeBookId() == gradeBookId) {
+                System.arraycopy(students, i + 1, students, i, numberOfStudents - i - 1);
+                students[--numberOfStudents] = null;
+                return;
+            }
+        }
+    }
+
 
     public void resizeArray(int i) {
         Student[] newarray = new Student[i];

@@ -24,6 +24,10 @@ public abstract class Person {
         return pib;
     }
 
+    public void setPib(String pib) {
+        this.pib = pib;
+    }
+
     public String getBirthDate() {
         return birthDate;
     }
@@ -32,8 +36,16 @@ public abstract class Person {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public int getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public void setPhoneNumber(int phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override

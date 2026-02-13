@@ -1,14 +1,21 @@
 package Project;
 
-import java.util.Arrays;
-
 public class TeacherRegistry {
     private Teacher[] teachers;
     private int numberOfTeachers;
 
     public TeacherRegistry() {
-        this.teachers = new Teacher[10];
+        this.teachers = new Teacher[1];
     }
+
+    public Teacher[] getTeachers() {
+        return teachers.clone();
+    }
+
+    public int getNumberOfTeachers() {
+        return numberOfTeachers;
+    }
+
     public void addTeacher(Teacher teacher){
         if(numberOfTeachers >= teachers.length){
             resizeArray(numberOfTeachers + 1);
@@ -16,42 +23,35 @@ public class TeacherRegistry {
         teachers[numberOfTeachers++] = teacher;
     }
 
-    public void removeTeacher(int id) {
+    public void removeTeacher(int teacherId) {
         for (int i = 0; i < numberOfTeachers; i++) {
-            //шукаємо за айді
-            if (teachers[i].getIdPerson() == id) {
-                Teacher[] newArray = new Teacher[numberOfTeachers - 1];
-                // пояснення для себе
-                // копіювання все до вибраного елементу
-                System.arraycopy(teachers, 0, newArray, 0, i);
-                // копіювання все після вибраного елементу
-                System.arraycopy(teachers, i + 1, newArray, i, numberOfTeachers - i - 1);
-
-                teachers = newArray;
-                numberOfTeachers--;
+            if (teachers[i].getTeacherId() == teacherId) {
+                System.arraycopy(teachers, i + 1, teachers, i, numberOfTeachers - i - 1);
+                teachers[--numberOfTeachers] = null;
                 return;
             }
         }
-        throw new IllegalArgumentException("TEACHER НЕ ЗНАЙДЕНО");
+        throw new IllegalArgumentException("Teacher not found with ID: " + teacherId);
     }
 
-    public void editTeacher(int teacherId,
-                            String position,
-                            String academicDegree,
-                            String academicRank,
-                            String hireDate,
-                            double fullTimeEquivalent){
-        for(int i = 0; i < numberOfTeachers; i++) {
-            if(teachers[i].getTeacherId() == teacherId){
-                teachers[i].setPosition(position);
-                teachers[i].setAcademicDegree(academicDegree);
-                teachers[i].setAcademicRank(academicRank);
-                teachers[i].setHireDate(hireDate);
-                teachers[i].setFullTimeEquivalent(fullTimeEquivalent);
-                return;
+    public void editTeacher(int teacherId, String position, String academicDegree,
+                            String academicRank, String hireDate, Double fullTimeEquivalent,
+                            Department department) {
+        Teacher teacher = findTeacherById(teacherId);
+        if (position != null) teacher.setPosition(position);
+        if (academicDegree != null) teacher.setAcademicDegree(academicDegree);
+        if (academicRank != null) teacher.setAcademicRank(academicRank);
+        if (hireDate != null) teacher.setHireDate(hireDate);
+        if (fullTimeEquivalent != null) teacher.setFullTimeEquivalent(fullTimeEquivalent);
+        if (department != null) teacher.setDepartment(department);
+    }
+    public Teacher findTeacherById(int teacherId) {
+        for (int i = 0; i < numberOfTeachers; i++) {
+            if (teachers[i].getTeacherId() == teacherId) {
+                return teachers[i];
             }
-            throw new IllegalArgumentException("Teacher not found");
         }
+        throw new IllegalArgumentException("Teacher not found with ID: " + teacherId);
     }
 
     public Teacher[] findByPib(String pib) {
@@ -82,16 +82,9 @@ public class TeacherRegistry {
         teachers = newarray;
     }
 
-    public Teacher[] getTeachers() {
-        return teachers.clone();
-    }
-
-    public int getNumberOfTeachers() {
-        return numberOfTeachers;
-    }
-
     @Override
     public String toString() {
+
         String result = " РЕЄСТР ВЧИТЕЛІВ (Всього: " + numberOfTeachers + ") \n";
         for (int i = 0; i < numberOfTeachers; i++) {
             result = result + (i + 1) + ". " + teachers[i].toString() + "\n";

@@ -3,90 +3,111 @@ package Project;
 import java.util.Arrays;
 
 public class FacultyRegistry {
+    private Faculty faculty;
 
-    private Faculty[] faculties;
-    private int numOfFaculties;
+    private Faculty[] faculties;  // масив факультетів
+    private int numOfFaculties;   // фактична кількість
 
+    // Конструктор без параметрів
     public FacultyRegistry() {
-        this.faculties = new Faculty[1];
+        this.faculties = new Faculty[1]; // початковий розмір
+        this.numOfFaculties = 0;
+
     }
 
+    public Faculty getFaculty() {
+        return faculty;
+    }
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
 
-    //Метод для створення факультету, щоб занести його в масив
-    public void addFaculty(Faculty faculty){
-        //якщо число факультетів більша за розмір масиву то ми його розширюємо
-        if (numOfFaculties >= faculties.length){
-            resizeArray(numOfFaculties + 1);
+    // Додати факультет
+    public void addFaculty(Faculty faculty) {
+        if (numOfFaculties >= faculties.length) {
+            resizeArray(faculties.length * 2); // збільшуємо масив в 2 рази
         }
         faculties[numOfFaculties++] = faculty;
     }
 
-    //метод щоб видалити факультет, шляхом знаходження по айді
-    public void removeFaculty(int id) {
+    // Видалити факультет за ID
+    public boolean removeFaculty(int id) {
         for (int i = 0; i < numOfFaculties; i++) {
-            //шукаємо за айді
             if (faculties[i].getIdFaculty() == id) {
-                Faculty[] newArray = new Faculty[numOfFaculties - 1];
-                // пояснення для себе
-                // копіювання все до вибраного елементу
-                System.arraycopy(faculties, 0, newArray, 0, i);
-                // копіювання все після вибраного елементу
-                System.arraycopy(faculties, i + 1, newArray, i, numOfFaculties - i - 1);
-
-                faculties = newArray;
+                // зсуваємо всі елементи після видаленого на одну позицію вліво
+                for (int j = i; j < numOfFaculties - 1; j++) {
+                    faculties[j] = faculties[j + 1];
+                }
+                faculties[numOfFaculties - 1] = null; // очищуємо останній
                 numOfFaculties--;
-                return;
+                return true;
             }
         }
-        throw new IllegalArgumentException("ФАКУЛЬТЕТ НЕ ЗНАЙДЕНО");
+        return false; // факультет не знайдено
     }
 
-    public void editFaculty(int id,
-                            String facultyName,
-                            String facultyShortName,
-                            String headOfFaculty,
-                            String email,
-                            String phone) {
-
+    // Редагувати факультет
+    public boolean editFaculty(int id,
+                               String facultyName,
+                               String facultyShortName,
+                               String headOfFaculty,
+                               String contactsOfFaculty) {
         for (int i = 0; i < numOfFaculties; i++) {
             if (faculties[i].getIdFaculty() == id) {
-
-                faculties[i].setFacultyName(facultyName);
-                faculties[i].setFacultyShortName(facultyShortName);
-                faculties[i].setHeadOfFaculty(headOfFaculty);
-                faculties[i].setEmail(email);
-                faculties[i].setPhoneNumber(phone);
-
-                return;
+                if (facultyName != null && !facultyName.isBlank())
+                    faculties[i].setFacultyName(facultyName);
+                if (facultyShortName != null && !facultyShortName.isBlank())
+                    faculties[i].setFacultyShortName(facultyShortName);
+                if (headOfFaculty != null && !headOfFaculty.isBlank())
+                    faculties[i].setHeadOfFaculty(headOfFaculty);
+                if (contactsOfFaculty != null && !contactsOfFaculty.isBlank())
+                    faculties[i].setContactsOfFaculty(contactsOfFaculty);
+                return true;
             }
         }
-        throw new IllegalArgumentException("Faculty not found");
+        return false;
     }
 
-    //метод для збільшення масиву
-    private void resizeArray(int i) {
-        Faculty[] newArray = new Faculty[i];
-        System.arraycopy(faculties,0,newArray,0,faculties.length);
-        faculties = newArray;
+    // Пошук факультету за ID
+    public Faculty findFacultyById(int id) {
+        for (int i = 0; i < numOfFaculties; i++) {
+            if (faculties[i].getIdFaculty() == id) {
+                return faculties[i];
+            }
+        }
+        return null; // повертаємо null, якщо не знайдено
     }
 
-    //повернути масив факультетів(клонований)
+    // Пошук факультету за назвою
+    public Faculty findFacultyByName(String name) {
+        for (int i = 0; i < numOfFaculties; i++) {
+            if (faculties[i].getFacultyName().equalsIgnoreCase(name)) {
+                return faculties[i];
+            }
+        }
+        return null;
+    }
+
+    // Геттер для масиву факультетів
     public Faculty[] getFaculties() {
-        return faculties.clone();
+        return Arrays.copyOf(faculties, numOfFaculties);
     }
 
     public int getNumOfFaculties() {
         return numOfFaculties;
     }
 
+    // Збільшення розміру масиву
+    private void resizeArray(int newSize) {
+        faculties = Arrays.copyOf(faculties, newSize);
+    }
+
     @Override
     public String toString() {
-        String result = "РЕЄСТР КАФЕДР (Всього:" + numOfFaculties + ") \n";
-
-        for(int i = 0 ;i<numOfFaculties;i++){
-            result = result + (i + 1) + ". " + faculties[i].toString() + "\n";
-            result = result + "--------------------------------------------------\n";
+        StringBuilder sb = new StringBuilder("FacultyRegistry:\n");
+        for (int i = 0; i < numOfFaculties; i++) {
+            sb.append(faculties[i].toString()).append("\n");
         }
-        return result;
+        return sb.toString();
     }
 }
