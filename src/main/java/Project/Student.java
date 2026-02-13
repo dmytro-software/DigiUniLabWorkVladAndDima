@@ -7,8 +7,10 @@ public class Student extends Person {
     private final int enrollmentYear;
     private String formOfEducation;
     private String studentStatus;
+    private Department department;
 
-    public Student(int idPerson, String pib, String birthDate, String email, int phoneNumber, int gradeBookId, int course, Faculty faculty, int group, int  enrollmentYear, String formOfEducation, String studentStatus) {
+    public Student(int idPerson, String pib, String birthDate, String email, int phoneNumber, int gradeBookId, int course,
+                   Faculty faculty, int group, int  enrollmentYear, String formOfEducation, String studentStatus) {
         super(idPerson, pib, birthDate, email, phoneNumber);
         this.course = course;
         this.faculty = faculty;
@@ -17,6 +19,14 @@ public class Student extends Person {
         this.enrollmentYear = enrollmentYear;
         this.formOfEducation = formOfEducation;
         this.studentStatus = studentStatus;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
     public int getGradeBookId() {

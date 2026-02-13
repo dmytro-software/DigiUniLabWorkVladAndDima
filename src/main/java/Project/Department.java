@@ -23,7 +23,6 @@ public class Department {
         this.faculty = faculty;
         this.headOfDepartment = headOfDepartment;
         this.roomNumberOfDepartment = roomNumberOfDepartment;
-        faculty.addDepartment(this);
     }
 
     public int getIdDepartment() {
@@ -87,23 +86,45 @@ public class Department {
         }
     }
 
-    public void editTeacher(int teacherId, String position, String academicDegree,
-                            String academicRank, String hireDate, Double fullTimeEquivalent,
-                            Department department) {
-        Teacher teacher = findTeacherById(teacherId);
-        if (position != null)
-            teacher.setPosition(position);
-        if (academicDegree != null)
-            teacher.setAcademicDegree(academicDegree);
-        if (academicRank != null)
-            teacher.setAcademicRank(academicRank);
-        if (hireDate != null)
-            teacher.setHireDate(hireDate);
-        if (fullTimeEquivalent != null)
-            teacher.setFullTimeEquivalent(fullTimeEquivalent);
-        if (department != null)
-            teacher.setDepartment(department);
+    public void editTeacher(int teacherId, String pib, String email, Integer phoneNumber, String position, String academicDegree,
+                            String academicRank, String hireDate, Double fullTimeEquivalent, Department department) {
+        for (int i = 0; i < numberOfTeachers; i++) {
+            if (teachers[i].getTeacherId() == teacherId) {
+                Teacher t = teachers[i];
+
+                if (pib != null && !pib.isBlank()) {
+                    t.setPib(pib);
+                }
+                if (email != null && !email.isBlank()) {
+                    t.setEmail(email);
+                }
+                if (phoneNumber != null) {
+                    t.setPhoneNumber(phoneNumber);
+                }
+                if (position != null) {
+                    t.setPosition(position);
+                }
+                if (academicDegree != null) {
+                    t.setAcademicDegree(academicDegree);
+                }
+                if (academicRank != null) {
+                    t.setAcademicRank(academicRank);
+                }
+                if (hireDate != null) {
+                    t.setHireDate(hireDate);
+                }
+                if (fullTimeEquivalent != null) {
+                    t.setFullTimeEquivalent(fullTimeEquivalent);
+                }
+                if (department != null) {
+                    t.setDepartment(department);
+                }
+
+                return;
+            }
+        }
     }
+
 
     public void addStudent(Student student) {
         if (numberOfStudents >= students.length) {
@@ -113,14 +134,20 @@ public class Department {
     }
 
 
-    public void editStudent(int gradeBookId, String pib, Integer course, Integer group,
-                               Faculty faculty, String formOfEducation, String studentStatus) {
+    public void editStudent(int gradeBookId, String pib, Integer course, Integer group, Faculty faculty, String formOfEducation,
+                            String studentStatus,String email, Integer phoneNumber) {
         for (int i = 0; i < numberOfStudents; i++) {
             if (students[i].getGradeBookId() == gradeBookId) {
                 Student s = students[i];
 
                 if (pib != null && !pib.isBlank()) {
                     s.setPib(pib);
+                }
+                if (email != null && !email.isBlank()) {
+                    s.setEmail(email);
+                }
+                if (phoneNumber != null) {
+                    s.setPhoneNumber(phoneNumber);
                 }
                 if (course != null) {
                     s.setCourse(course);
@@ -142,20 +169,23 @@ public class Department {
             }
         }
     }
-    public boolean removeStudent(int gradeBookId) {
+
+    public void removeStudent(Student student) {
+        boolean found = false;
         for (int i = 0; i < numberOfStudents; i++) {
-            if (students[i].getGradeBookId() == gradeBookId) {
+            if (students[i] == student) {
+                found = true;
                 // Зсуваємо всі елементи після видаленого на одну позицію вліво
-                for (int j = i; j < numberOfStudents - 1; j++) {
-                    students[j] = students[j + 1];
-                }
-                students[numberOfStudents - 1] = null; // Очищаємо останній елемент
-                numberOfStudents--;
-                return true; // Успішно видалено
+                System.arraycopy(students, i + 1, students, i, numberOfStudents - i - 1);
+                students[--numberOfStudents] = null; // Очищаємо останній елемент
+                break;
             }
         }
-        return false; // Студента не знайдено
+        if (!found) {
+            System.out.println("Student not found in this department.");
+        }
     }
+
 
     public Teacher findTeacherById(int teacherId) {
         for (int i = 0; i < numberOfTeachers; i++) {
