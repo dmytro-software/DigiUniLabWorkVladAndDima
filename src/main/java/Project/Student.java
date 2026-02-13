@@ -1,6 +1,6 @@
 package Project;
 public class Student extends Person {
-    private final int grateBookId;
+    private final int gradeBookId;
     private int course;
     private Faculty faculty;
     private int group;
@@ -8,19 +8,19 @@ public class Student extends Person {
     private String formOfEducation;
     private String studentStatus;
 
-    public Student(int idPerson, String pib, String birthDate, String email, int phoneNumber, int grateBookId, int course, Faculty faculty, int group, int  enrollmentYear, String formOfEducation, String studentStatus) {
+    public Student(int idPerson, String pib, String birthDate, String email, int phoneNumber, int gradeBookId, int course, Faculty faculty, int group, int  enrollmentYear, String formOfEducation, String studentStatus) {
         super(idPerson, pib, birthDate, email, phoneNumber);
         this.course = course;
         this.faculty = faculty;
         this.group = group;
-        this.grateBookId = grateBookId;
+        this.gradeBookId = gradeBookId;
         this.enrollmentYear = enrollmentYear;
         this.formOfEducation = formOfEducation;
         this.studentStatus = studentStatus;
     }
 
-    public int getGrateBookId() {
-        return grateBookId;
+    public int getGradeBookId() {
+        return gradeBookId;
     }
 
     public int getCourse() {
@@ -67,10 +67,11 @@ public class Student extends Person {
         this.studentStatus = studentStatus;
     }
 
+
     @Override
     public String toString() {
         return super.toString() +
-                " | Заліковка: " + grateBookId +
+                "   | Заліковка: " + gradeBookId +
                 "\n | Курс: " + course +
                 "\n | Група: " + group +
                 "\n | Рік: " + enrollmentYear +

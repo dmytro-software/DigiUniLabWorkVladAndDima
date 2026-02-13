@@ -10,8 +10,12 @@ public class Department {
     private String headOfDepartment;
     private int roomNumberOfDepartment;
 
+
     private Teacher[] teachers = new Teacher[1];
     private int numberOfTeachers;
+
+    private Student[] students = new Student[1];
+    private int numberOfStudents;
 
     public Department(int idDepartment, String departmentName, Faculty faculty, String headOfDepartment, int roomNumberOfDepartment) {
         this.idDepartment = idDepartment;
@@ -19,6 +23,7 @@ public class Department {
         this.faculty = faculty;
         this.headOfDepartment = headOfDepartment;
         this.roomNumberOfDepartment = roomNumberOfDepartment;
+        faculty.addDepartment(this);
     }
 
     public int getIdDepartment() {
@@ -59,32 +64,165 @@ public class Department {
 
     public void addTeacher(Teacher teacher) {
         if (numberOfTeachers >= teachers.length) {
-            Teacher[] newArray = new Teacher[numberOfTeachers + 1];
-            System.arraycopy(teacher, 0, newArray, 0, teachers.length);
+            Teacher[] newArray = new Teacher[teachers.length + 1];
+            System.arraycopy(teachers, 0, newArray, 0, teachers.length);
             teachers = newArray;
         }
         teachers[numberOfTeachers++] = teacher;
+
     }
+
+    public void removeTeacher(Teacher teacher) {
+        boolean found = false;
+        for (int i = 0; i < numberOfTeachers; i++) {
+            if (teachers[i] == teacher) {
+                found = true;
+                System.arraycopy(teachers, i + 1, teachers, i, numberOfTeachers - i - 1);
+                teachers[--numberOfTeachers] = null;
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("Teacher not found in this department.");
+        }
+    }
+
+    public void editTeacher(int teacherId, String position, String academicDegree,
+                            String academicRank, String hireDate, Double fullTimeEquivalent,
+                            Department department) {
+        Teacher teacher = findTeacherById(teacherId);
+        if (position != null)
+            teacher.setPosition(position);
+        if (academicDegree != null)
+            teacher.setAcademicDegree(academicDegree);
+        if (academicRank != null)
+            teacher.setAcademicRank(academicRank);
+        if (hireDate != null)
+            teacher.setHireDate(hireDate);
+        if (fullTimeEquivalent != null)
+            teacher.setFullTimeEquivalent(fullTimeEquivalent);
+        if (department != null)
+            teacher.setDepartment(department);
+    }
+
+    public void addStudent(Student student) {
+        if (numberOfStudents >= students.length) {
+            students = Arrays.copyOf(students, numberOfStudents + 1);
+        }
+        students[numberOfStudents++] = student;
+    }
+
+
+    public void editStudent(int gradeBookId, String pib, Integer course, Integer group,
+                               Faculty faculty, String formOfEducation, String studentStatus) {
+        for (int i = 0; i < numberOfStudents; i++) {
+            if (students[i].getGradeBookId() == gradeBookId) {
+                Student s = students[i];
+
+                if (pib != null && !pib.isBlank()) {
+                    s.setPib(pib);
+                }
+                if (course != null) {
+                    s.setCourse(course);
+                }
+                if (group != null) {
+                    s.setGroup(group);
+                }
+                if (faculty != null) {
+                    s.setFaculty(faculty);
+                }
+                if (formOfEducation != null && !formOfEducation.isBlank()) {
+                    s.setFormOfEducation(formOfEducation);
+                }
+                if (studentStatus != null && !studentStatus.isBlank()) {
+                    s.setStudentStatus(studentStatus);
+                }
+
+                return;
+            }
+        }
+    }
+    public boolean removeStudent(int gradeBookId) {
+        for (int i = 0; i < numberOfStudents; i++) {
+            if (students[i].getGradeBookId() == gradeBookId) {
+                // Зсуваємо всі елементи після видаленого на одну позицію вліво
+                for (int j = i; j < numberOfStudents - 1; j++) {
+                    students[j] = students[j + 1];
+                }
+                students[numberOfStudents - 1] = null; // Очищаємо останній елемент
+                numberOfStudents--;
+                return true; // Успішно видалено
+            }
+        }
+        return false; // Студента не знайдено
+    }
+
+    public Teacher findTeacherById(int teacherId) {
+        for (int i = 0; i < numberOfTeachers; i++) {
+            if (teachers[i].getTeacherId() == teacherId) {
+                return teachers[i];
+            }
+        }
+        throw new IllegalArgumentException("Teacher not found with ID: " + teacherId);
+    }
+
+    public Student findStudentByGradeBook(int gradeBookId) {
+        for (Student s : students) {
+            if (s != null && s.getGradeBookId() == gradeBookId) {
+                return s;
+            }
+        }
+        return null;
+    }
+
     public Teacher[] getTeachers() {
         return Arrays.copyOf(teachers, numberOfTeachers);
     }
 
     @Override
     public String toString() {
-        String result = "Department:\n";
-        result += "ID: " + idDepartment + "\n";
-        result += "Name: " + departmentName + "\n";
-        result += "Faculty: " + faculty.getFacultyName() + "\n";
-        result += "Head: " + headOfDepartment + "\n";
-        result += "Room: " + roomNumberOfDepartment + "\n";
-        result += "Teachers:\n";
+        StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < numberOfTeachers; i++) {
-            result += "   - " + teachers[i].getPib() +
-                    " (" + teachers[i].getAcademicDegree() + ")\n";
+        sb.append("============================================================\n");
+        sb.append("Department:\n");
+        sb.append("------------------------------------------------------\n");
+        sb.append("ID: ").append(idDepartment).append("\n");
+        sb.append("Name: ").append(departmentName).append("\n");
+        sb.append("Faculty: ").append(faculty.getFacultyName()).append("\n");
+        sb.append("Head: ").append(headOfDepartment).append("\n");
+        sb.append("Room: ").append(roomNumberOfDepartment).append("\n");
+        sb.append("------------------------------------------------------\n");
+        sb.append("Teachers:\n");
+
+        if (numberOfTeachers == 0) {
+            sb.append("На даний момент викладачів немає\n");
+        } else {
+            for (int i = 0; i < numberOfTeachers; i++) {
+                sb.append("   - ")
+                        .append(teachers[i].getPib())
+                        .append(" (")
+                        .append(teachers[i].getAcademicDegree())
+                        .append(")\n");
+            }
         }
 
-        return result;
-    }
+        sb.append("------------------------------------------------------\n");
+        sb.append("Студентів зареєстровано: ").append(numberOfStudents).append("\n");
+        sb.append("СПИСОК СТУДЕНТІВ:\n");
 
+        if (numberOfStudents == 0) {
+            sb.append("На даний момент студентів немає\n");
+        } else {
+            for (int i = 0; i < numberOfStudents; i++) {
+                sb.append(String.format("    %2d. %-25s | Група: %s\n",
+                        (i + 1),
+                        students[i].getPib(),
+                        students[i].getGroup()));
+            }
+        }
+
+        sb.append("============================================================\n");
+
+        return sb.toString();
+    }
 }
