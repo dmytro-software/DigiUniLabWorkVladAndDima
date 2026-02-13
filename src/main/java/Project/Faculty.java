@@ -69,7 +69,6 @@ public class Faculty {
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        // Перевірка: тільки цифри, довжина від 10 до 13 символів (наприклад, +380...)
         if (phoneNumber == null || !phoneNumber.matches("\\+?\\d+")) {
             throw new IllegalArgumentException("Некоректний номер телефону (має бути від 10 до 13 цифр)");
         }

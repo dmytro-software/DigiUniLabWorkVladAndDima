@@ -1,5 +1,7 @@
 package Project;
 
+import java.util.Arrays;
+
 public class TeacherRegistry {
     private Teacher[] teachers;
     private int numberOfTeachers;

@@ -71,7 +71,7 @@ public class Student extends Person {
     @Override
     public String toString() {
         return super.toString() +
-                "   | Заліковка: " + gradeBookId +
+                "\n  | Заліковка: " + gradeBookId +
                 "\n | Курс: " + course +
                 "\n | Група: " + group +
                 "\n | Рік: " + enrollmentYear +
