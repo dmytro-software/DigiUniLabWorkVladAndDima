@@ -582,11 +582,29 @@ public class Main {
             System.out.println("No permission");
             return;
         }
+
         try {
             int id = Integer.parseInt(reader.readLine("Enter GradeBook ID of student to edit: "));
             Student student = studentRegistry.findStudentByGradeBook(id);
 
+            if (student == null) {
+                System.out.println("Student not found.");
+                return;
+            }
+
             System.out.println("Editing student. Press Enter to keep current value.");
+
+            String pib = reader.readLine("Full Name (" + student.getPib() + "): ");
+            if (!pib.isBlank())
+                student.setPib(pib);
+
+            String email = reader.readLine("Email (" + student.getEmail() + "): ");
+            if (!email.isBlank())
+                student.setEmail(email);
+
+            String phoneStr = reader.readLine("Phone Number (" + student.getPhoneNumber() + "): ");
+            if (!phoneStr.isBlank())
+                student.setPhoneNumber(Integer.parseInt(phoneStr));
 
             String courseStr = reader.readLine("Course (" + student.getCourse() + "): ");
             if (!courseStr.isBlank())
@@ -617,37 +635,23 @@ public class Main {
         }
 
         try {
-            int gradeBookId = Integer.parseInt(reader.readLine("Enter GradeBook ID to remove: "));
+            int gradeBookId = Integer.parseInt(reader.readLine("Enter Grade book ID to remove: "));
+            Student student = studentRegistry.findStudentByGradeBook(gradeBookId);
 
-            // Знаходимо кафедру, в якій є студент
-            Department department = departmentRegistry.getDepartment();
-            if (department == null) {
-                System.out.println("Department not found.");
+            if (student == null) {
+                System.out.println("Student not found");
                 return;
             }
 
-            // Перевіряємо чи студент існує
-            Student student = null;
-            try {
-                student = department.findStudentByGradeBook(gradeBookId);
-            } catch (IllegalArgumentException e) {
-                System.out.println("Student not found.");
-                return;
+            Department deptm = student.getDepartment();
+
+            if (deptm != null) {
+                deptm.removeStudent(student);
             }
 
-            // Видаляємо студента з кафедри
-            boolean removedFromDepartment = department.removeStudent(gradeBookId);
+            studentRegistry.removeStudent(gradeBookId);
+            System.out.println("Student removed successfully from department and registry.");
 
-            // Видаляємо студента з реєстру університету, якщо потрібен глобальний реєстр
-            if (removedFromDepartment) {
-                departmentRegistry.getDepartment().removeStudent(gradeBookId);
-                System.out.println("Student removed successfully from department: " + department.getDepartmentName());
-            } else {
-                System.out.println("Student not found in department.");
-            }
-
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a valid GradeBook ID.");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -661,12 +665,8 @@ public class Main {
         }
 
         try {
-            String idPersonStr = reader.readLine("Person ID: ");
-            if (idPersonStr.isBlank() || !idPersonStr.matches("\\d+")) {
-                System.out.println("Person ID must be a number and not empty.");
-                return;
-            }
-            int idPerson = Integer.parseInt(idPersonStr);
+            int idPerson = generateSixDigitId();
+            System.out.println("Person ID: " + idPerson);
 
             String pib = reader.readLine("Full Name: ");
             if (pib.trim().isEmpty() || !pib.matches("^[a-zA-Zа-яА-ЯіїєґІЇЄҐ'\\s]+$")) {
@@ -690,12 +690,8 @@ public class Main {
             }
             int phoneNumber = Integer.parseInt(phoneStr);
 
-            String teacherIdStr = reader.readLine("Teacher ID: ");
-            if (teacherIdStr.isBlank() || !teacherIdStr.matches("\\d+")) {
-                System.out.println("Teacher ID must be a number.");
-                return;
-            }
-            int teacherId = Integer.parseInt(teacherIdStr);
+            int teacherId = generateSixDigitId();
+            System.out.println("Teacher id: " + teacherId);
 
             String position = reader.readLine("Position: ");
 
@@ -754,34 +750,68 @@ public class Main {
         }
 
         try {
-            int teacherId = Integer.parseInt(reader.readLine("Enter Teacher ID to edit: "));
-            Teacher teacher = teacherRegistry.findTeacherById(teacherId);
+            int id = Integer.parseInt(reader.readLine("Enter Teacher ID to edit: "));
+            Teacher teacher = teacherRegistry.findTeacherById(id);
 
-            System.out.println("Press Enter to keep current value.");
-
-            String position = reader.readLine("Position (" + teacher.getPosition() + "): ");
-            String degree = reader.readLine("Academic Degree (" + teacher.getAcademicDegree() + "): ");
-            String rank = reader.readLine("Academic Rank (" + teacher.getAcademicRank() + "): ");
-            String hireDate = reader.readLine("Hire Date (" + teacher.getHireDate() + "): ");
-
-            String fteStr = reader.readLine("Full Time Equivalent (" + teacher.getFullTimeEquivalent() + "): ");
-            Double fte = fteStr.isBlank() ? null : Double.parseDouble(fteStr.replace(',', '.'));
-
-            String department = reader.readLine("Department ID (" + teacher.getDepartment().getIdDepartment() + "): ");
-            Department dept;
-            if (department.isBlank()) {
-                dept = null;
-            } else {
-                dept = departmentRegistry.findDepartmentById(Integer.parseInt(department));
+            if (teacher == null) {
+                System.out.println("Teacher not found.");
+                return;
             }
 
+            System.out.println("Editing teacher. Press Enter to keep current value.");
 
-            System.out.println("Teacher updated successfully.");
+            String pib = reader.readLine("Full Name (" + teacher.getPib() + "): ");
+            if (!pib.isBlank())
+                teacher.setPib(pib);
 
+            String email = reader.readLine("Email (" + teacher.getEmail() + "): ");
+            if (!email.isBlank())
+                teacher.setEmail(email);
+
+            String phoneStr = reader.readLine("Phone Number (" + teacher.getPhoneNumber() + "): ");
+            if (!phoneStr.isBlank())
+                teacher.setPhoneNumber(Integer.parseInt(phoneStr));
+
+            String position = reader.readLine("Position (" + teacher.getPosition() + "): ");
+            if (!position.isBlank())
+                teacher.setPosition(position);
+
+            String degree = reader.readLine("Academic Degree (" + teacher.getAcademicDegree() + "): ");
+            if (!degree.isBlank())
+                teacher.setAcademicDegree(degree);
+
+            String rank = reader.readLine("Academic Rank (" + teacher.getAcademicRank() + "): ");
+            if (!rank.isBlank())
+                teacher.setAcademicRank(rank);
+
+            String hireDate = reader.readLine("Hire Date (" + teacher.getHireDate() + "): ");
+            if (!hireDate.isBlank())
+                teacher.setHireDate(hireDate);
+
+            String fteStr = reader.readLine("Full Time Equivalent (" + teacher.getFullTimeEquivalent() + "): ");
+            if (!fteStr.isBlank())
+                teacher.setFullTimeEquivalent(Double.parseDouble(fteStr.replace(',', '.')));
+
+            String deptStr = reader.readLine("Department ID (" + teacher.getDepartment().getIdDepartment() + "): ");
+            if (!deptStr.isBlank()) {
+                int deptId = Integer.parseInt(deptStr);
+                Department dept = departmentRegistry.findDepartmentById(deptId);
+                if (dept != null) {
+                    // переміщаємо вчителя до нового департаменту
+                    teacher.getDepartment().removeTeacher(teacher);
+                    dept.addTeacher(teacher);
+                    teacher.setDepartment(dept);
+                } else {
+                    System.out.println("Department not found, keeping current.");
+                }
+            }
+
+            System.out.println("Teacher record updated.");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
+
 
     private static void removeTeacher(LineReader reader, String role) {
         if (!role.equals("manager")) {
