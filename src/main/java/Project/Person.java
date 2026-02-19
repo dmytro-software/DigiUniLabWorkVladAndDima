@@ -5,10 +5,10 @@ public abstract class Person {
     private String pib;
     private final String birthDate;
     private String email;
-    private int phoneNumber;
+    private long phoneNumber;
 
 
-    public Person(int idPerson, String pib, String birthDate, String email, int phoneNumber) {
+    public Person(int idPerson, String pib, String birthDate, String email, long phoneNumber) {
         this.idPerson = idPerson;
         this.pib = pib;
         this.birthDate = birthDate;
@@ -40,7 +40,7 @@ public abstract class Person {
         this.email = email;
     }
 
-    public int getPhoneNumber() {
+    public long getPhoneNumber() {
         return phoneNumber;
     }
 

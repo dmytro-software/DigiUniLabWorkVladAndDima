@@ -43,6 +43,31 @@ public class Main {
                 .history(new DefaultHistory())
                 .build();
 
+        System.out.println(" /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\ \n" +
+                        "( o.o )( o.o )( o.o )( o.o )( o.o )( o.o )( o.o )( o.o )( o.o )( o.o )( o.o )( o.o )\n" +
+                        " > ^ <  > ^ <  > ^ <  > ^ <  > ^ <  > ^ <  > ^ <  > ^ <  > ^ <  > ^ <  > ^ <  > ^ < \n" +
+                        " /\\_/\\                                                                        /\\_/\\ \n" +
+                        "( o.o ) ██╗   ██╗██╗      █████╗ ██████╗      █████╗ ███╗   ██╗██████╗       ( o.o )\n" +
+                        " > ^ <  ██║   ██║██║     ██╔══██╗██╔══██╗    ██╔══██╗████╗  ██║██╔══██╗       > ^ < \n" +
+                        " /\\_/\\  ██║   ██║██║     ███████║██║  ██║    ███████║██╔██╗ ██║██║  ██║       /\\_/\\ \n" +
+                        "( o.o ) ╚██╗ ██╔╝██║     ██╔══██║██║  ██║    ██╔══██║██║╚██╗██║██║  ██║      ( o.o )\n" +
+                        " > ^ <   ╚████╔╝ ███████╗██║  ██║██████╔╝    ██║  ██║██║ ╚████║██████╔╝       > ^ < \n" +
+                        " /\\_/\\    ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═════╝     ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝        /\\_/\\ \n" +
+                        "( o.o )                                                                      ( o.o )\n" +
+                        " > ^ <  ██████╗ ██╗███╗   ███╗ █████╗      ██████╗ ██████╗ ██████╗ ██████╗    > ^ < \n" +
+                        " /\\_/\\  ██╔══██╗██║████╗ ████║██╔══██╗    ██╔════╝██╔═══██╗██╔══██╗██╔══██╗   /\\_/\\ \n" +
+                        "( o.o ) ██║  ██║██║██╔████╔██║███████║    ██║     ██║   ██║██████╔╝██████╔╝  ( o.o )\n" +
+                        " > ^ <  ██║  ██║██║██║╚██╔╝██║██╔══██║    ██║     ██║   ██║██╔══██╗██╔═══╝    > ^ < \n" +
+                        " /\\_/\\  ██████╔╝██║██║ ╚═╝ ██║██║  ██║    ╚██████╗╚██████╔╝██║  ██║██║██╗     /\\_/\\ \n" +
+                        "( o.o ) ╚═════╝ ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝     ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝    ( o.o )\n" +
+                        " > ^ <" + "  DIGI UNI Systems v1.0                                                  > ^ < \n" +
+                        " /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\ \n" +
+                        "( o.o )( o.o )( o.o )( o.o )( o.o )( o.o )( o.o )( o.o )( o.o )( o.o )( o.o )( o.o )\n" +
+                        " > ^ <  > ^ <  > ^ <  > ^ <  > ^ <  > ^ <  > ^ <  > ^ <  > ^ <  > ^ <  > ^ <  > ^ <  "
+                );
+
+        System.out.println("==================================================");
+
         System.out.print("Login: ");
         String login = reader.readLine();
 
@@ -57,7 +82,7 @@ public class Main {
         }
 
         System.out.println("Logged as: " + role);
-        System.out.println("Type 'help -manager' to see commands");
+        System.out.println("Type 'help'(or 6 for user menu) to see commands");
 
         if (role.equals("manager")) {
             managerMenu(reader, role);
@@ -72,36 +97,41 @@ public class Main {
             if (line.isEmpty()) continue;
 
             switch (line) {
-                case "help -manager":
+                case "help":
                     System.out.println("""
-                            ==============================================
-                            |               Commands:                    |
-                            ==============================================
-                            | university show   | - Show university      |
-                            |============================================|
-                            | faculty add       | - Add a faculty        |
-                            | faculty edit      | - Edit a faculty       |
-                            | faculty remove    | - Remove a faculty     |
-                            | faculty show      | - Show all faculties   |
-                            |============================================|
-                            | department add    | - Add a department     |
-                            | department remove | - Remove a department  |
-                            | department edit   | - Edit a department    |
-                            | department show   | - Show all departments |
-                            |============================================|
-                            | student add       | - Add a student        |
-                            | student edit      | - Edit a student       |
-                            | student remove    | - Remove a student     |
-                            | student show      | - Show all students    |
-                            | student transfer  | - Show all students    |
-                            |============================================|
-                            | teacher add       | - Add a teacher        |
-                            | teacher remove    | - Remove a teacher     |
-                            | teacher edit      | - Edit a teacher       |
-                            | teacher show      | - Show all teachers    |
-                            |============================================|
-                            | exit              | - Exit program         |
-                            ==============================================
+                            ============================================================
+                            |                      COMMANDS                            |
+                            ============================================================
+                            | university show          | - Show university             |
+                            |--------------------------|-------------------------------|
+                            | faculty add              | - Add a faculty               |
+                            | faculty edit             | - Edit a faculty              |
+                            | faculty remove           | - Remove a faculty            |
+                            | faculty show             | - Show all faculties          |
+                            |--------------------------|-------------------------------|
+                            | department add           | - Add a department            |
+                            | department edit          | - Edit a department           |
+                            | department remove        | - Remove a department         |
+                            | department show          | - Show all departments        |
+                            |--------------------------|-------------------------------|
+                            | student add              | - Add a student               |
+                            | student edit             | - Edit a student              |
+                            | student remove           | - Remove a student            |
+                            | student show             | - Show all students           |
+                            | student transfer         | - Transfer student to another |
+                            | student search pib       | - Search student by PIIB      |
+                            | student search group     | - Search student by group     |
+                            | student search course    | - Search student by course    |
+                            |--------------------------|-------------------------------|
+                            | teacher add              | - Add a teacher               |
+                            | teacher edit             | - Edit a teacher              |
+                            | teacher remove           | - Remove a teacher            |
+                            | teacher show             | - Show all teachers           |
+                            | teacher search pib       | - Search teacher by PIIB      |
+                            | teacher search id        | - Search teacher by ID        |
+                            |--------------------------|-------------------------------|
+                            | exit                     | - Exit program                |
+                            ============================================================
                             """);
                     break;
 
@@ -152,6 +182,16 @@ public class Main {
                     removeStudent(reader, role);
                     break;
 
+                case "student search pib":
+                    searchStudentsByPib(reader, role);
+                    break;
+
+                case "student search course":
+                    searchStudentsByCourse(reader, role);
+
+                case "student search group":
+                    searchStudentsByGroup(reader, role);
+
                 case "student show":
                     System.out.println(studentRegistry);
                     break;
@@ -172,6 +212,12 @@ public class Main {
                     removeTeacher(reader, role);
                     break;
 
+                case "teacher search pib":
+                    searchTeachersByPib(reader, role);
+
+                case "teacher search id":
+                    searchTeacherById(reader, role);
+
                 case "teacher show":
                     System.out.println(teacherRegistry);
                     break;
@@ -190,38 +236,38 @@ public class Main {
 
     private static void userMenu(LineReader reader, String role) {
         while (true) {
-            String line = reader.readLine("User>> ").trim();
-            if (line.isEmpty()) continue;
+            int line = Integer.parseInt(reader.readLine("User>> ").trim());
+            if (line < 0 || line > 6) continue;
 
 
             switch (line) {
-                case "help":
+                case 6:
                     System.out.println("""
-                            ==============================================
-                            |               Commands:                    |
-                            ==============================================
-                            | faculty show      | - Show all faculties   |
-                            | department show   | - Show all departments |
-                            | student show      | - Show all students    |
-                            | teacher show      | - Show all teachers    |
-                            | exit              | - Exit program         |
-                            ==============================================
+                            ==================================================
+                            |                   Commands:                    |
+                            ==================================================
+                            | faculty show (1)      | - Show all faculties   |
+                            | department show (2)   | - Show all departments |
+                            | student show (3)      | - Show all students    |
+                            | teacher show (4)      | - Show all teachers    |
+                            | exit (5)              | - Exit program         |
+                            ==================================================
                             """);
                     break;
 
-                case "faculty show":
+                case 1:
                     System.out.println(facultyRegistry);
                     break;
-                case "department show":
+                case 2:
                     System.out.println(departmentRegistry);
                     break;
-                case "student show":
+                case 3:
                     System.out.println(studentRegistry);
                     break;
-                case "teacher show":
-                    System.out.println("Teachers list");
+                case 4:
+                    System.out.println(teacherRegistry);
                     break;
-                case "exit":
+                case 5:
                     System.out.println("Bye!");
                     return;
                 default:
@@ -249,11 +295,32 @@ public class Main {
             int id = generateSixDigitId();
             System.out.println("Faculty id: " + id);
             String name = reader.readLine("Name: ");
+            while(name == null || name.isBlank()){
+                System.out.println("ПОМИЛКА: ПОВНА НАЗВА ФАКУЛЬТЕТУ ПУСТА");
+                name = reader.readLine("Name: ");
+            }
             String shortName = reader.readLine("Short name: ");
+            while(shortName == null || shortName.isBlank()){
+                System.out.println("ПОМИЛКА: КОРОТКЕ ІМЯ ПУСТЕ");
+                shortName = reader.readLine("Short name: ");
+            }
             String head = reader.readLine("Head: ");
-            String contacts = reader.readLine("Contacts: ");
+            while (head == null || head.isBlank()) {
+                System.out.println(" ПОМИЛКА: ПІБ ДЕКАНА ПУСТЕ");
+                head = reader.readLine("Head: ");
+            }
+            String email = reader.readLine("Email: ");
+            while (email == null || !email.contains("@") || !email.contains(".")) {
+                System.out.println(" ПОМИЛКА: НЕКОРЕКТНИЙ EMAIL (має містити @ та крапку)");
+                email = reader.readLine("Email: ");
+            }
+            String phoneNumber = reader.readLine("Phone number:");
+            while (phoneNumber == null || !phoneNumber.matches("\\+?\\d{10,13}")) {
+                System.out.println(" ПОМИЛКА: ТЕЛЕФОН МАЄ МІСТИТИ ТІЛЬКИ ЦИФРИ(10-13 цифр)");
+                phoneNumber = reader.readLine("Phone number: ");
+            }
 
-            Faculty faculty = new Faculty(id, name, shortName, head, contacts);
+            Faculty faculty = new Faculty(id, name, shortName, head, email, phoneNumber);
 
             universityRegistry.getUniversity().addFaculty(faculty);
             facultyRegistry.addFaculty(faculty);
@@ -284,10 +351,11 @@ public class Main {
             String name = reader.readLine("Name (" + faculty.getFacultyName() + "): ");
             String shortName = reader.readLine("Short name (" + faculty.getFacultyShortName() + "): ");
             String head = reader.readLine("Head of faculty(" + faculty.getHeadOfFaculty() + "): ");
-            String contacts = reader.readLine("Contacts (" + faculty.getContactsOfFaculty() + "): ");
+            String email = reader.readLine("Email(" + faculty.getEmail() +"): ");
+            String phoneNumber = reader.readLine("Phone number("+ faculty.getPhoneNumber()+"): ");
 
             universityRegistry.getUniversity()
-                    .editFaculty(id, name, shortName, head, contacts);
+                    .editFaculty(id, name, shortName, head, email, phoneNumber);
 
             System.out.println("Faculty updated successfully.");
 
@@ -342,39 +410,39 @@ public class Main {
             System.out.println("Department ID: " + id);
 
             String name = reader.readLine("Department name: ");
-            if (name.isBlank()) {
-                System.out.println("Department name cannot be empty.");
-                return;
+            while (name == null || name.isBlank()) {
+                System.out.println("ПОМИЛКА: НАЗВА КАФЕДРИ ПУСТА");
+                name = reader.readLine("Department name: ");
             }
 
             String facultyIdStr = reader.readLine("Faculty ID: ");
-            if (facultyIdStr.isBlank() || !facultyIdStr.matches("\\d+")) {
-                System.out.println("Faculty ID must be a number.");
-                return;
+            Faculty faculty = null;
+            if (facultyIdStr.matches("\\d+")) {
+                faculty = universityRegistry.getUniversity().findFacultyById(Integer.parseInt(facultyIdStr));
             }
-            int facultyId = Integer.parseInt(facultyIdStr);
 
-            Faculty faculty = universityRegistry.getUniversity().findFacultyById(facultyId);
-            if (faculty == null) {
-                System.out.println("Faculty not found.");
-                return;
+            while (faculty == null) {
+                System.out.println("ПОМИЛКА: ФАКУЛЬТЕТ НЕ ЗНАЙДЕНО (введіть існуючий ID)");
+                facultyIdStr = reader.readLine("Faculty ID: ");
+                if (facultyIdStr.matches("\\d+")) {
+                    faculty = universityRegistry.getUniversity().findFacultyById(Integer.parseInt(facultyIdStr));
+                }
             }
 
             String head = reader.readLine("Head of department: ");
-            if (head.isBlank()) {
-                System.out.println("Head of department cannot be empty.");
-                return;
+            while (head == null || head.isBlank()) {
+                System.out.println("ПОМИЛКА: ПІБ ЗАВІДУВАЧА ПУСТЕ");
+                head = reader.readLine("Head of department: ");
             }
 
             String roomStr = reader.readLine("Room number: ");
-            if (roomStr.isBlank() || !roomStr.matches("\\d+")) {
-                System.out.println("Room number must be a positive integer.");
-                return;
-            }
-            int room = Integer.parseInt(roomStr);
-            if (room <= 0) {
-                System.out.println("Room number must be greater than 0.");
-                return;
+            int room = (roomStr.matches("\\d+")) ? Integer.parseInt(roomStr) : 0;
+            while (room <= 0) {
+                System.out.println("ПОМИЛКА: НОМЕР АУДИТОРІЇ МАЄ БУТИ ДОДАТНИМ ЧИСЛОМ");
+                roomStr = reader.readLine("Room number: ");
+                if (roomStr.matches("\\d+")) {
+                    room = Integer.parseInt(roomStr);
+                }
             }
 
             Department department = new Department(id, name, faculty, head, room);
@@ -493,57 +561,70 @@ public class Main {
             System.out.println("Person ID: " + idPerson);
 
             String pib = reader.readLine("Full Name (PIB): ");
-            if (pib.isBlank() || !pib.matches("^[a-zA-Zа-яА-ЯіїєґІЇЄҐ'\\s]+$")) {
-                System.out.println("Full Name must contain only letters and spaces.");
-                return;
-            }
-
-            String birthDate = reader.readLine("Birth Date (YYYYMMDD): ");
-            if (!birthDate.matches("\\d{8}")) {
-                System.out.println("Birth Date must be in format YYYYMMDD and 8 digits.");
-                return;
+            while (pib == null || pib.isBlank() || !pib.matches("^[a-zA-Zа-яА-ЯіїєґІЇЄҐ'\\s]+$")) {
+                System.out.println("ПОМИЛКА: ПІБ має містити тільки літери та не бути порожнім");
+                pib = reader.readLine("Full Name (PIB): ");
             }
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-            LocalDate birthLocalDate;
-            try {
-                birthLocalDate = LocalDate.parse(birthDate, formatter);
-            } catch (DateTimeParseException e) {
-                System.out.println("Invalid birth date format.");
-                return;
+            LocalDate birthLocalDate = null;
+            while (birthLocalDate == null) {
+                String birthDateStr = reader.readLine("Birth Date (YYYYMMDD): ");
+                try {
+                    if (birthDateStr.matches("\\d{8}")) {
+                        birthLocalDate = LocalDate.parse(birthDateStr, formatter);
+                        int age = Period.between(birthLocalDate, LocalDate.now()).getYears();
+                        if (age < 16 || age > 60) {
+                            System.out.println("ПОМИЛКА: Вік студента має бути від 16 до 60 років (Зараз: " + age + ")");
+                            birthLocalDate = null;
+                        }
+                    } else {
+                        System.out.println("ПОМИЛКА: Формат має бути 8 цифр (YYYYMMDD)");
+                    }
+                } catch (DateTimeParseException e) {
+                    System.out.println("ПОМИЛКА: Некоректна дата");
+                }
             }
-
-            LocalDate today = LocalDate.now();
-            if (birthLocalDate.isAfter(today)) {
-                System.out.println("Birth date cannot be in the future.");
-                return;
-            }
-
-            int age = Period.between(birthLocalDate, today).getYears();
-            if (age < 16 || age > 60) {
-                System.out.println("Student age must be between 16 and 60 years. Current age: " + age);
-                return;
-            }
+            String birthDate = birthLocalDate.format(formatter);
 
             String email = reader.readLine("Email: ");
-            if (!email.contains("@") || !email.contains(".")) {
-                System.out.println("Invalid email format.");
-                return;
+            while (email == null || !email.contains("@") || !email.contains(".")) {
+                System.out.println("ПОМИЛКА: Некоректний формат Email");
+                email = reader.readLine("Email: ");
             }
 
-            String phoneStr = reader.readLine("Phone Number: ");
-            if (!phoneStr.matches("\\d{10}")) {
-                System.out.println("Phone number must be exactly 10 digits.");
-                return;
+            String phoneInput = reader.readLine("Phone Number (10-13 digits): ");
+            while (phoneInput == null || !phoneInput.matches("\\d{10,13}")) {
+                System.out.println("ПОМИЛКА: ТЕЛЕФОН МАЄ МІСТИТИ ТІЛЬКИ ЦИФРИ (10-13 цифр)");
+                phoneInput = reader.readLine("Phone Number: ");
             }
-            int phoneNumber = Integer.parseInt(phoneStr);
+            long phoneNumber = Long.parseLong(phoneInput);
+            String gradeBookInput = reader.readLine("GradeBook ID: ");
+            while (gradeBookInput == null || !gradeBookInput.matches("\\d+")) {
+                System.out.println("ПОМИЛКА: GradeBook ID має бути числом");
+                gradeBookInput = reader.readLine("GradeBook ID: ");
+            }
+            int gradeBookId = Integer.parseInt(gradeBookInput);
 
-            int gradeBookId = generateSixDigitId();
-            System.out.println("GradeBook ID: " + gradeBookId);
+            String courseInput = reader.readLine("Course (1-4): ");
+            while (courseInput == null || !courseInput.matches("[1-4]")) {
+                System.out.println("ПОМИЛКА: КУРС МАЄ БУТИ ЦИФРОЮ ВІД 1 ДО 4");
+                courseInput = reader.readLine("Course (1-4): ");
+            }
+            int course = Integer.parseInt(courseInput);
+            String groupInput = reader.readLine("Group (1-6): ");
+            while (groupInput == null || !groupInput.matches("[1-6]")) {
+                System.out.println("ПОМИЛКА: ГРУПА МАЄ БУТИ ЦИФРОЮ ВІД 1 ДО 6");
+                groupInput = reader.readLine("Group (1-6): ");
+            }
+            int group = Integer.parseInt(groupInput);
 
-            int course = Integer.parseInt(reader.readLine("Course (1-4): "));
-            int group = Integer.parseInt(reader.readLine("Group (1-6): "));
-            int enrollmentYear = Integer.parseInt(reader.readLine("Enrollment year (2000-2026): "));
+            String yearInput = reader.readLine("Enrollment year (2000-2026): ");
+            while (yearInput == null || !yearInput.matches("\\d{4}")) {
+                System.out.println("ПОМИЛКА: ВВЕДІТЬ РІК ЧИСЛОМ (наприклад, 2024)");
+                yearInput = reader.readLine("Enrollment year (2000-2026): ");
+            }
+            int enrollmentYear = Integer.parseInt(yearInput);
             String formOfEducation = reader.readLine("Form of Education: ");
             String studentStatus = reader.readLine("Student status: ");
 
@@ -657,8 +738,131 @@ public class Main {
         }
     }
 
+    private static void searchStudentsByPib(LineReader reader, String role) {
+        if (!role.equals("manager")) {
+            System.out.println("No permission");
+            return;
+        }
+
+        try {
+            String pib = reader.readLine("Введіть ПІБ для пошуку: ");
+            while(pib == null || pib.isBlank()){
+                System.out.println("! ПІБ пустий !");
+                pib = reader.readLine("Введіть ПІБ для пошуку: ");
+            }
+            Student[] results = studentRegistry.findByPib(pib);
+            printSearchResults(results);
+        } catch (Exception e) {
+            System.out.println("Помилка: " + e.getMessage());
+        }
+    }
+
+    private static void searchTeachersByPib(LineReader reader, String role) {
+        if (!role.equals("manager")) {
+            System.out.println("No permission");
+            return;
+        }
+        try {
+            String pib = reader.readLine("Введіть ПІБ викладача для пошуку: ");
+            while (pib == null || pib.isBlank()) {
+                System.out.println("! ПІБ пустий !");
+                pib = reader.readLine("Введіть ПІБ викладача для пошуку: ");
+            }
+
+            Teacher[] results = teacherRegistry.findByPib(pib);
+
+            if (results.length == 0) {
+                System.out.println("Викладачів не знайдено.");
+            } else {
+                System.out.println("Знайдено викладачів: " + results.length);
+                for (Teacher t : results) {
+                    System.out.println(t);
+                    System.out.println("-----------------------------------");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Помилка: " + e.getMessage());
+        }
+    }
+
+    private static void searchTeacherById(LineReader reader, String role) {
+        if (!role.equals("manager")) {
+            System.out.println("No permission");
+            return;
+        }
+        try {
+            String input = reader.readLine("Введіть ID викладача: ");
+            while (input == null || input.isBlank() || !input.matches("\\d+")) {
+                System.out.println("! ID має бути числом і не може бути порожнім !");
+                input = reader.readLine("Введіть ID викладача: ");
+            }
+
+            int id = Integer.parseInt(input);
+            Teacher teacher = teacherRegistry.findByTeacherId(id);
+
+            System.out.println("Викладача знайдено:");
+            System.out.println(teacher);
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Помилка " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Помилка: " + e.getMessage());
+        }
+    }
+
+    private static void searchStudentsByCourse(LineReader reader, String role) {
+        if (!role.equals("manager")) {
+            System.out.println("No permission");
+            return;
+        }
+        try {
+            int course = Integer.parseInt(reader.readLine("Введіть курс (1-4): "));
+            while(course < 1 || course > 4){
+                System.out.println("! Курс має бути в проміжку від 1-4 !");
+                course = Integer.parseInt(reader.readLine("Введіть курс (1-4): "));
+            }
+            Student[] results = studentRegistry.findByCourse(course);
+            printSearchResults(results);
+        } catch (Exception e) {
+            System.out.println("ERROR");
+        }
+    }
+
+    private static void searchStudentsByGroup(LineReader reader, String role) {
+        if (!role.equals("manager")) {
+            System.out.println("No permission");
+            return;
+        }
+        try {
+            int group = Integer.parseInt(reader.readLine("Введіть номер групи: "));
+            while(group < 1 || group > 6){
+                System.out.println("! Група має бути в проміжку від 1-6 !");
+                group = Integer.parseInt(reader.readLine("Введіть номер групи: "));
+            }
+            Student[] results = studentRegistry.findByGroup(group);
+            printSearchResults(results);
+        } catch (Exception e) {
+            System.out.println("ERROR");
+        }
+    }
+
+
+    private static void printSearchResults(Student[] results) {
+        if (results.length == 0) {
+            System.out.println("Студентів не знайдено.");
+        } else {
+            System.out.println("Знайдено студентів: " + results.length);
+            for (int i = 0; i < results.length; i++) {
+                System.out.println((i + 1) + ". " + results[i]);
+                System.out.println("-----------------------------------");
+            }
+        }
+    }
+
+
 
     private static void addTeacher(LineReader reader, String role) {
+
         if (!role.equals("manager")) {
             System.out.println("No permission");
             return;

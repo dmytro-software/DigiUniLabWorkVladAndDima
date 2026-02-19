@@ -17,10 +17,25 @@ public class Faculty {
     public Faculty(int idFaculty, String facultyName, String facultyShortName,
                    String headOfFaculty, String email, String phoneNumber) {
         this.idFaculty = idFaculty;
+        if(facultyName == null || facultyName.isBlank()){
+            throw new IllegalArgumentException("ПОМИЛКА: ІМЯ ФАКУЛЬТЕТУ НЕ ВВЕДЕНО");
+        }
         this.facultyName = facultyName;
+        if (facultyShortName == null || facultyShortName.isBlank()) {
+            throw new IllegalArgumentException("ПОМИЛКА: АБРЕВІАТУРА ФАКУЛЬТЕТУ НЕ ВВЕДЕНА");
+        }
         this.facultyShortName = facultyShortName;
+        if (headOfFaculty == null || headOfFaculty.isBlank()) {
+            throw new IllegalArgumentException("ПОМИЛКА: ПІБ ДЕКАНА НЕ ВВЕДЕНО");
+        }
         this.headOfFaculty = headOfFaculty;
+        if (email == null || email.isBlank() || !email.contains("@")) {
+            throw new IllegalArgumentException("ПОМИЛКА: НЕКОРЕКТНИЙ EMAIL (МАЄ МІСТИТИ '@')");
+        }
         this.email = email;
+        if (phoneNumber == null || phoneNumber.isBlank() || !phoneNumber.matches("\\+?\\d+")) {
+            throw new IllegalArgumentException("ПОМИЛКА: НОМЕР ТЕЛЕФОНУ МАЄ МІСТИТИ ТІЛЬКИ ЦИФРИ");
+        }
         this.phoneNumber = phoneNumber;
     }
 
@@ -32,12 +47,14 @@ public class Faculty {
         return idFaculty;
     }
 
-
     public String getFacultyName() {
         return facultyName;
     }
 
     public void setFacultyName(String facultyName) {
+        if (facultyName == null || facultyName.isBlank()) {
+            throw new IllegalArgumentException("ПОМИЛКА: НАЗВА ФАКУЛЬТЕТУ НЕ МОЖЕ БУТИ ПОРОЖНЬОЮ");
+        }
         this.facultyName = facultyName;
     }
 
@@ -46,6 +63,9 @@ public class Faculty {
     }
 
     public void setFacultyShortName(String facultyShortName) {
+        if (facultyShortName == null || facultyShortName.isBlank()) {
+            throw new IllegalArgumentException("ПОМИЛКА: АБРЕВІАТУРА НЕ МОЖЕ БУТИ ПОРОЖНЬОЮ");
+        }
         this.facultyShortName = facultyShortName;
     }
 
@@ -58,18 +78,21 @@ public class Faculty {
     public String getPhoneNumber() { return phoneNumber; }
 
     public void setHeadOfFaculty(String headOfFaculty) {
+        if (headOfFaculty == null || headOfFaculty.isBlank()) {
+            throw new IllegalArgumentException("ПОМИЛКА: ПІБ ДЕКАНА НЕ МОЖЕ БУТИ ПОРОЖНІМ");
+        }
         this.headOfFaculty = headOfFaculty;
     }
 
     public void setEmail(String email) {
-        if (email == null || !email.contains("@") || !email.contains(".")) {
+        if (email == null || email.isBlank() || !email.contains("@") || !email.contains(".")) {
             throw new IllegalArgumentException("Некоректний формат Email (має містити @ та крапку)");
         }
         this.email = email;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        if (phoneNumber == null || !phoneNumber.matches("\\+?\\d+")) {
+        if (phoneNumber == null || !phoneNumber.matches("\\\\+?\\\\d{10,13}")) {
             throw new IllegalArgumentException("Некоректний номер телефону (має бути від 10 до 13 цифр)");
         }
         this.phoneNumber = phoneNumber;

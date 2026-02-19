@@ -18,10 +18,29 @@ public class Department {
     private int numberOfStudents;
 
     public Department(int idDepartment, String departmentName, Faculty faculty, String headOfDepartment, int roomNumberOfDepartment) {
+        if (idDepartment <= 0) {
+            throw new IllegalArgumentException("ПОМИЛКА: ID КАФЕДРИ МАЄ БУТИ ДОДАТНИМ ЧИСЛОМ");
+        }
         this.idDepartment = idDepartment;
+
+        if (departmentName == null || departmentName.isBlank()) {
+            throw new IllegalArgumentException("ПОМИЛКА: НАЗВА КАФЕДРИ НЕ МОЖЕ БУТИ ПОРОЖНЬОЮ");
+        }
         this.departmentName = departmentName;
+
+        if (faculty == null) {
+            throw new IllegalArgumentException("ПОМИЛКА: КАФЕДРА МАЄ БУТИ ПРИВ'ЯЗАНА ДО ФАКУЛЬТЕТУ");
+        }
         this.faculty = faculty;
+
+        if (headOfDepartment == null || headOfDepartment.isBlank()) {
+            throw new IllegalArgumentException("ПОМИЛКА: ПІБ ЗАВІДУВАЧА КАФЕДРИ НЕ ВВЕДЕНО");
+        }
         this.headOfDepartment = headOfDepartment;
+
+        if (roomNumberOfDepartment <= 0) {
+            throw new IllegalArgumentException("ПОМИЛКА: НОМЕР АУДИТОРІЇ МАЄ БУТИ ДОДАТНИМ ЧИСЛОМ");
+        }
         this.roomNumberOfDepartment = roomNumberOfDepartment;
     }
 
@@ -34,6 +53,9 @@ public class Department {
     }
 
     public void setDepartmentName(String departmentName) {
+        if (departmentName == null || departmentName.isBlank()) {
+            throw new IllegalArgumentException("ПОМИЛКА: НАЗВА КАФЕДРИ НЕ МОЖЕ БУТИ ПОРОЖНЬОЮ");
+        }
         this.departmentName = departmentName;
     }
 
@@ -42,6 +64,9 @@ public class Department {
     }
 
     public void setFaculty(Faculty faculty) {
+        if (faculty == null) {
+            throw new IllegalArgumentException("ПОМИЛКА: ФАКУЛЬТЕТ НЕ МОЖЕ БУТИ NULL");
+        }
         this.faculty = faculty;
     }
 
@@ -50,6 +75,9 @@ public class Department {
     }
 
     public void setHeadOfDepartment(String headOfDepartment) {
+        if (headOfDepartment == null || headOfDepartment.isBlank()) {
+            throw new IllegalArgumentException("ПОМИЛКА: ПІБ ЗАВІДУВАЧА НЕ МОЖЕ БУТИ ПОРОЖНІМ");
+        }
         this.headOfDepartment = headOfDepartment;
     }
 
@@ -58,6 +86,9 @@ public class Department {
     }
 
     public void setRoomNumberOfDepartment(int roomNumberOfDepartment) {
+        if (roomNumberOfDepartment <= 0) {
+            throw new IllegalArgumentException("ПОМИЛКА: НОМЕР АУДИТОРІЇ МАЄ БУТИ ДОДАТНИМ ЧИСЛОМ");
+        }
         this.roomNumberOfDepartment = roomNumberOfDepartment;
     }
 

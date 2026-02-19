@@ -28,7 +28,7 @@ public class University {
         faculties[numberOfFaculties++] = faculty;
     }
 
-    public boolean editFaculty(int id, String name, String shortName, String head, String contacts) {
+    public boolean editFaculty(int id, String name, String shortName, String head, String email, String phoneNumber) {
         for (int i = 0; i < numberOfFaculties; i++) {
             if (faculties[i].getIdFaculty() == id) {
                 if (name != null && !name.isBlank())
@@ -37,8 +37,10 @@ public class University {
                     faculties[i].setFacultyShortName(shortName);
                 if (head != null && !head.isBlank())
                     faculties[i].setHeadOfFaculty(head);
-                if (contacts != null && !contacts.isBlank())
-                    faculties[i].setContactsOfFaculty(contacts);
+                if (email != null && !email.isBlank())
+                    faculties[i].setEmail(email);
+                if (phoneNumber != null && !phoneNumber.isBlank())
+                    faculties[i].setPhoneNumber(phoneNumber);
                 return true;
             }
         }

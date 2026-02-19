@@ -51,7 +51,7 @@ public class FacultyRegistry {
                                String facultyName,
                                String facultyShortName,
                                String headOfFaculty,
-                               String contactsOfFaculty) {
+                               String email, String phoneNumber) {
         for (int i = 0; i < numOfFaculties; i++) {
             if (faculties[i].getIdFaculty() == id) {
                 if (facultyName != null && !facultyName.isBlank())
@@ -60,8 +60,10 @@ public class FacultyRegistry {
                     faculties[i].setFacultyShortName(facultyShortName);
                 if (headOfFaculty != null && !headOfFaculty.isBlank())
                     faculties[i].setHeadOfFaculty(headOfFaculty);
-                if (contactsOfFaculty != null && !contactsOfFaculty.isBlank())
-                    faculties[i].setContactsOfFaculty(contactsOfFaculty);
+                if (email != null && !email.isBlank())
+                    faculties[i].setEmail(email);
+                if(phoneNumber != null && !phoneNumber.isBlank())
+                    faculties[i].setPhoneNumber(phoneNumber);
                 return true;
             }
         }
