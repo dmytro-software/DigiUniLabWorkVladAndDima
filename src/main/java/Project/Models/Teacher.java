@@ -1,6 +1,6 @@
-package Project;
+package Project.Models;
 
-public class Teacher extends Person{
+public class Teacher extends Person {
     private final int teacherId;
     private String position;
     private Department department;
@@ -28,7 +28,6 @@ public class Teacher extends Person{
     public String getPosition() {
         return position;
     }
-
     public void setPosition(String position) {
         this.position = position;
     }

@@ -1,48 +1,31 @@
-package Project;
+package Project.Models;
+
+import java.util.List;
+
 public class Student extends Person {
     private final int gradeBookId;
     private int course;
-    private Faculty faculty;
     private int group;
     private final int enrollmentYear;
     private String formOfEducation;
     private String studentStatus;
-    private Department department;
 
-    public Student(int idPerson, String pib, String birthDate, String email, long phoneNumber, int gradeBookId, int course,
-                   Faculty faculty, int group, int  enrollmentYear, String formOfEducation, String studentStatus) {
+    public Student(int idPerson, String pib, String birthDate, String email, int phoneNumber, int gradeBookId, int course,
+                   int group, int  enrollmentYear, String formOfEducation, String studentStatus) {
         super(idPerson, pib, birthDate, email, phoneNumber);
         this.course = course;
-        this.faculty = faculty;
         this.group = group;
         this.gradeBookId = gradeBookId;
         this.enrollmentYear = enrollmentYear;
         this.formOfEducation = formOfEducation;
         this.studentStatus = studentStatus;
     }
-
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
-
     public int getGradeBookId() {
         return gradeBookId;
     }
 
     public int getCourse() {
         return course;
-    }
-
-    public Faculty getFaculty(){
-        return  faculty;
-    }
-
-    public void setFaculty(Faculty faculty) {
-        this.faculty = faculty;
     }
 
     public void setCourse(int course) {
@@ -81,7 +64,7 @@ public class Student extends Person {
     @Override
     public String toString() {
         return super.toString() +
-                "\n  | Заліковка: " + gradeBookId +
+                "   | Заліковка: " + gradeBookId +
                 "\n | Курс: " + course +
                 "\n | Група: " + group +
                 "\n | Рік: " + enrollmentYear +

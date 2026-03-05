@@ -1,4 +1,4 @@
-package Project;
+package Project.Models;
 
 public abstract class Person {
     private final int idPerson;
