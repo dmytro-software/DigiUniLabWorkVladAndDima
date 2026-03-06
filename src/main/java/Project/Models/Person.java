@@ -51,10 +51,10 @@ public abstract class Person {
     @Override
     public String toString() {
         return "ID: " + idPerson +
-                "\n | ПІБ: " + pib +
-                "\n | Дата народж: " + birthDate +
-                "\n | Email: " + email +
-                "\n | Тел: " + phoneNumber;
+                " | PIB: " + pib +
+                " | Birth date: " + birthDate +
+                " | Email: " + email +
+                " | Phone number: " + phoneNumber;
     }
 }
 

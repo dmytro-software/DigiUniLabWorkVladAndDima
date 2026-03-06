@@ -75,11 +75,11 @@ public class Department {
     @Override
     public String toString() {
         return "Department{" +
-                "id=" + idDepartment +
-                ", name='" + departmentName + '\'' +
-                ", head='" + headOfDepartment + '\'' +
-                ", room=" + roomNumber +
-                ", faculty=" + (faculty != null ? faculty.getFacultyName() : "null") +
+                "Id=" + idDepartment +
+                ", Name='" + departmentName + '\'' +
+                ", Head='" + headOfDepartment + '\'' +
+                ", Room=" + roomNumber +
+                ", Faculty=" + (faculty != null ? faculty.getFacultyName() : "null") +
                 '}';
     }
 

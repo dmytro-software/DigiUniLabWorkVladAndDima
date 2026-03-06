@@ -65,10 +65,10 @@ public class Student extends Person {
     public String toString() {
         return super.toString() +
                 "   | Заліковка: " + gradeBookId +
-                "\n | Курс: " + course +
-                "\n | Група: " + group +
-                "\n | Рік: " + enrollmentYear +
-                "\n | Форма: " + formOfEducation +
-                "\n | Статус: " + studentStatus;
+                "  | Курс: " + course +
+                "  | Група: " + group +
+                "  | Рік: " + enrollmentYear +
+                "  | Форма: " + formOfEducation +
+                "  | Статус: " + studentStatus;
     }
 }

@@ -70,10 +70,10 @@ public class Faculty {
     public String toString() {
         return "Faculty{" +
                 "id=" + idFaculty +
-                ", name='" + facultyName + '\'' +
-                ", shortName='" + facultyShortName + '\'' +
-                ", head='" + headOfFaculty + '\'' +
-                ", contacts='" + contactsOfFaculty + '\'' +
+                ", Name='" + facultyName + '\'' +
+                ", Short Name='" + facultyShortName + '\'' +
+                ", Head='" + headOfFaculty + '\'' +
+                ", Contacts='" + contactsOfFaculty + '\'' +
                 '}';
     }
 
