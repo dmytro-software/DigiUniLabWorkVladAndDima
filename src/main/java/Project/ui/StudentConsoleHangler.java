@@ -1,19 +1,15 @@
 package Project.ui;
 
 import Project.Models.Student;
-import Project.service.DepartmentService;
 import Project.service.StudentService;
+import Project.validation.StudentValidator;
 import org.jline.reader.LineReader;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class StudentConsoleHangler {
-    private final StudentService studentService;
+    private StudentService studentService;
 
     public StudentConsoleHangler(StudentService studentService) {
         this.studentService = studentService;
@@ -21,54 +17,42 @@ public class StudentConsoleHangler {
 
     public void handleAddStudent(LineReader reader) {
         try {
-
             int departmentId = Integer.parseInt(reader.readLine("Department ID: "));
+            StudentValidator.validateId(departmentId);
 
             int idPerson = (int) (Math.random() * 900000) + 100000;
-            System.out.println("Person ID: " + idPerson);
+            System.out.println("Generated Person ID: " + idPerson);
 
             String pib = reader.readLine("Full Name (PIB): ");
-            if (pib.isBlank() || !pib.matches("^[a-zA-Zа-яА-ЯіїєґІЇЄҐ'\\s]+$")) {
-                System.out.println("Invalid name format.");
-                return;
-            }
+            StudentValidator.validatePib(pib);
 
             String birthDate = reader.readLine("Birth Date (YYYYMMDD): ");
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-            LocalDate birthLocalDate = LocalDate.parse(birthDate, formatter);
-
-            if (birthLocalDate.isAfter(LocalDate.now())) {
-                System.out.println("Birth date cannot be in future.");
-                return;
-            }
-
-            int age = Period.between(birthLocalDate, LocalDate.now()).getYears();
-            if (age < 16 || age > 60) {
-                System.out.println("Student age must be between 16 and 60.");
-                return;
-            }
+            StudentValidator.validateBirthDate(birthDate);
 
             String email = reader.readLine("Email: ");
-            if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,}$")) {
-                System.out.println("Invalid email format.");
-                return;
-            }
+            StudentValidator.validateEmail(email);
 
             String phoneStr = reader.readLine("Phone (10 digits): ");
-            if (!phoneStr.matches("\\d{10}")) {
-                System.out.println("Phone must be 10 digits.");
-                return;
-            }
+            StudentValidator.validatePhoneNumber(phoneStr);
             int phoneNumber = Integer.parseInt(phoneStr);
 
             int gradeBookId = (int) (Math.random() * 900000) + 100000;
-            System.out.println("GradeBook ID: " + gradeBookId);
+            System.out.println("Generated gradeBook ID: " + gradeBookId);
 
             int course = Integer.parseInt(reader.readLine("Course (1-4): "));
+            StudentValidator.valideCourse(course);
+
             int group = Integer.parseInt(reader.readLine("Group: "));
+            StudentValidator.valideGroup(group);
+
             int enrollmentYear = Integer.parseInt(reader.readLine("Enrollment year: "));
+            StudentValidator.validateEnrollmentYear(enrollmentYear);
+
             String formOfEducation = reader.readLine("Form of Education: ");
+            StudentValidator.valideFormOfEducation(formOfEducation);
+
             String studentStatus = reader.readLine("Student status: ");
+            StudentValidator.valideStudentStatus(studentStatus);
 
             studentService.addStudent(
                     departmentId,
@@ -104,62 +88,84 @@ public class StudentConsoleHangler {
 
                 System.out.println("Editing student. Press Enter to keep current value.");
 
+                // PIB
                 String pib = reader.readLine("Full Name (" + student.getPib() + "): ");
-                if (!pib.isBlank())
+                if (!pib.isBlank()) {
+                    StudentValidator.validatePib(pib);
                     student.setPib(pib);
+                }
 
-                 String birthDate = reader.readLine("Birth Date (YYYYMMDD): ");
-                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-                 LocalDate birthLocalDate = LocalDate.parse(birthDate, formatter);
-
-                 if (birthLocalDate.isAfter(LocalDate.now())) {
-                     System.out.println("Birth date cannot be in future.");
-                     return;
-                 }
-
-                 int age = Period.between(birthLocalDate, LocalDate.now()).getYears();
-                if (age < 16 || age > 60) {
-                     System.out.println("Student age must be between 16 and 60.");
-                      return;
-                 }
-
+                // Email
                 String email = reader.readLine("Email (" + student.getEmail() + "): ");
-                if (!email.isBlank())
+                if (!email.isBlank()) {
+                    StudentValidator.validateEmail(email);
                     student.setEmail(email);
+                }
 
-                int phoneNumber = Integer.parseInt(reader.readLine("Phone Number (" + student.getPhoneNumber() + "): "));
+                // Phone
+                String phoneStr = reader.readLine("Phone (" + student.getPhoneNumber() + "): ");
+                int phoneNumber;
+                if (!phoneStr.isBlank()) {
+                    phoneNumber = student.getPhoneNumber();
+                }else {
+                    phoneNumber = Integer.parseInt(phoneStr);
+                    StudentValidator.validatePhoneNumber(phoneStr);
+                    student.setPhoneNumber(phoneNumber);
+                }
 
+                // Course
+                String courseInput = reader.readLine("Course (" + student.getCourse() + "): ");
+                int finalCourse;
+                if (courseInput.isBlank()) {
+                    finalCourse = student.getCourse();
+                } else {
+                    finalCourse = Integer.parseInt(courseInput);
+                    StudentValidator.valideCourse(finalCourse);
+                    student.setCourse(finalCourse);
+                }
 
-                int course = Integer.parseInt(reader.readLine("Course (" + student.getCourse() + "): "));
+                // Group
+                String groupInput= reader.readLine("Group (" + student.getGroup() + "): ");
+                int group;
+                if (!groupInput.isBlank()) {
+                    group = student.getGroup();
+                } else {
+                    group = Integer.parseInt(groupInput);
+                    StudentValidator.valideGroup(group);
+                    student.setGroup(group);
+                }
 
-
-                int group = Integer.parseInt(reader.readLine("Group (" + student.getGroup() + "): "));
-
-                int enrollmentYear = Integer.parseInt(reader.readLine("Enrollment year (" + student.getEnrollmentYear() + "): "));
-
+                // Form of Education
                 String formOfEducation = reader.readLine("Form of Education (" + student.getFormOfEducation() + "): ");
+                if (!formOfEducation.isBlank()) {
+                    StudentValidator.valideFormOfEducation(formOfEducation);
+                    student.setFormOfEducation(formOfEducation);
+                }
 
+                // Status
                 String studentStatus = reader.readLine("Status (" + student.getStudentStatus() + "): ");
+                if (!studentStatus.isBlank()) {
+                    StudentValidator.valideStudentStatus(studentStatus);
+                    student.setStudentStatus(studentStatus);
+                }
+
+                System.out.println("Student updated successfully!");
 
 
-                studentService.editStudent(
-                        gradeBooktId,
-                        pib,
-                        birthDate,
-                        email,
-                        phoneNumber,
-                        course,
-                        group,
-                        enrollmentYear,
-                        formOfEducation,
-                        studentStatus
+                studentService.editStudent(gradeBooktId,
+                                           pib,
+                                           email,
+                                           phoneNumber,
+                                           finalCourse,
+                                           group,
+                                           formOfEducation,
+                                           studentStatus
+
                 );
 
                 System.out.println("Student successfully updated!");
 
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid number format.");
-            } catch (Exception e) {
+                }catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
             }
     }
@@ -209,3 +215,21 @@ public class StudentConsoleHangler {
         }
     }
 }
+
+
+// Department
+//String departmentInput = reader.readLine("Department ID (" + student.getDepartmentId() + "): ");
+//int departmentId;
+//
+//if (departmentInput.isBlank()) {
+//departmentId = student.getDepartmentId();
+//} else {
+//departmentId = Integer.parseInt(departmentInput);
+//
+//    if (studentService.getDepartmentService().findById(departmentId) == null) {
+//        System.out.println("Department with this ID does not exist!");
+//        return;
+//                }
+//
+//                student.setDepartmentId(departmentId);
+//}

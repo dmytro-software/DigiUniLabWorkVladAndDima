@@ -71,4 +71,5 @@ public class Student extends Person {
                 "\n | Форма: " + formOfEducation +
                 "\n | Статус: " + studentStatus;
     }
+
 }

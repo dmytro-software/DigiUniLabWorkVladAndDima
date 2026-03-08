@@ -26,7 +26,7 @@ public class Main {
     private static final TeacherService teacherService = new TeacherServiceImpl(deptService);
 
     private static final FacultyConsoleHandler facultyHandler = new FacultyConsoleHandler(facultyService);
-    private static final DepartmentConsoleHandler deptHandler = new DepartmentConsoleHandler(deptService);
+    private static final DepartmentConsoleHandler deptHandler = new DepartmentConsoleHandler(deptService, facultyService);
     private static final StudentConsoleHangler studentHandler = new StudentConsoleHangler(studentService);
     private static final TeacherConsoleHangler teacherHandler = new TeacherConsoleHangler(teacherService);
 
@@ -102,7 +102,7 @@ public class Main {
                     break;
 
                 case "0":
-                   System.out.println(myUniversity);
+                    myUniversity.printInfo();
                     break;
 
                 case "1":
@@ -157,7 +157,7 @@ public class Main {
                     break;
 
                 case "15":
-                    //teacherHandler.handleEditTeacher(reader);
+                    teacherHandler.handleEditTeacher(reader);
                     break;
 
                 case "16":

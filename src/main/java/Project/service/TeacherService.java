@@ -21,7 +21,13 @@ public interface TeacherService {
 
     boolean removeTeacher(int teacherId);
 
-    void editTeacher(int teacherId,
+    void editTeacher(int departmentId,
+                     int idPerson,
+                     String pib,
+                     String birthDate,
+                     String email,
+                     int phoneNumber,
+                     int teacherId,
                      String position,
                      String academicDegree,
                      String academicRank,
@@ -29,4 +35,6 @@ public interface TeacherService {
                      Double fullTimeEquivalent);
 
     List<Teacher> findAll();
+
+    Teacher findByTeacherId(int teacherId);
 }

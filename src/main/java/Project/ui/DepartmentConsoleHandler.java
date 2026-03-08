@@ -2,23 +2,35 @@ package Project.ui;
 import Project.Models.Department;
 import Project.Models.Faculty;
 import Project.service.DepartmentService;
+import Project.service.FacultyService;
+import Project.validation.DepartmentValidator;
 import org.jline.reader.LineReader;
 
 import java.util.List;
 
 public class DepartmentConsoleHandler {
     private final DepartmentService departmentService;
+    private final FacultyService facultyService;
 
-    public DepartmentConsoleHandler(DepartmentService departmentService) {
+    public DepartmentConsoleHandler(DepartmentService departmentService, FacultyService facultyService) {
         this.departmentService = departmentService;
+        this.facultyService = facultyService;
     }
 
     public void handleAddDepartment(LineReader reader) {
         try {
             String name = reader.readLine("Department Name: ");
+            DepartmentValidator.validateDepartmentName(name);
+
             int facultyId = Integer.parseInt(reader.readLine("Faculty ID: "));
+            DepartmentValidator.validateFacultyId(facultyId);
+
             String head = reader.readLine("Head: ");
+            DepartmentValidator.validateHeadOfDepartment(head);
+
             int room = Integer.parseInt(reader.readLine("Room Number: "));
+            DepartmentValidator.validateRoomNumber(room);
+
             int id = (int) (Math.random() * 900000) + 100000;
 
             departmentService.addDepartment(id, name, facultyId, head, room);
@@ -56,20 +68,57 @@ public class DepartmentConsoleHandler {
                 return;
             }
 
-            String name = reader.readLine("New Name (leave blank to keep '" + department.getDepartmentName() + "'): ");
-            int facultyId= Integer.parseInt(reader.readLine("New Faculty ID (leave blank to keep '" + department.getFaculty() + "'): "));
-            String head = reader.readLine("New Head (leave blank to keep '" + department.getHeadOfDepartment() + "'): ");
-            int roomNumber = Integer.parseInt(reader.readLine("New Room Number (leave blank to keep '" + department.getRoomNumber() + "'): "));
+            System.out.println("Editing department. Press Enter to keep current value.");
 
+            // Name
+            String name = reader.readLine("New Name (" + department.getDepartmentName() + "): ");
+            if (!name.isBlank()) {
+                DepartmentValidator.validateDepartmentName(name);
+                department.setDepartmentName(name);
+            }
 
-            departmentService.editDepartment(departmentId, name, facultyId, head,  roomNumber);
-            System.out.println("Department updated successfully.");
+            // Faculty ID
+            String facultyInput = reader.readLine("New Faculty ID (" + department.getFacultyId() + "): ");
+            int facultyId;
+            if (facultyInput.isBlank()) {
+                facultyId = department.getFacultyId();
+            } else {
+                facultyId = Integer.parseInt(facultyInput);
+                if (facultyService.findById(facultyId) == null) {
+                    System.out.println("Department with this ID does not exist!");
+                    return;
 
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. ID must be a number.");
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+                }
+                DepartmentValidator.validateFacultyId(departmentId);
+                department.setFacultyId(facultyId);
+            }
+
+                // Head
+                String head = reader.readLine("New Head (" + department.getHeadOfDepartment() + "): ");
+                if (!head.isBlank()) {
+                    DepartmentValidator.validateHeadOfDepartment(head);
+                    department.setHeadOfDepartment(head);
+                }
+
+                // Room Number
+                String roomInput = reader.readLine("New Room Number (" + department.getRoomNumber() + "): ");
+                int roomNumber;
+                if (roomInput.isBlank()) {
+                    roomNumber = department.getRoomNumber();
+                } else {
+                    roomNumber = Integer.parseInt(roomInput);
+                    DepartmentValidator.validateRoomNumber(roomNumber);
+                    department.setRoomNumber(roomNumber);
+                }
+
+                departmentService.editDepartment(departmentId, name, facultyId, head, roomNumber);
+                System.out.println("Department updated successfully.");
+
+            } catch(NumberFormatException e){
+                System.out.println("Error: Please enter a valid numeric value.");
+            } catch(IllegalArgumentException e){
+                System.out.println("Validation Error: " + e.getMessage());
+            }
     }
 
     public void handleShowAllDepartments() {
