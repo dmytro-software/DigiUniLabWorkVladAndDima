@@ -26,7 +26,7 @@ public class Main {
     private static final TeacherService teacherService = new TeacherServiceImpl(deptService);
 
     private static final FacultyConsoleHandler facultyHandler = new FacultyConsoleHandler(facultyService);
-    private static final DepartmentConsoleHandler deptHandler = new DepartmentConsoleHandler(deptService);
+    private static final DepartmentConsoleHandler deptHandler = new DepartmentConsoleHandler(deptService, facultyService);
     private static final StudentConsoleHangler studentHandler = new StudentConsoleHangler(studentService);
     private static final TeacherConsoleHangler teacherHandler = new TeacherConsoleHangler(teacherService);
 
@@ -71,104 +71,100 @@ public class Main {
             switch (line) {
                 case "help -manager":
                     System.out.println("""
-                ===================================================
-                |                DigiUni Manager                  |
-                ===================================================
-                | Action | Target | Description                   |
-                |--------|--------|-------------------------------|
-                | ls     | uni    | Show university               |
-                |--------|--------|-------------------------------|
-                | add    | fac    | Add a new faculty             |
-                | edit   | fac    | Edit a faculty                |
-                | rm     | fac    | Remove a faculty              |
-                | ls     | fac    | Show all faculties            |
-                |--------|--------|-------------------------------|
-                | add    | dep    | Add a department              |
-                | edit   | dep    | Edit a department             |
-                | rm     | dep    | Remove a department           |
-                | ls     | dep    | Show all departments          |
-                |--------|--------|-------------------------------|
-                | add    | stu    | Add a student                 |
-                | edit   | stu    | Edit a student                |
-                | rm     | stu    | Remove a student              |
-                | ls     | stu    | Show all students             |
-                |--------|--------|-------------------------------|
-                | add    | tch    | Add a teacher                 |
-                | edit   | tch    | Edit a teacher                |
-                | rm     | tch    | Remove a teacher              |
-                | ls     | tch    | Show all teachers             |
-                ===================================================
-                | exit            | Exit program                  |
-                ===================================================
-                * Tip: Type commands like 'add stu' or 'ls fac'
-                """);
+                            ====================================
+                            |               Commands:          |
+                            |==================================|
+                            | 0       | - Show university      |
+                            |==================================|
+                            | 1       | - Add a faculty        |
+                            | 2       | - Edit a faculty       |
+                            | 3       | - Remove a faculty     |
+                            | 4       | - Show all faculties   |
+                            |==================================|
+                            | 5       | - Add a department     |
+                            | 6       | - Remove a department  |
+                            | 7       | - Edit a department    |
+                            | 8       | - Show all departments |
+                            |==================================|
+                            | 9       | - Add a student        |
+                            | 10      | - Edit a student       |
+                            | 11      | - Remove a student     |
+                            | 12      | - Show all students    |
+                            |==================================|
+                            | 13      | - Add a teacher        |
+                            | 14      | - Remove a teacher     |
+                            | 15      | - Edit a teacher       |
+                            | 16      | - Show all teachers    |
+                            |==================================|
+                            | exit    | - Exit program         |
+                            ===================================
+                            """);
                     break;
 
-                case "ls uni":
-                    System.out.println(myUniversity);
+                case "0":
+                    myUniversity.printInfo();
                     break;
 
-                case "add fac":
+                case "1":
                     facultyHandler.handleAddFaculty(reader);
                     break;
 
-                case "edit fac":
+                case "2":
                     facultyHandler.handleEditFaculty(reader);
                     break;
 
-                case "rm fac":
+                case "3":
                     facultyHandler.handleRemoveFaculty(reader);
                     break;
 
-                case "ls fac":
+                case "4":
                     facultyHandler.handleShowAllFaculties();
                     break;
 
-                case "add dep":
+                case "5":
                     deptHandler.handleAddDepartment(reader);
                     break;
 
-                case "rm dep":
+                case "7":
                     deptHandler.handleRemoveDepartment(reader);
                     break;
-
-                case "edit dep":
+                case "8":
                     deptHandler.handleEditDepartment(reader);
                     break;
 
-                case "ls dep":
+                case "9":
                     deptHandler.handleShowAllDepartments();
                     break;
 
-                case "add stu":
+                case "10":
                     studentHandler.handleAddStudent(reader);
                     break;
 
-                case "edit stu":
+                case "11":
                     studentHandler.handleEditStudent(reader);
                     break;
 
-                case "rm stu":
+                case "12":
                     studentHandler.handleRemoveStudent(reader);
                     break;
 
-                case "ls stu":
+                case "13":
                     studentHandler.handleShowAllStudents();
                     break;
 
-                case "add tch":
+                case "14":
                     teacherHandler.handleAddTeacher(reader);
                     break;
 
-                case "edit tch":
-                    //teacherHandler.handleEditTeacher(reader);
+                case "15":
+                    teacherHandler.handleEditTeacher(reader);
                     break;
 
-                case "rm tch":
+                case "16":
                     teacherHandler.handleRemoveTeacher(reader);
                     break;
 
-                case "ls tch":
+                case "17":
                     teacherHandler.handleShowAllTeachers();
                     break;
 

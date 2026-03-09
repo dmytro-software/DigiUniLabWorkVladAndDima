@@ -10,15 +10,15 @@ public class Department {
     private String departmentName;
     private String headOfDepartment;
     private int roomNumber;
-    private Faculty faculty;
+    private int facultyId;
     private List<Student> students = new ArrayList<>();
     private List<Teacher> teachers = new ArrayList<>();
 
 
-    public Department(int idDepartment, String departmentName, Faculty faculty, String headOfDepartment, int roomNumber) {
+    public Department(int idDepartment, String departmentName, int facultyId, String headOfDepartment, int roomNumber) {
         this.idDepartment = idDepartment;
         this.departmentName = departmentName;
-        this.faculty = faculty;
+        this.facultyId = facultyId;
         this.headOfDepartment = headOfDepartment;
         this.roomNumber = roomNumber;
     }
@@ -26,6 +26,7 @@ public class Department {
     public int getIdDepartment() {
         return idDepartment;
     }
+
     public String getDepartmentName() {
         return departmentName;
     }
@@ -38,8 +39,8 @@ public class Department {
         return roomNumber;
     }
 
-    public Faculty getFaculty() {
-        return faculty;
+    public int getFacultyId() {
+        return facultyId;
     }
 
     public void setDepartmentName(String departmentName) {
@@ -54,12 +55,14 @@ public class Department {
         this.roomNumber = roomNumber;
     }
 
-    public void setFaculty(Faculty faculty) {
-        this.faculty = faculty;
+    public void setFacultyId(int facultyId) {
+        this.facultyId = facultyId;
     }
+
     public List<Student> getStudents() {
         return students;
     }
+
     public void setStudents(List<Student> students) {
         this.students = students;
     }
@@ -75,11 +78,11 @@ public class Department {
     @Override
     public String toString() {
         return "Department{" +
-                "Id=" + idDepartment +
-                ", Name='" + departmentName + '\'' +
-                ", Head='" + headOfDepartment + '\'' +
-                ", Room=" + roomNumber +
-                ", Faculty=" + (faculty != null ? faculty.getFacultyName() : "null") +
+                "id=" + idDepartment +
+                ", name='" + departmentName + '\'' +
+                ", head='" + headOfDepartment + '\'' +
+                ", room=" + roomNumber +
+                ", faculty id =" + facultyId +
                 '}';
     }
 

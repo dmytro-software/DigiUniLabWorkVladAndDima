@@ -30,10 +30,8 @@ public class StudentServiceImpl implements StudentService {
                            String formOfEducation,
                            String studentStatus) {
 
-        // 1. Знаходимо кафедру
         Department department = departmentService.findById(departmentId);
 
-        // 2. Створюємо студента
         Student newStudent = new Student(
                 idPerson,
                 pib,
@@ -69,12 +67,10 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void editStudent(int gradeBookId,
                             String pib,
-                            String birthDate,
                             String email,
                             int phoneNumber,
                             int course,
                             int group,
-                            int enrollmentYear,
                             String formOfEducation,
                             String studentStatus) {
 

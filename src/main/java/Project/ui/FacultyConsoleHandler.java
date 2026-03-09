@@ -3,6 +3,7 @@ package Project.ui;
 import Project.Models.Faculty;
 import Project.service.FacultyService;
 
+import Project.validation.FacultyValidator;
 import org.jline.reader.LineReader;
 
 import java.util.List;
@@ -17,10 +18,18 @@ public class FacultyConsoleHandler {
     public void handleAddFaculty(LineReader reader) {
         try {
             int id = (int) (Math.random() * 900000) + 100000;
+
             String name = reader.readLine("Faculty Name: ");
+            FacultyValidator.validateFacultyName(name);
+
             String shortName = reader.readLine("Short Name: ");
+            FacultyValidator.validateFacultyShortName(shortName);
+
             String head = reader.readLine("Head: ");
+            FacultyValidator.validateHeadOfFaculty(head);
+
             String contacts = reader.readLine("Contacts: ");
+            FacultyValidator.validatePhoneNumber(contacts);
 
             Faculty newFaculty = new Faculty(id, name, shortName, head, contacts);
             facultyService.addFaculty(newFaculty);
@@ -47,10 +56,10 @@ public class FacultyConsoleHandler {
 
         try {
             String idInput = reader.readLine("Enter faculty id: ");
+            int idFaculty;
+            if(idInput.isBlank()){
+//                idFaculty =
 
-            if (idInput == null || idInput.isBlank()) {
-                System.out.println("Faculty id cannot be empty.");
-                return;
             }
 
             int id = Integer.parseInt(idInput);

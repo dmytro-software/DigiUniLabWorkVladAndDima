@@ -23,12 +23,10 @@ public interface StudentService {
     void editStudent(
             int gradeBookId,
             String pib,
-            String birthDate,
             String email,
             int phoneNumber,
             int course,
             int group,
-            int enrollmentYear,
             String formOfEducation,
             String studentStatus);
 

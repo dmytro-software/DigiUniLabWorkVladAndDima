@@ -4,10 +4,9 @@ import Project.Models.Department;
 import Project.Models.Faculty;
 import Project.service.DepartmentService;
 import Project.service.FacultyService;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 public class DepartmentServiceImpl implements DepartmentService {
 
@@ -19,14 +18,12 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public void addDepartment(int id, String name, int facultyId, String head, int room) {
-
         Faculty faculty = facultyService.findById(facultyId);
         if (faculty == null) {
             throw new IllegalArgumentException("Faculty not found with ID: " + facultyId);
         }
 
-        Department newDepartment =
-                new Department(id, name, faculty, head, room);
+        Department newDepartment = new Department(id, name, facultyId, head, room);
 
         faculty.getDepartments().add(newDepartment);
     }
@@ -34,9 +31,16 @@ public class DepartmentServiceImpl implements DepartmentService {
     public boolean removeDepartment(int id) {
 
         for (Faculty faculty : facultyService.findAll()) {
-            boolean removed = faculty.getDepartments().removeIf(dep -> dep.getIdDepartment() == id);
-            if (removed) return true;
+            List<Department> departments = faculty.getDepartments();
+
+            for (Department dep : departments) {
+                if (dep.getIdDepartment() == id) {
+                    departments.remove(dep);
+                    return true;
+                }
+            }
         }
+
         return false;
     }
 
@@ -69,9 +73,15 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public List<Department> findAll() {
 
-        return facultyService.findAll().stream()
-                .flatMap(f -> f.getDepartments().stream())
-                .collect(Collectors.toList());
+        List<Department> departments = new ArrayList<>();
+
+        for (Faculty faculty : facultyService.findAll()) {
+            for (Department department : faculty.getDepartments()) {
+                departments.add(department);
+            }
+        }
+
+        return departments;
     }
 
 }
