@@ -18,6 +18,7 @@ public class FacultyConsoleHandler {
     public void handleAddFaculty(LineReader reader) {
         try {
             int id = (int) (Math.random() * 900000) + 100000;
+            System.out.println("Faculty id: " + id);
 
             String name = reader.readLine("Faculty Name: ");
             FacultyValidator.validateFacultyName(name);

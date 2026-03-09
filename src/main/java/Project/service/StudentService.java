@@ -34,5 +34,11 @@ public interface StudentService {
 
     Student findStudentByGradeBook(int gradeBookId);
 
+    List<Student> findByPib(String pib);
+
+    List<Student> findByGroup(int group);
+
+    List<Student> findByCourse(int course);
+
 
 }

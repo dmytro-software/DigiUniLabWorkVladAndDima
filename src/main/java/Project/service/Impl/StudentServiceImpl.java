@@ -5,6 +5,7 @@ import Project.Models.Student;
 import Project.service.DepartmentService;
 import Project.service.StudentService;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,5 +124,57 @@ public class StudentServiceImpl implements StudentService {
         }
 
         return null;
+    }
+
+    @Override
+    public List<Student> findByPib(String pib) {
+        List<Student> foundStudents = new ArrayList<>();
+
+        for (Department department : departmentService.findAll()) {
+            for (Student student : department.getStudents()) {
+                if (student.getPib().equalsIgnoreCase(pib)) {
+                    foundStudents.add(student);
+                }
+            }
+        }
+        System.out.println("Search results: " + pib);
+        System.out.println("Found: " + foundStudents.size());
+        return foundStudents;
+    }
+
+    @Override
+    public List<Student> findByGroup(int group) {
+
+        List<Student> foundStudents = new ArrayList<>();
+        for (Department department : departmentService.findAll()) {
+            for (Student student : department.getStudents()) {
+                if (student.getGroup() == group) {
+                    foundStudents.add(student);
+                }
+            }
+        }
+
+        System.out.println("Search by group: " + group );
+        System.out.println("Total found: " + foundStudents.size());
+        return foundStudents;
+
+    }
+
+    @Override
+    public List<Student> findByCourse(int course) {
+
+        List<Student> foundStudents = new ArrayList<>();
+        for (Department department : departmentService.findAll()) {
+            for (Student student : department.getStudents()) {
+                if (student.getCourse() == course) {
+                    foundStudents.add(student);
+                }
+            }
+        }
+
+        System.out.println("Search by course: " + course );
+        System.out.println("Total found: " + foundStudents.size());
+        return foundStudents;
+
     }
 }

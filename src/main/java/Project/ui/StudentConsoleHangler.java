@@ -5,6 +5,7 @@ import Project.service.StudentService;
 import Project.validation.StudentValidator;
 import org.jline.reader.LineReader;
 
+import javax.sound.sampled.Line;
 import java.util.List;
 
 
@@ -213,6 +214,65 @@ public class StudentConsoleHangler {
             System.out.println("Student Status: " + s.getStudentStatus());
             System.out.println("--------------------------------------------------\n");
         }
+    }
+
+    public void handleFindStudentByPib(LineReader reader){
+        try {
+            String studentPib = reader.readLine("Enter a Student Pib: ");
+            StudentValidator.validatePib(studentPib);
+            List<Student> result = studentService.findByPib(studentPib);
+
+            if (result.isEmpty()) {
+                System.out.println("No students found with PIB: " + studentPib);
+                return;
+            }
+            System.out.println("\n--- Search Results ---");
+            for( Student s : result){
+                System.out.println(s);
+            }
+
+
+        }catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+        }
+
+    }
+
+    public void handleFindStudentByCourse(LineReader reader){
+        try{
+            int course = Integer.parseInt(reader.readLine("Enter course number: "));
+            StudentValidator.valideCourse(course);
+            List<Student> result = studentService.findByCourse(course);
+
+            if (result.isEmpty()) {
+                System.out.println("No students found with this course: " + course);
+                return;
+            }
+            System.out.println("\n--- Search Results ---");
+            for( Student s : result){
+                System.out.println(s);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error:" + e.getMessage());
+        }
+    }
+
+    public void handleFindStudentsByGroup(LineReader reader){
+        int group = Integer.parseInt(reader.readLine("Enter group number: "));
+        StudentValidator.valideGroup(group);
+
+        List<Student> result = studentService.findByGroup(group);
+
+        if (result.isEmpty()) {
+            System.out.println("No students found with this group: " + group);
+            return;
+        }
+        System.out.println("\n--- Search Results ---");
+        for( Student s : result){
+            System.out.println(s);
+        }
+
     }
 }
 

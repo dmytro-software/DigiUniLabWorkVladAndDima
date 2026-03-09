@@ -1,6 +1,7 @@
 package Project.service.Impl;
 
 import Project.Models.Department;
+import Project.Models.Student;
 import Project.Models.Teacher;
 import Project.service.DepartmentService;
 import Project.service.TeacherService;
@@ -80,6 +81,7 @@ public class TeacherServiceImpl implements TeacherService {
                             String academicRank,
                             String hireDate,
                             Double fullTimeEquivalent) {
+
         for (Department department : departmentService.findAll()) {
 
             for (Teacher teacher : department.getTeachers()) {
@@ -107,20 +109,30 @@ public class TeacherServiceImpl implements TeacherService {
         }
 
         throw new IllegalArgumentException("Teacher not found with ID: " + teacherId);
-
     }
 
-    @Override
     public Teacher findByTeacherId(int teacherId) {
 
-        for(Department dep : departmentService.findAll()) {
+        for (Department dep : departmentService.findAll()) {
 
-            for(Teacher teach : dep.getTeachers()) {
+            for (Teacher teach : dep.getTeachers()) {
 
                 if (teach.getTeacherId() == teacherId) {
 
                     return teach;
 
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Teacher findByPib(String pib) {
+        for(Department dep : departmentService.findAll()){
+            for( Teacher teacher : dep.getTeachers()){
+                if(teacher.getPib().equals(pib)){
+                    return teacher;
                 }
             }
         }

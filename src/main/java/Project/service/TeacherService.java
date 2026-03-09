@@ -37,4 +37,6 @@ public interface TeacherService {
     List<Teacher> findAll();
 
     Teacher findByTeacherId(int teacherId);
+
+    Teacher findByPib(String pib);
 }

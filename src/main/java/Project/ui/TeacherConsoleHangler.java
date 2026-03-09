@@ -65,7 +65,7 @@ public class TeacherConsoleHangler {
                     fullTimeEquivalent
             );
 
-            System.out.println("Student successfully added!");
+            System.out.println("Teacher successfully added!");
 
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -184,6 +184,40 @@ public class TeacherConsoleHangler {
 
         } catch (Exception e) {
             System.out.println("Invalid input.");
+        }
+    }
+
+    public void handelFindTeacherByPib(LineReader reader){
+        try {
+            String teacherPib = reader.readLine("Enter teacher Pib: ");
+            TeacherValidator.validateName(teacherPib);
+
+            Teacher teacher = teacherService.findByPib(teacherPib);
+            if (teacher == null) {
+                System.out.println("Teacher with PIB " + teacherPib + " not found");
+            }
+            System.out.println("Teacher Found");
+            System.out.println(teacher);
+        }catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void handleFindTeacherById(LineReader reader){
+        try{
+            int teacherID = Integer.parseInt(reader.readLine("Enter TeacherId: "));
+            TeacherValidator.validateId(teacherID);
+
+            Teacher teacher = teacherService.findByTeacherId(teacherID);
+
+            if(teacher == null){
+                System.out.println("Teacher with PIB " + teacherID + " not found");
+            }
+
+            System.out.println("Teacher Found");
+            System.out.println(teacher);
+        }catch (Exception e){
+            System.out.println("Error: "+ e.getMessage() );
         }
     }
 

@@ -32,6 +32,7 @@ public class DepartmentConsoleHandler {
             DepartmentValidator.validateRoomNumber(room);
 
             int id = (int) (Math.random() * 900000) + 100000;
+            System.out.println("Department ID:" + id);
 
             departmentService.addDepartment(id, name, facultyId, head, room);
 
