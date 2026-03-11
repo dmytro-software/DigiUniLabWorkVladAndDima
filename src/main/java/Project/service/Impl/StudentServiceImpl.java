@@ -6,6 +6,7 @@ import Project.service.DepartmentService;
 import Project.service.StudentService;
 
 import java.sql.SQLOutput;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class StudentServiceImpl implements StudentService {
     public void addStudent(int departmentId,
                            int idPerson,
                            String pib,
-                           String birthDate,
+                           LocalDate birthDate,
                            String email,
                            int phoneNumber,
                            int gradeBookId,

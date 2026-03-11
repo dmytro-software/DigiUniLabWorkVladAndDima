@@ -1,5 +1,7 @@
 package Project.Models;
 
+import java.time.LocalDate;
+
 public class Teacher extends Person {
     private final int teacherId;
     private String position;
@@ -9,7 +11,7 @@ public class Teacher extends Person {
     private String hireDate;
     private double fullTimeEquivalent;
 
-    public Teacher(int idPerson, String pib, String birthDate, String email,
+    public Teacher(int idPerson, String pib, LocalDate birthDate, String email,
                    int phoneNumber, int teacherId, String position, Department department, String academicDegree, String academicRank, String hireDate, double fullTimeEquivalent) {
         super(idPerson, pib, birthDate, email, phoneNumber);
         this.teacherId = teacherId;

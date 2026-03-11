@@ -1,5 +1,6 @@
 package Project.Models;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class Student extends Person {
@@ -10,7 +11,7 @@ public class Student extends Person {
     private String formOfEducation;
     private String studentStatus;
 
-    public Student(int idPerson, String pib, String birthDate, String email, int phoneNumber, int gradeBookId, int course,
+    public Student(int idPerson, String pib, LocalDate birthDate, String email, int phoneNumber, int gradeBookId, int course,
                    int group, int  enrollmentYear, String formOfEducation, String studentStatus) {
         super(idPerson, pib, birthDate, email, phoneNumber);
         this.course = course;

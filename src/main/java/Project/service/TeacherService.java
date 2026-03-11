@@ -2,6 +2,7 @@ package Project.service;
 
 import Project.Models.Teacher;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface TeacherService {
@@ -9,7 +10,7 @@ public interface TeacherService {
     void addTeacher(int departmentId,
                     int idPerson,
                     String pib,
-                    String birthDate,
+                    LocalDate birthDate,
                     String email,
                     int phoneNumber,
                     int teacherId,

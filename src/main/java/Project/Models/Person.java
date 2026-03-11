@@ -1,14 +1,16 @@
 package Project.Models;
 
+import java.time.LocalDate;
+
 public abstract class Person {
     private final int idPerson;
     private String pib;
-    private final String birthDate;
+    private final LocalDate birthDate;
     private String email;
     private int phoneNumber;
 
 
-    public Person(int idPerson, String pib, String birthDate, String email, int phoneNumber) {
+    public Person(int idPerson, String pib, LocalDate birthDate, String email, int phoneNumber) {
         this.idPerson = idPerson;
         this.pib = pib;
         this.birthDate = birthDate;
@@ -28,7 +30,7 @@ public abstract class Person {
         this.pib = pib;
     }
 
-    public String getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 

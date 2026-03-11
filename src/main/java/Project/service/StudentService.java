@@ -2,13 +2,14 @@ package Project.service;
 
 import Project.Models.Student;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface StudentService {
     void addStudent(int departmentId,
                     int idPerson,
                     String pib,
-                    String birthDate,
+                    LocalDate birthDate,
                     String email,
                     int phoneNumber,
                     int gradeBookId,

@@ -4,6 +4,8 @@ import Project.Models.Teacher;
 import Project.service.TeacherService;
 import Project.validation.TeacherValidator;
 import org.jline.reader.LineReader;
+
+import java.time.LocalDate;
 import java.util.List;
 
 public class TeacherConsoleHangler {
@@ -22,6 +24,7 @@ public class TeacherConsoleHangler {
 
             String birthDate = reader.readLine("Birth Date (YYYYMMDD): ");
             TeacherValidator.validateBirthDate(birthDate);
+            LocalDate birthDatee = LocalDate.parse(birthDate, java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
 
             String email = reader.readLine("Email: ");
             TeacherValidator.validateEmail(email);
@@ -54,7 +57,7 @@ public class TeacherConsoleHangler {
             teacherService.addTeacher(
                     departmentId,
                     idPerson,
-                    pib, birthDate,
+                    pib, birthDatee,
                     email,
                     phoneNumber,
                     teacherId,

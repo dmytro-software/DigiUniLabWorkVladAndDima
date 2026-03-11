@@ -6,6 +6,7 @@ import Project.Models.Teacher;
 import Project.service.DepartmentService;
 import Project.service.TeacherService;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class TeacherServiceImpl implements TeacherService {
     public void addTeacher(int departmentId,
                            int idPerson,
                            String pib,
-                           String birthDate,
+                           LocalDate birthDate,
                            String email,
                            int phoneNumber,
                            int teacherId,

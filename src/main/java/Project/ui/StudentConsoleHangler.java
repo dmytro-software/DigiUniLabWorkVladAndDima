@@ -6,6 +6,7 @@ import Project.validation.StudentValidator;
 import org.jline.reader.LineReader;
 
 import javax.sound.sampled.Line;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -29,6 +30,7 @@ public class StudentConsoleHangler {
 
             String birthDate = reader.readLine("Birth Date (YYYYMMDD): ");
             StudentValidator.validateBirthDate(birthDate);
+            LocalDate birthDatee = LocalDate.parse(birthDate, java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
 
             String email = reader.readLine("Email: ");
             StudentValidator.validateEmail(email);
@@ -59,7 +61,7 @@ public class StudentConsoleHangler {
                     departmentId,
                     idPerson,
                     pib,
-                    birthDate,
+                    birthDatee,
                     email,
                     phoneNumber,
                     gradeBookId,
@@ -106,11 +108,11 @@ public class StudentConsoleHangler {
                 // Phone
                 String phoneStr = reader.readLine("Phone (" + student.getPhoneNumber() + "): ");
                 int phoneNumber;
-                if (!phoneStr.isBlank()) {
+                if (phoneStr.isBlank()) {
                     phoneNumber = student.getPhoneNumber();
-                }else {
-                    phoneNumber = Integer.parseInt(phoneStr);
+                } else {
                     StudentValidator.validatePhoneNumber(phoneStr);
+                    phoneNumber = Integer.parseInt(phoneStr);
                     student.setPhoneNumber(phoneNumber);
                 }
 
