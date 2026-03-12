@@ -1,5 +1,7 @@
 package Project.service.Impl;
 
+import Project.Exceptions.EntityNotEmptyException;
+import Project.Exceptions.EntityNotFoundException;
 import Project.Models.Faculty;
 import Project.Models.University;
 import Project.service.FacultyService;
@@ -25,16 +27,16 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public boolean removeFaculty(int id) {
-        for (Faculty fac : faculties) {
-            if (fac.getIdFaculty() == id) {
 
-                faculties.remove(fac);
-                university.getFaculties().remove(fac);
+        Faculty fac = findById(id);
 
-                return true;
-            }
+        if (fac.getDepartments() != null && !fac.getDepartments().isEmpty()) {
+            throw new EntityNotEmptyException("Cannot be deleted. Departments exist in this faculty");
         }
-        return false;
+
+        faculties.remove(fac);
+        university.getFaculties().remove(fac);
+        return true;
     }
 
     @Override
@@ -57,7 +59,7 @@ public class FacultyServiceImpl implements FacultyService {
            if(faculty.getIdFaculty() == id) {
                return faculty;
            }
-        throw new IllegalArgumentException("Faculty with ID " + id + " not found");
+        throw new EntityNotFoundException("Faculty with ID " + id + " not found");
     }
 
     @Override

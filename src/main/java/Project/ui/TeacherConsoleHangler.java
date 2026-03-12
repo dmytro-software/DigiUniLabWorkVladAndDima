@@ -1,5 +1,7 @@
 package Project.ui;
 
+import Project.Exceptions.EntityNotFoundException;
+import Project.Exceptions.ValidationException;
 import Project.Models.Teacher;
 import Project.service.TeacherService;
 import Project.validation.TeacherValidator;
@@ -70,6 +72,12 @@ public class TeacherConsoleHangler {
 
             System.out.println("Teacher successfully added!");
 
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        } catch (EntityNotFoundException e) {
+            System.out.println("Search Error: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Numeric format error");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -78,12 +86,8 @@ public class TeacherConsoleHangler {
     public void handleEditTeacher(LineReader reader) {
         try {
             int teacherId = Integer.parseInt(reader.readLine("Enter teacher ID to edit: "));
-            Teacher teacher = teacherService.findByTeacherId(teacherId);
+            Teacher teacher = teacherService.findByTeacherId(teacherId).orElseThrow(() -> new EntityNotFoundException("Teacher with Teacher ID " + teacherId + " not found."));
 
-            if (teacher == null) {
-                System.out.println("Teacher not found.");
-                return;
-            }
 
             System.out.println("Editing teacher. Press Enter to keep current value.\n");
 
@@ -166,6 +170,10 @@ public class TeacherConsoleHangler {
 
             System.out.println("Teacher updated successfully!");
 
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        } catch (EntityNotFoundException e) {
+            System.out.println("Search Error: " + e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println("Invalid number format: " + e.getMessage());
         } catch (Exception e) {
@@ -185,8 +193,12 @@ public class TeacherConsoleHangler {
                 System.out.println("Teacher not found.");
             }
 
+        } catch (EntityNotFoundException e) {
+            System.out.println("Search Error: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a number.");
         } catch (Exception e) {
-            System.out.println("Invalid input.");
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
@@ -195,13 +207,13 @@ public class TeacherConsoleHangler {
             String teacherPib = reader.readLine("Enter teacher Pib: ");
             TeacherValidator.validateName(teacherPib);
 
-            Teacher teacher = teacherService.findByPib(teacherPib);
-            if (teacher == null) {
-                System.out.println("Teacher with PIB " + teacherPib + " not found");
-            }
+            Teacher teacher = teacherService.findByPib(teacherPib).orElseThrow(() -> new EntityNotFoundException("Teacher with Pib " + teacherPib + " not found."));
+
             System.out.println("Teacher Found");
             System.out.println(teacher);
-        }catch (Exception e){
+        }catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        } catch (Exception e){
             System.out.println("Error: " + e.getMessage());
         }
     }
@@ -211,14 +223,12 @@ public class TeacherConsoleHangler {
             int teacherID = Integer.parseInt(reader.readLine("Enter TeacherId: "));
             TeacherValidator.validateId(teacherID);
 
-            Teacher teacher = teacherService.findByTeacherId(teacherID);
-
-            if(teacher == null){
-                System.out.println("Teacher with PIB " + teacherID + " not found");
-            }
+            Teacher teacher = teacherService.findByTeacherId(teacherID).orElseThrow(() -> new EntityNotFoundException("Teacher with Teacher ID " + teacherID + " not found."));
 
             System.out.println("Teacher Found");
             System.out.println(teacher);
+        }catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
         }catch (Exception e){
             System.out.println("Error: "+ e.getMessage() );
         }

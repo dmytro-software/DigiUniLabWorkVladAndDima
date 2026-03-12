@@ -1,5 +1,6 @@
 package Project.service.Impl;
 
+import Project.Exceptions.EntityNotFoundException;
 import Project.Models.Department;
 import Project.Models.Student;
 import Project.service.DepartmentService;
@@ -9,6 +10,7 @@ import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class StudentServiceImpl implements StudentService {
     private List<Student> students = new ArrayList<>();
@@ -95,7 +97,7 @@ public class StudentServiceImpl implements StudentService {
             }
         }
 
-        throw new IllegalArgumentException("Student not found with gradeBookId: " + gradeBookId);
+        throw new EntityNotFoundException("Student not found with gradeBookId: " + gradeBookId);
     }
 
     @Override
@@ -111,20 +113,20 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student findStudentByGradeBook(int gradeBookId) {
+    public Optional<Student> findStudentByGradeBook(int gradeBookId) {
 
         for (Department department : departmentService.findAll()) {
 
             for (Student student : department.getStudents()) {
 
                 if (student.getGradeBookId() == gradeBookId) {
-                    return student;
+                    return Optional.of(student);
                 }
 
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override

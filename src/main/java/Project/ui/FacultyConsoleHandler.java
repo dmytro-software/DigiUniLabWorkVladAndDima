@@ -1,5 +1,8 @@
 package Project.ui;
 
+import Project.Exceptions.EntityNotEmptyException;
+import Project.Exceptions.EntityNotFoundException;
+import Project.Exceptions.ValidationException;
 import Project.Models.Faculty;
 import Project.service.FacultyService;
 
@@ -35,6 +38,10 @@ public class FacultyConsoleHandler {
             Faculty newFaculty = new Faculty(id, name, shortName, head, contacts);
             facultyService.addFaculty(newFaculty);
             System.out.println("Faculty created.");
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Numeric format error");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -42,14 +49,21 @@ public class FacultyConsoleHandler {
 
     public void handleRemoveFaculty(LineReader reader) {
         try {
-            String idInput = reader.readLine("Введіть ID факультету для видалення: ");
+            String idInput = reader.readLine("Enter Faculty Id for remove: ");
             int id = Integer.parseInt(idInput.trim());
 
             facultyService.removeFaculty(id);
 
-            System.out.println("Готово! Якщо такий ID був, факультет видалено.");
-        } catch (Exception e) {
-            System.out.println("Помилка: введіть коректне число.");
+            System.out.println("Faculty with id " + id + " was successfully deleted");
+        } catch (EntityNotFoundException e) {
+            System.out.println("Search Error: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Number format error");
+        } catch (EntityNotEmptyException e) {
+            System.out.println("Delete error: " + e.getMessage());
+        }
+        catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
@@ -92,6 +106,10 @@ public class FacultyConsoleHandler {
             facultyService.editFaculty(id, name, shortName, head, contacts);
             System.out.println("Faculty updated successfully.");
 
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        } catch (EntityNotFoundException e) {
+            System.out.println("Search Error: " + e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println("Invalid faculty id. Please enter a number.");
         } catch (Exception e) {

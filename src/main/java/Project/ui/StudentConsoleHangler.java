@@ -1,5 +1,7 @@
 package Project.ui;
 
+import Project.Exceptions.EntityNotFoundException;
+import Project.Exceptions.ValidationException;
 import Project.Models.Student;
 import Project.service.StudentService;
 import Project.validation.StudentValidator;
@@ -74,6 +76,12 @@ public class StudentConsoleHangler {
 
             System.out.println("Student successfully added!");
 
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        } catch (EntityNotFoundException e) {
+            System.out.println("Search Error: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Numeric format error. Please enter valid numbers.");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -82,12 +90,10 @@ public class StudentConsoleHangler {
     public void handleEditStudent(LineReader reader) {
         try {
                 int gradeBooktId = Integer.parseInt(reader.readLine("Enter GradeBook ID of student to edit: "));
-                Student student = studentService.findStudentByGradeBook(gradeBooktId);
+                StudentValidator.validateId(gradeBooktId);
+                Student student = studentService.findStudentByGradeBook(gradeBooktId)
+                    .orElseThrow(() -> new EntityNotFoundException("Student with GradeBook ID " + gradeBooktId + " not found."));
 
-                if (student == null) {
-                    System.out.println("Student not found.");
-                    return;
-                }
 
                 System.out.println("Editing student. Press Enter to keep current value.");
 
@@ -168,9 +174,15 @@ public class StudentConsoleHangler {
 
                 System.out.println("Student successfully updated!");
 
-                }catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-            }
+                }catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        } catch (EntityNotFoundException e) {
+            System.out.println("Search Error: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Numeric format error");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     public void handleRemoveStudent(LineReader reader) {
@@ -185,8 +197,12 @@ public class StudentConsoleHangler {
                 System.out.println("Student not found.");
             }
 
+        } catch (EntityNotFoundException e) {
+            System.out.println("Search Error: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a number.");
         } catch (Exception e) {
-            System.out.println("Invalid input.");
+            System.out.println("Error: " + e.getMessage());
         }
     }
     public void handleShowAllStudents() {
@@ -234,6 +250,9 @@ public class StudentConsoleHangler {
             }
 
 
+        }
+        catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
         }catch (Exception e){
             System.out.println("Error: " + e.getMessage());
         }
@@ -255,26 +274,33 @@ public class StudentConsoleHangler {
                 System.out.println(s);
             }
 
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Error:" + e.getMessage());
         }
     }
 
     public void handleFindStudentsByGroup(LineReader reader){
-        int group = Integer.parseInt(reader.readLine("Enter group number: "));
-        StudentValidator.valideGroup(group);
+        try {
+            int group = Integer.parseInt(reader.readLine("Enter group number: "));
+            StudentValidator.valideGroup(group);
 
-        List<Student> result = studentService.findByGroup(group);
+            List<Student> result = studentService.findByGroup(group);
 
-        if (result.isEmpty()) {
-            System.out.println("No students found with this group: " + group);
-            return;
+            if (result.isEmpty()) {
+                System.out.println("No students found with this group: " + group);
+                return;
+            }
+            System.out.println("\n--- Search Results ---");
+            for (Student s : result) {
+                System.out.println(s);
+            }
+        }catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
         }
-        System.out.println("\n--- Search Results ---");
-        for( Student s : result){
-            System.out.println(s);
-        }
-
     }
 }
 

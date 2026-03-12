@@ -54,7 +54,7 @@ public class Main {
         }
 
         System.out.println("Logged as: " + role);
-        System.out.println("Type 'help -manager' to see commands");
+        System.out.println("Type 'help -m' to see commands");
 
         if (role.equals("manager")) {
             managerMenu(reader, role);
@@ -69,7 +69,7 @@ public class Main {
             if (line.isEmpty()) continue;
 
             switch (line) {
-                case "help -manager":
+                case "help -m":
                     System.out.println("""
 =====================================================
 |               DigiUni Manager CLI                 |
