@@ -217,20 +217,7 @@ public class StudentConsoleHangler {
         System.out.println("\n========== STUDENTS LIST ==========\n");
 
         for (Student s : students) {
-
-            System.out.println("--------------------------------------------------");
-            System.out.println("Person ID: " + s.getIdPerson());
-            System.out.println("Full Name: " + s.getPib());
-            System.out.println("Birth Date: " + s.getBirthDate());
-            System.out.println("Email: " + s.getEmail());
-            System.out.println("Phone: " + s.getPhoneNumber());
-            System.out.println("GradeBook ID: " + s.getGradeBookId());
-            System.out.println("Course: " + s.getCourse());
-            System.out.println("Group: " + s.getGroup());
-            System.out.println("Enrollment Year: " + s.getEnrollmentYear());
-            System.out.println("Form of Education: " + s.getFormOfEducation());
-            System.out.println("Student Status: " + s.getStudentStatus());
-            System.out.println("--------------------------------------------------\n");
+            System.out.println(s);
         }
     }
 

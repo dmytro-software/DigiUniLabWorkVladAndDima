@@ -1,5 +1,6 @@
 package Project;
-import Project.Models.*;
+
+import Project.Models.University;
 import Project.service.*;
 import Project.service.Impl.*;
 import Project.ui.DepartmentConsoleHandler;
@@ -39,40 +40,49 @@ public class Main {
                 .parser(new DefaultParser())
                 .history(new DefaultHistory())
                 .build();
+while (true) {
+    System.out.print("Login: ");
+    String login = reader.readLine();
 
-        System.out.print("Login: ");
-        String login = reader.readLine();
+    System.out.print("Password: ");
+    String password = reader.readLine();
 
-        System.out.print("Password: ");
-        String password = reader.readLine();
+    String role = authService.authorize(login, password);
 
-        String role = authService.authorize(login, password);
-
-        if (role == null) {
-            System.out.println("Access denied");
-            return;
-        }
-
-        System.out.println("Logged as: " + role);
-        System.out.println("Type 'help -m' to see commands");
-
-        if (role.equals("manager")) {
-            managerMenu(reader, role);
-        } else {
-            userMenu(reader, role);
-        }
+    if (role == null) {
+        System.out.println("Access denied");
+        continue;
     }
 
-    private static void managerMenu(LineReader reader, String role) {
+    System.out.println("Logged as: " + role);
+    System.out.println("Type 'help -m' to see commands");
+
+    if (role.equals("manager")) {
+        managerMenu(reader, role);
+    }
+    if (role.equals("admin")) {
+        adminMenu(reader, role);
+    } else {
+        userMenu(reader, role);
+    }
+}
+    }
+
+    private static void barrier(){
+        System.out.println("=========================================");;
+    }
+
+    private static void adminMenu(LineReader reader, String role){
+
         while (true) {
-            String line = reader.readLine("Manager>> ").trim();
+            String line = reader.readLine("Admin>> ").trim();
             if (line.isEmpty()) continue;
 
             switch (line) {
                 case "help -m":
                     System.out.println("""
 =====================================================
-|               DigiUni Manager CLI                 |
+|               DigiUni ADMIN CLI                   |
 =====================================================
 | Action | Target   | Description                   |
 |--------|----------|-------------------------------|
@@ -197,6 +207,132 @@ public class Main {
 
                 case "exit":
                     System.out.println("Bye!");
+                    barrier();
+                    return;
+
+                default:
+                    System.out.println("Unknown command.");
+                    break;
+            }
+        }
+
+    }
+
+    private static void managerMenu(LineReader reader, String role) {
+        while (true) {
+            String line = reader.readLine("Manager>> ").trim();
+            if (line.isEmpty()) continue;
+
+            switch (line) {
+                case "help -m":
+                    System.out.println("""
+=====================================================
+|               DigiUni Manager CLI                 |
+=====================================================
+| Action | Target   | Description                   |
+|--------|----------|-------------------------------|
+| ls     | uni      | Show university               |
+|--------|----------|-------------------------------|
+| add    | fac      | Add a new faculty             |
+| edit   | fac      | Edit a faculty                |
+| ls     | fac      | Show all faculties            |
+|--------|----------|-------------------------------|
+| add    | dep      | Add a department              |
+| edit   | dep      | Edit a department             |
+| ls     | dep      | Show all departments          |
+|--------|----------|-------------------------------|
+| add    | stu      | Add a student                 |
+| edit   | stu      | Edit a student                |
+| ls     | stu      | Show all students             |
+| find   | stu -n   | Find student by PIB           |
+| find   | stu -g   | Find student by Group         |
+| find   | stu -c   | Find student by Course        |
+|--------|----------|-------------------------------|
+| add    | tch      | Add a teacher                 |
+| edit   | tch      | Edit a teacher                |
+| ls     | tch      | Show all teachers             |
+| find   | tch -id  | Find teacher by ID            |
+| find   | tch -n   | Find teacher by PIB           |
+=====================================================
+| exit              | Exit program                  |
+=====================================================
+""");
+                    break;
+
+                case "ls uni":
+                    myUniversity.printInfo();
+                    break;
+
+                case "add fac":
+                    facultyHandler.handleAddFaculty(reader);
+                    break;
+
+                case "edit fac":
+                    facultyHandler.handleEditFaculty(reader);
+                    break;
+
+                case "ls fac":
+                    facultyHandler.handleShowAllFaculties();
+                    break;
+
+                case "add dep":
+                    deptHandler.handleAddDepartment(reader);
+                    break;
+
+                case "edit dep":
+                    deptHandler.handleEditDepartment(reader);
+                    break;
+
+                case "ls dep":
+                    deptHandler.handleShowAllDepartments();
+                    break;
+
+                case "add stu":
+                    studentHandler.handleAddStudent(reader);
+                    break;
+
+                case "edit stu":
+                    studentHandler.handleEditStudent(reader);
+                    break;
+
+                case "ls stu":
+                    studentHandler.handleShowAllStudents();
+                    break;
+
+                case "find stu -p":
+                    studentHandler.handleFindStudentByPib(reader);
+                    break;
+
+                case "find stu -c":
+                    studentHandler.handleFindStudentByCourse(reader);
+                    break;
+
+                case "find stu -g":
+                    studentHandler.handleFindStudentsByGroup(reader);
+                    break;
+
+                case "add tch":
+                    teacherHandler.handleAddTeacher(reader);
+                    break;
+
+                case "edit tch":
+                    teacherHandler.handleEditTeacher(reader);
+                    break;
+
+                case "ls tch":
+                    teacherHandler.handleShowAllTeachers();
+                    break;
+
+                case "find tch -id":
+                    teacherHandler.handleFindTeacherById(reader);
+                    break;
+
+                case "find tch -p":
+                    teacherHandler.handelFindTeacherByPib(reader);
+                    break;
+
+                case "exit":
+                    System.out.println("Bye!");
                     return;
 
                 default:
@@ -215,29 +351,57 @@ public class Main {
             switch (line) {
                 case "help":
                     System.out.println("""
-                            ==============================================
-                            |               Commands:                    |
-                            ==============================================
-                            | 1                 | - Show all faculties   |
-                            | 2                 | - Show all departments |
-                            | 3                 | - Show all students    |
-                            | 4                 | - Show all teachers    |
-                            | exit              | - Exit program         |
-                            ==============================================
-                            """);
+============================================================
+|                     DIGIUNI USER CLI                     |
+============================================================
+| COMMAND    | DESCRIPTION                                 |
+|------------|---------------------------------------------|
+| 1          | List all faculties                          |
+| 2          | List all departments                        |
+| 3          | List all students                           |
+| 4          | List all teachers                           |
+|------------|---------------------------------------------|
+| SEARCH STUDENTS                                          |
+| f s -p     | Search student by name                      |
+| f s -c     | Search student by course                    |
+| f s -g     | Search student by group                     |
+|------------|---------------------------------------------|
+| SEARCH TEACHERS                                          |
+| f t -id    | Search teacher by ID                        |
+| f t -p     | Search teacher by name                      |
+|------------|---------------------------------------------|
+| h          | Show this menu                              |
+| exit       | Exit program                                |
+============================================================
+""");;
                     break;
 
                 case "1":
-                    // facultyHandler.handleShowAll();
+                     facultyHandler.handleShowAllFaculties();
                     break;
                 case "2":
-                    // System.out.println(departmentRegistry);
+                    deptHandler.handleShowAllDepartments();
                     break;
                 case "3":
-                    // System.out.println(studentRegistry);
+                    studentHandler.handleShowAllStudents();
                     break;
                 case "4":
-                    System.out.println("Teachers list");
+                    teacherHandler.handleShowAllTeachers();
+                    break;
+                case "f s -p":
+                    studentHandler.handleFindStudentByPib(reader);
+                    break;
+                case"f s -c":
+                    studentHandler.handleFindStudentByCourse(reader);
+                    break;
+                case"f s -g":
+                    studentHandler.handleFindStudentsByGroup(reader);
+                    break;
+                case "f t -id":
+                    teacherHandler.handleFindTeacherById(reader);
+                    break;
+                case "f t -p":
+                    teacherHandler.handelFindTeacherByPib(reader);
                     break;
                 case "exit":
                     System.out.println("Bye!");
@@ -248,4 +412,9 @@ public class Main {
             }
         }
     }
+
+
+
+
 }
+
