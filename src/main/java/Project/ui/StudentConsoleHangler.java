@@ -260,21 +260,24 @@ public class StudentConsoleHangler {
         }
     }
 
-    public void handleFindStudentsByGroup(LineReader reader){
-        int group = Integer.parseInt(reader.readLine("Enter group number: "));
-        StudentValidator.valideGroup(group);
+    public void handleFindStudentsByGroup(LineReader reader) {
+        try {
+            int group = Integer.parseInt(reader.readLine("Enter group number: "));
+            StudentValidator.valideGroup(group);
 
-        List<Student> result = studentService.findByGroup(group);
+            List<Student> result = studentService.findAll().stream()
+                    .filter(s -> s.getGroup() == group)
+                    .toList();
 
-        if (result.isEmpty()) {
-            System.out.println("No students found with this group: " + group);
-            return;
+            if (result.isEmpty()) {
+                System.out.println("No students found with this group: " + group);
+            } else {
+                System.out.println("\n--- Search Results ---");
+                result.forEach(System.out::println); 
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
         }
-        System.out.println("\n--- Search Results ---");
-        for( Student s : result){
-            System.out.println(s);
-        }
-
     }
 }
 
