@@ -1,5 +1,6 @@
 package Project.service.Impl;
 
+import Project.Exceptions.EntityNotFoundException;
 import Project.Models.Department;
 import Project.Models.Student;
 import Project.Models.Teacher;
@@ -9,6 +10,7 @@ import Project.service.TeacherService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class TeacherServiceImpl implements TeacherService {
 
@@ -109,10 +111,10 @@ public class TeacherServiceImpl implements TeacherService {
             }
         }
 
-        throw new IllegalArgumentException("Teacher not found with ID: " + teacherId);
+        throw new EntityNotFoundException("Teacher not found with ID: " + teacherId);
     }
 
-    public Teacher findByTeacherId(int teacherId) {
+    public Optional<Teacher> findByTeacherId(int teacherId) {
 
         for (Department dep : departmentService.findAll()) {
 
@@ -120,24 +122,24 @@ public class TeacherServiceImpl implements TeacherService {
 
                 if (teach.getTeacherId() == teacherId) {
 
-                    return teach;
+                    return Optional.of(teach);
 
                 }
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public Teacher findByPib(String pib) {
+    public Optional<Teacher> findByPib(String pib) {
         for(Department dep : departmentService.findAll()){
             for( Teacher teacher : dep.getTeachers()){
                 if(teacher.getPib().equals(pib)){
-                    return teacher;
+                    return Optional.of(teacher);
                 }
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     public List<Teacher> findAll() {

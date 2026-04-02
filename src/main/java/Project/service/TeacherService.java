@@ -4,6 +4,7 @@ import Project.Models.Teacher;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface TeacherService {
 
@@ -37,7 +38,7 @@ public interface TeacherService {
 
     List<Teacher> findAll();
 
-    Teacher findByTeacherId(int teacherId);
+    Optional<Teacher> findByTeacherId(int teacherId);
 
-    Teacher findByPib(String pib);
+    Optional<Teacher> findByPib(String pib);
 }

@@ -1,5 +1,7 @@
 package Project.service.Impl;
 
+import Project.Exceptions.EntityNotEmptyException;
+import Project.Exceptions.EntityNotFoundException;
 import Project.Models.Department;
 import Project.Models.Faculty;
 import Project.service.DepartmentService;
@@ -20,7 +22,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public void addDepartment(int id, String name, int facultyId, String head, int room) {
         Faculty faculty = facultyService.findById(facultyId);
         if (faculty == null) {
-            throw new IllegalArgumentException("Faculty not found with ID: " + facultyId);
+            throw new EntityNotFoundException("Faculty not found with ID: " + facultyId);
         }
 
         Department newDepartment = new Department(id, name, facultyId, head, room);
@@ -30,17 +32,18 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public boolean removeDepartment(int id) {
 
-        for (Faculty faculty : facultyService.findAll()) {
-            List<Department> departments = faculty.getDepartments();
+        Department dep = findById(id);
 
-            for (Department dep : departments) {
-                if (dep.getIdDepartment() == id) {
-                    departments.remove(dep);
-                    return true;
-                }
-            }
+        if ((dep.getStudents() != null && !dep.getStudents().isEmpty()) ||
+                (dep.getTeachers() != null && !dep.getTeachers().isEmpty())) {
+            throw new EntityNotEmptyException("Cannot be deleted. Students or teachers exsist there");
         }
 
+        for (Faculty faculty : facultyService.findAll()) {
+            if (faculty.getDepartments().remove(dep)) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -67,7 +70,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 }
             }
         }
-        throw new IllegalArgumentException("Department with ID " + id + " not found");
+        throw new EntityNotFoundException("Department with ID " + id + " not found");
     }
 
     @Override

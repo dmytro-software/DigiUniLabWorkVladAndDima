@@ -4,6 +4,7 @@ import Project.Models.Student;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface StudentService {
     void addStudent(int departmentId,
@@ -33,7 +34,7 @@ public interface StudentService {
 
     List<Student> findAll();
 
-    Student findStudentByGradeBook(int gradeBookId);
+    Optional<Student> findStudentByGradeBook(int gradeBookId);
 
     List<Student> findByPib(String pib);
 

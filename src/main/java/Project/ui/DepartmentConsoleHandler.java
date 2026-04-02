@@ -1,4 +1,7 @@
 package Project.ui;
+import Project.Exceptions.EntityNotEmptyException;
+import Project.Exceptions.EntityNotFoundException;
+import Project.Exceptions.ValidationException;
 import Project.Models.Department;
 import Project.Models.Faculty;
 import Project.service.DepartmentService;
@@ -37,6 +40,10 @@ public class DepartmentConsoleHandler {
             departmentService.addDepartment(id, name, facultyId, head, room);
 
             System.out.println("Department linked and created.");
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        } catch (EntityNotFoundException e) {
+            System.out.println("Search Error: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -54,8 +61,14 @@ public class DepartmentConsoleHandler {
                 System.out.println("Department not found.");
             }
 
+        } catch (EntityNotFoundException e) {
+            System.out.println("Search Error: " + e.getMessage());
+        } catch (EntityNotEmptyException e) {
+            System.out.println("Delete Error: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Numeric format error");
         } catch (Exception e) {
-            System.out.println("Invalid input.");
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
@@ -115,10 +128,16 @@ public class DepartmentConsoleHandler {
                 departmentService.editDepartment(departmentId, name, facultyId, head, roomNumber);
                 System.out.println("Department updated successfully.");
 
-            } catch(NumberFormatException e){
-                System.out.println("Error: Please enter a valid numeric value.");
-            } catch(IllegalArgumentException e){
-                System.out.println("Validation Error: " + e.getMessage());
+            } catch (EntityNotFoundException e) {
+            System.out.println("Search Error: " + e.getMessage());
+            }catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+            } catch (EntityNotEmptyException e) {
+            System.out.println("Delete Error: " + e.getMessage());
+            } catch (NumberFormatException e) {
+            System.out.println("Numeric format error");
+            }catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
             }
     }
 
