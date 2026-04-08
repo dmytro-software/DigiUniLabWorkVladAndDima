@@ -81,10 +81,6 @@ while (true) {
 }
     }
 
-    private static void barrier(){
-        System.out.println("=========================================");;
-    }
-
     private static void adminMenu(LineReader reader, String role) throws IOException {
 
         while (true) {
