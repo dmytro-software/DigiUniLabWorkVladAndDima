@@ -44,6 +44,7 @@ public class Main {
     private static final DepartmentRepository departmentRepository = new DepartmentRepository();
     private static final UniversityRepository universityRepository = new UniversityRepository(facultyRepository, departmentRepository);
 
+
     public static void main(String[] args) throws Exception {
 
         Terminal terminal = TerminalBuilder.terminal();
@@ -53,7 +54,7 @@ public class Main {
                 .parser(new DefaultParser())
                 .history(new DefaultHistory())
                 .build();
-while (true) {
+    while (true) {
     System.out.print("Login: ");
     String login = reader.readLine();
 
@@ -78,7 +79,7 @@ while (true) {
     } else {
         userMenu(reader, role);
     }
-}
+  }
     }
 
     private static void adminMenu(LineReader reader, String role) throws IOException {
@@ -230,6 +231,7 @@ while (true) {
                         System.out.println("Університет не знайдено у файлі.");
                     }
                     break;
+
                 case "load dep":
                     DepartmentRepository dep = new DepartmentRepository();
                     Optional<List<Department>> optionalDepartments = dep.loadAll();
