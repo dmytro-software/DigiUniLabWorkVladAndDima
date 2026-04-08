@@ -32,13 +32,13 @@ public class UniversityRepository {
         try (BufferedWriter bw = Files.newBufferedWriter(filePath, StandardCharsets.UTF_8)) {
 
 
-            bw.write("University: " + university.getUniversityName() + ";" +
-                    university.getUniversityShortName() + ";" +
-                    university.getCity() + ";" +
-                    university.getUniversityAddress());
+            bw.write("University: " + university.universityName() + ";" +
+                    university.universityShortName() + ";" +
+                    university.city() + ";" +
+                    university.universityAddress());
             bw.newLine();
 
-            for (Faculty f : university.getFaculties()) {
+            for (Faculty f : university.faculties()) {
 
                 bw.write("Faculty:" + f.getIdFaculty() + ";" +
                         f.getFacultyName() + ";" +
@@ -84,7 +84,7 @@ public class UniversityRepository {
                             parts[4]
                     );
                     if (university != null) {
-                        university.getFaculties().add(currentFaculty);
+                        university.faculties().add(currentFaculty);
                     }
                 } else if (line.startsWith("Department:")) {
                     parts = line.substring("Department:".length()).split(";", -1);

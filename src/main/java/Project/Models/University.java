@@ -3,39 +3,15 @@ package Project.Models;
 import java.util.ArrayList;
 import java.util.List;
 
-public class University {
-    private String universityName;
-    private String universityShortName;
-    private String city;
-    private String universityAddress;
-
-    private List<Faculty> faculties = new ArrayList<>();
-
+public record University(
+        String universityName,
+        String universityShortName,
+        String city,
+        String universityAddress,
+        List<Faculty> faculties
+) {
     public University(String universityName, String universityShortName, String city, String universityAddress) {
-        this.universityName = universityName;
-        this.universityShortName = universityShortName;
-        this.city = city;
-        this.universityAddress = universityAddress;
-    }
-
-    public String getUniversityName() {
-        return universityName;
-    }
-
-    public String getUniversityShortName() {
-        return universityShortName;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public String getUniversityAddress() {
-        return universityAddress;
-    }
-
-    public List<Faculty> getFaculties() {
-        return faculties;
+        this(universityName, universityShortName, city, universityAddress, new ArrayList<>());
     }
     public void printInfo() {
         System.out.println("Університет: " + universityName + " (" + universityShortName + ")");
