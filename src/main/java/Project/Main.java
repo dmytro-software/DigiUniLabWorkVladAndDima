@@ -1,6 +1,9 @@
 package Project;
 
+import Project.Models.Department;
+import Project.Models.Faculty;
 import Project.Models.University;
+import Project.Repository.*;
 import Project.service.*;
 import Project.service.Impl.*;
 import Project.ui.DepartmentConsoleHandler;
@@ -13,6 +16,12 @@ import org.jline.reader.impl.DefaultParser;
 import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
+
 
 public class Main {
 
@@ -30,6 +39,10 @@ public class Main {
     private static final DepartmentConsoleHandler deptHandler = new DepartmentConsoleHandler(deptService, facultyService);
     private static final StudentConsoleHangler studentHandler = new StudentConsoleHangler(studentService);
     private static final TeacherConsoleHangler teacherHandler = new TeacherConsoleHangler(teacherService);
+
+    private static final FacultyRepository facultyRepository = new FacultyRepository();
+    private static final DepartmentRepository departmentRepository = new DepartmentRepository();
+    private static final UniversityRepository universityRepository = new UniversityRepository(facultyRepository, departmentRepository);
 
     public static void main(String[] args) throws Exception {
 
@@ -72,7 +85,7 @@ while (true) {
         System.out.println("=========================================");;
     }
 
-    private static void adminMenu(LineReader reader, String role){
+    private static void adminMenu(LineReader reader, String role) throws IOException {
 
         while (true) {
             String line = reader.readLine("Admin>> ").trim();
@@ -112,6 +125,10 @@ while (true) {
 | ls     | tch      | Show all teachers             |
 | find   | tch -id  | Find teacher by ID            |
 | find   | tch -n   | Find teacher by PIB           |
+|--------|----------|-------------------------------|
+| load   | uni      | Load data from files          |
+| load   | fac      | Load faculties from file      |
+| load   | dep      | Load departments from file    |
 =====================================================
 | exit              | Exit program                  |
 =====================================================
@@ -205,9 +222,33 @@ while (true) {
                     teacherHandler.handelFindTeacherByPib(reader);
                     break;
 
+                case "load uni":
+                    UniversityRepository repo = new UniversityRepository(facultyRepository, departmentRepository);
+
+                    Optional<University> optionalUniversity = repo.loadUniversity();
+
+                    if (optionalUniversity.isPresent()) {
+                        University university = optionalUniversity.get();
+                        university.printInfo();
+                    } else {
+                        System.out.println("Університет не знайдено у файлі.");
+                    }
+                    break;
+                case "load dep":
+                    DepartmentRepository dep = new DepartmentRepository();
+                    Optional<List<Department>> optionalDepartments = dep.loadAll();
+                    break;
+
+                case "load fac":
+                    FacultyRepository fac = new FacultyRepository();
+                    Optional<List<Faculty>> optionalFaculties = fac.loadAll();
+                    break;
+
                 case "exit":
-                    System.out.println("Bye!");
-                    barrier();
+                    departmentRepository.saveAll(deptService.findAll());
+                    facultyRepository.saveAll(facultyService.findAll());
+                    universityRepository.saveUniversity(myUniversity);
+                    System.out.println("Saved. Bye!");
                     return;
 
                 default:
@@ -376,9 +417,6 @@ while (true) {
 """);;
                     break;
 
-                case "1":
-                     facultyHandler.handleShowAllFaculties();
-                    break;
                 case "2":
                     deptHandler.handleShowAllDepartments();
                     break;
@@ -412,9 +450,5 @@ while (true) {
             }
         }
     }
-
-
-
-
 }
 

@@ -3,7 +3,6 @@ import Project.Exceptions.EntityNotEmptyException;
 import Project.Exceptions.EntityNotFoundException;
 import Project.Exceptions.ValidationException;
 import Project.Models.Department;
-import Project.Models.Faculty;
 import Project.service.DepartmentService;
 import Project.service.FacultyService;
 import Project.validation.DepartmentValidator;

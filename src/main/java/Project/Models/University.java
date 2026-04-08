@@ -18,6 +18,22 @@ public class University {
         this.universityAddress = universityAddress;
     }
 
+    public String getUniversityName() {
+        return universityName;
+    }
+
+    public String getUniversityShortName() {
+        return universityShortName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getUniversityAddress() {
+        return universityAddress;
+    }
+
     public List<Faculty> getFaculties() {
         return faculties;
     }
