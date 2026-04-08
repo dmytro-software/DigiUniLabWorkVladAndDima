@@ -55,6 +55,7 @@ public class Main {
                 .history(new DefaultHistory())
                 .build();
     while (true) {
+
     System.out.print("Login: ");
     String login = reader.readLine();
 
