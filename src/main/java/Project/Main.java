@@ -1,5 +1,7 @@
 package Project;
 
+import Project.Data.DemoDataSeeder;
+import Project.Models.ColorPalette;
 import Project.Models.University;
 import Project.service.*;
 import Project.service.Impl.*;
@@ -26,12 +28,15 @@ public class Main {
     private static final StudentService studentService = new StudentServiceImpl(deptService);
     private static final TeacherService teacherService = new TeacherServiceImpl(deptService);
 
+
     private static final FacultyConsoleHandler facultyHandler = new FacultyConsoleHandler(facultyService);
     private static final DepartmentConsoleHandler deptHandler = new DepartmentConsoleHandler(deptService, facultyService);
     private static final StudentConsoleHangler studentHandler = new StudentConsoleHangler(studentService);
     private static final TeacherConsoleHangler teacherHandler = new TeacherConsoleHangler(teacherService);
 
     public static void main(String[] args) throws Exception {
+
+        DemoDataSeeder.initDummyData(facultyService,deptService,teacherService,studentService);
 
         Terminal terminal = TerminalBuilder.terminal();
 
@@ -137,7 +142,12 @@ while (true) {
                 case "ls fac":
                     facultyHandler.handleShowAllFaculties();
                     break;
-
+                case "repo stu -f":
+                    facultyHandler.handelShowStudentsReportByPibFromFaculty(reader);
+                    break;
+                case "repo tch -f":
+                    facultyHandler.handelShowTeacherReportByPibFromFaculty(reader);
+                    break;
                 case "add dep":
                     deptHandler.handleAddDepartment(reader);
                     break;
@@ -180,7 +190,9 @@ while (true) {
                 case "find stu -g":
                     studentHandler.handleFindStudentsByGroup(reader);
                     break;
-
+                case "repo stu -c":
+                    studentHandler.handleShowStudentsReportByCourse(reader);
+                    break;
                 case "add tch":
                     teacherHandler.handleAddTeacher(reader);
                     break;

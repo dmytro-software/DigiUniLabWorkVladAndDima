@@ -1,13 +1,17 @@
 package Project.ui;
 
+import Project.Exceptions.EntityNotEmptyException;
 import Project.Exceptions.EntityNotFoundException;
 import Project.Exceptions.ValidationException;
+import Project.Models.Faculty;
 import Project.Models.Student;
+import Project.Reports.FacultyReport;
+import Project.Reports.StudentsReport;
+import Project.service.FacultyService;
 import Project.service.StudentService;
 import Project.validation.StudentValidator;
 import org.jline.reader.LineReader;
 
-import javax.sound.sampled.Line;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -289,6 +293,20 @@ public class StudentConsoleHangler {
             System.out.println("Error: " + e.getMessage());
         }
     }
+
+    public void handleShowStudentsReportByCourse(LineReader reader){
+        try{
+            List<Student> allStudents = studentService.findAll();
+            StudentValidator.validateList(allStudents);
+            System.out.println("\n--- Report Search By Course ---");
+            StudentsReport.getStudentsGroupedByCourse(allStudents);
+        } catch (EntityNotEmptyException e) {
+            throw new EntityNotFoundException("Not found Error: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("ERROR: " + e.getMessage());
+        }
+    }
+
 }
 
 
