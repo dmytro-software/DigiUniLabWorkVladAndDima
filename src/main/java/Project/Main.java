@@ -2,6 +2,8 @@ package Project;
 
 import Project.Models.Department;
 import Project.Models.Faculty;
+import Project.Data.DemoDataSeeder;
+import Project.Models.ColorPalette;
 import Project.Models.University;
 import Project.Repository.*;
 import Project.service.*;
@@ -35,6 +37,7 @@ public class Main {
     private static final StudentService studentService = new StudentServiceImpl(deptService);
     private static final TeacherService teacherService = new TeacherServiceImpl(deptService);
 
+
     private static final FacultyConsoleHandler facultyHandler = new FacultyConsoleHandler(facultyService);
     private static final DepartmentConsoleHandler deptHandler = new DepartmentConsoleHandler(deptService, facultyService);
     private static final StudentConsoleHangler studentHandler = new StudentConsoleHangler(studentService);
@@ -46,6 +49,8 @@ public class Main {
 
 
     public static void main(String[] args) throws Exception {
+
+        DemoDataSeeder.initDummyData(facultyService,deptService,teacherService,studentService);
 
         Terminal terminal = TerminalBuilder.terminal();
 
@@ -152,7 +157,12 @@ public class Main {
                 case "ls fac":
                     facultyHandler.handleShowAllFaculties();
                     break;
-
+                case "repo stu -f":
+                    facultyHandler.handelShowStudentsReportByPibFromFaculty(reader);
+                    break;
+                case "repo tch -f":
+                    facultyHandler.handelShowTeacherReportByPibFromFaculty(reader);
+                    break;
                 case "add dep":
                     deptHandler.handleAddDepartment(reader);
                     break;
@@ -195,7 +205,9 @@ public class Main {
                 case "find stu -g":
                     studentHandler.handleFindStudentsByGroup(reader);
                     break;
-
+                case "repo stu -c":
+                    studentHandler.handleShowStudentsReportByCourse(reader);
+                    break;
                 case "add tch":
                     teacherHandler.handleAddTeacher(reader);
                     break;
@@ -416,6 +428,9 @@ public class Main {
 """);;
                     break;
 
+                case "1":
+                     facultyHandler.handleShowAllFaculties();
+                    break;
                 case "2":
                     deptHandler.handleShowAllDepartments();
                     break;

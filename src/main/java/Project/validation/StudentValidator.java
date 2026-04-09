@@ -1,9 +1,12 @@
 package Project.validation;
+import Project.Exceptions.EntityNotFoundException;
 import Project.Exceptions.ValidationException;
+import Project.Models.Student;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class StudentValidator {
     public static void validatePib(String pib) {
@@ -77,6 +80,13 @@ public class StudentValidator {
         }
         return false;
     }
+
+    public static void validateList(List<Student> list){
+        if(list.isEmpty() || list == null){
+            throw new EntityNotFoundException("List of Students is empty");
+        }
+    }
+
 
 
 }

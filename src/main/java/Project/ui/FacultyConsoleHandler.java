@@ -4,6 +4,7 @@ import Project.Exceptions.EntityNotEmptyException;
 import Project.Exceptions.EntityNotFoundException;
 import Project.Exceptions.ValidationException;
 import Project.Models.Faculty;
+import Project.Reports.FacultyReport;
 import Project.service.FacultyService;
 
 import Project.validation.FacultyValidator;
@@ -148,6 +149,37 @@ public class FacultyConsoleHandler {
             }
 
             System.out.println("\n==========================================\n");
+        }
+    }
+
+    public void handelShowStudentsReportByPibFromFaculty(LineReader reader){
+        try {
+            int facultyId = Integer.parseInt(reader.readLine("Enter Faculty ID: "));
+            FacultyValidator.validateId(facultyId);
+            Faculty faculty = facultyService.findById(facultyId);
+            if (faculty != null) {
+                FacultyReport.generateStudentsAlphabeticalReport(faculty);
+            }
+        }catch (EntityNotEmptyException e){
+            System.out.println("Empty Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void handelShowTeacherReportByPibFromFaculty(LineReader reader){
+        try {
+            int facultyId = Integer.parseInt(reader.readLine("Enter Faculty ID: "));
+            FacultyValidator.validateId(facultyId);
+            Faculty faculty = facultyService.findById(facultyId);
+
+            if (faculty != null) {
+                FacultyReport.generateTeachersAlphabeticalReport(faculty);
+            }
+        }catch (EntityNotEmptyException e){
+            System.out.println("Empty Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 }

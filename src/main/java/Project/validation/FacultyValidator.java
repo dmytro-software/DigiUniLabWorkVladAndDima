@@ -27,4 +27,10 @@ public class FacultyValidator {
             throw new ValidationException("Invalid phone: Number must start with '0' and contain exactly 10 digits.");
         }
     }
+
+    public static void validateId(long id){
+        if(id<=0){
+            throw new ValidationException("Faculty ID must be a positive number.");
+        }
+    }
 }
