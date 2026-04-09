@@ -1,41 +1,42 @@
 package Project.validation;
 
 import Project.Exceptions.ValidationException;
+import static Project.Models.ConsoleColors.*;
 
 public class DepartmentValidator {
     public static void validateDepartmentName(String departmentName) {
         if (departmentName == null || departmentName.isBlank()) {
-            throw new ValidationException("Department name cannot be empty.");
+            throw new ValidationException(RED + "Department name cannot be empty." + RESET);
         }
 
         if (departmentName.length() < 3) {
-            throw new ValidationException("Department name is too short (min 3 characters).");
+            throw new ValidationException(RED + "Department name is too short (min 3 characters)." + RESET);
         }
 
         if (!departmentName.matches("^[a-zA-Zа-яА-ЯіїєґІЇЄҐ'\\s]+$")) {
-            throw new ValidationException("Department name contains invalid characters.");
+            throw new ValidationException(RED + "Department name contains invalid characters." + RESET);
         }
 
         if (!departmentName.matches(".*[a-zA-Zа-яА-ЯіїєґІЇЄҐ].*")) {
-            throw new ValidationException("Department name must contain at least one letter.");
+            throw new ValidationException(RED + "Department name must contain at least one letter." + RESET);
         }
     }
 
     public static void validateHeadOfDepartment(String headOfDepartment) {
         if (headOfDepartment == null || headOfDepartment.isBlank() || !headOfDepartment.matches("^[a-zA-Zа-яА-ЯіїєґІЇЄҐ'\\s]+$")) {
-            throw new ValidationException("Invalid head of department: Please provide a valid name.");
+            throw new ValidationException(RED + "Invalid head of department: Please provide a valid name." + RESET);
         }
     }
 
     public static void validateRoomNumber(int roomNumber) {
         if (roomNumber < 1 || roomNumber > 999) {
-            throw new ValidationException("Invalid room number: Must be between 1 and 999.");
+            throw new ValidationException(RED + "Invalid room number: Must be between 1 and 999." + RESET);
         }
     }
 
     public static void validateFacultyId(int id) {
         if (id <= 0) {
-            throw new ValidationException("Department ID must be a positive number.");
+            throw new ValidationException(RED + "Department ID must be a positive number." + RESET);
         }
     }
 }

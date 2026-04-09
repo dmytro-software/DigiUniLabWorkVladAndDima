@@ -3,7 +3,6 @@ package Project;
 import Project.Models.Department;
 import Project.Models.Faculty;
 import Project.Data.DemoDataSeeder;
-import Project.Models.ColorPalette;
 import Project.Models.University;
 import Project.Reports.DepartmentReport;
 import Project.Repository.*;
@@ -24,6 +23,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+
+import static Project.Models.ConsoleColors.*;
 
 
 public class Main {
@@ -71,11 +72,11 @@ public class Main {
     String role = authService.authorize(login, password);
 
     if (role == null) {
-        System.out.println("Access denied");
+        System.out.println(RED+ "Access denied" +RESET);
         continue;
     }
 
-    System.out.println("Logged as: " + role);
+    System.out.println(GREEN+ "Logged as: " + role + RESET);
     System.out.println("Type 'help -m' to see commands");
 
     if (role.equals("manager")) {
@@ -97,7 +98,7 @@ public class Main {
 
             switch (line) {
                 case "help -m":
-                    System.out.println("""
+                    System.out.println(CYAN+ """
 =====================================================
 |               DigiUni ADMIN CLI                   |
 =====================================================
@@ -130,13 +131,18 @@ public class Main {
 | find   | tch -id  | Find teacher by ID            |
 | find   | tch -n   | Find teacher by PIB           |
 |--------|----------|-------------------------------|
+| repo   | stu -f -p| Faculty students (by PIB)     |
+| repo   | tch -f -p| Faculty teachers (by PIB)     |
+| repo   | stu -d -c| Dept. students (by Course)    |
+| repo   | stu -c   | All students (by Course)      |
+|--------|----------|-------------------------------|
 | load   | uni      | Load data from files          |
 | load   | fac      | Load faculties from file      |
 | load   | dep      | Load departments from file    |
 =====================================================
 | exit              | Exit program                  |
 =====================================================
-""");
+"""+RESET);
                     break;
 
                 case "ls uni":

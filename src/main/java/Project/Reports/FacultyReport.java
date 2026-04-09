@@ -9,12 +9,16 @@ import Project.Models.Teacher;
 import java.util.Comparator;
 import java.util.List;
 
+import static Project.Models.ConsoleColors.*;
+
 public class FacultyReport {
     public static void generateStudentsAlphabeticalReport(Faculty faculty) {
+        System.out.println(CYAN_BOLD + "\n=======================================================");
         System.out.println("Students on Faculty: " + faculty.getFacultyName() + " (А-Я)");
+        System.out.println("=======================================================" + RESET);
 
         if (faculty.getDepartments() == null || faculty.getDepartments().isEmpty()) {
-            throw new EntityNotFoundException("No departments there");
+            throw new EntityNotFoundException(RED + "No departments there" + RESET);
         }
 
         List<Student> allStudents = faculty.getDepartments().stream()
@@ -24,17 +28,21 @@ public class FacultyReport {
                 .toList();
 
         if (allStudents.isEmpty()) {
-            throw new EntityNotFoundException("No students found");
+            throw new EntityNotFoundException(RED + "No students found" + RESET);
         } else {
             allStudents.forEach(System.out::println);
         }
+
+        System.out.println(CYAN_BOLD + "=======================================================\n" + RESET);
     }
 
     public static void generateTeachersAlphabeticalReport(Faculty faculty) {
+        System.out.println(CYAN_BOLD + "\n=======================================================");
         System.out.println("Teachers on Faculty : " + faculty.getFacultyName() + " (А-Я)");
+        System.out.println("=======================================================" + RESET);
 
         if (faculty.getDepartments() == null || faculty.getDepartments().isEmpty()) {
-           throw new EntityNotFoundException("No departments there");
+            throw new EntityNotFoundException(RED + "No departments there" + RESET);
         }
 
         List<Teacher> allTeachers = faculty.getDepartments().stream()
@@ -44,9 +52,11 @@ public class FacultyReport {
                 .toList();
 
         if (allTeachers.isEmpty()) {
-            System.out.println("No teachers found");
+            System.out.println(RED + "No teachers found" + RESET);
         } else {
             allTeachers.forEach(System.out::println);
         }
+
+        System.out.println(CYAN_BOLD + "=======================================================\n" + RESET);
     }
 }

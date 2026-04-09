@@ -9,17 +9,25 @@ import Project.service.DepartmentService;
 
 import java.util.*;
 
+import static Project.Models.ConsoleColors.*;
+
 public class StudentsReport {
 
     public static void getStudentsGroupedByCourse(List<Student> list){
-        List<Student> sortedByCourse = list.stream().sorted(Comparator.comparing(Student::getCourse)).toList();
+        if (list == null || list.isEmpty()) {
+            throw new EntityNotFoundException(RED + "No students found to display." + RESET);
+        }
+        List<Student> sortedByCourse = list.stream()
+                .sorted(Comparator.comparingInt(Student::getCourse))
+                .toList();
+
         int currentCourse = 0;
-        for(Student student : sortedByCourse){
+        for (Student student : sortedByCourse) {
             if (student.getCourse() != currentCourse) {
                 if (currentCourse != 0) {
                     System.out.println();
                 }
-                System.out.println("====== Курс " + student.getCourse() + " ===========");
+                System.out.println(CYAN + "====== Course " + student.getCourse() + " ===========" + RESET);
                 currentCourse = student.getCourse();
             }
             System.out.println(student);

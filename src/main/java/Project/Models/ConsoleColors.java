@@ -1,6 +1,6 @@
 package Project.Models;
 
-public class ColorPalette {
+public class ConsoleColors {
 
     public static final String RESET = "\u001B[0m";
 
@@ -10,5 +10,6 @@ public class ColorPalette {
     public static final String BLUE = "\u001B[34m";
     public static final String CYAN = "\u001B[36m";
 
-    public static final String BOLD = "\u001B[1m";
+    public static final String CYAN_BOLD = "\u001B[1;36m";
+    public static final String WHITE_BOLD = "\u001B[1;37m";
 }
