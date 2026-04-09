@@ -1,13 +1,23 @@
 package Project.Models;
 
+import Project.Annotation.DisplayName;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public record University(
+        @DisplayName(value = "Name of University")
         String universityName,
+
+        @DisplayName(value = "Short Name of University")
         String universityShortName,
+
+        @DisplayName(value = "City")
         String city,
+
+        @DisplayName(value = "Address")
         String universityAddress,
+
         List<Faculty> faculties
 ) {
     public University(String universityName, String universityShortName, String city, String universityAddress) {

@@ -1,12 +1,24 @@
 package Project.Models;
 
+import Project.Annotation.DisplayName;
+import Project.Annotation.Identifier;
+import Project.Annotation.ValidContact;
+
 import java.time.LocalDate;
 
 public abstract class Person {
+    @Identifier(label = "Person Id")
     private final int idPerson;
+
+    @DisplayName(value = "Last Name, First Name, Patronymic")
     private String pib;
+
     private final LocalDate birthDate;
+
+    @ValidContact(format = "Email")
     private String email;
+
+    @ValidContact(format = "Phone")
     private int phoneNumber;
 
 

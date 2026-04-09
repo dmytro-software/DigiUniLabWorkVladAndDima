@@ -1,15 +1,26 @@
 package Project.Models;
 
+import Project.Annotation.DisplayName;
+import Project.Annotation.HeadOfUnit;
+import Project.Annotation.Identifier;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Department {
-
+    @Identifier(label = "Department ID")
     private final int idDepartment;
+
+    @DisplayName(value = "Name of Department")
     private String departmentName;
+
+    @HeadOfUnit(level = "head of department")
     private String headOfDepartment;
+
     private int roomNumber;
+
+    @Identifier(label = "Faculty ID")
     private int facultyId;
 
     private List<Student> students = new ArrayList<>();

@@ -64,7 +64,7 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public List<Faculty> findAll() {
-        //return new ArrayList<>(faculties);
+
         return new ArrayList<>(university.faculties());
     }
 }

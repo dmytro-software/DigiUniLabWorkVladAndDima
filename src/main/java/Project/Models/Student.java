@@ -1,14 +1,27 @@
 package Project.Models;
 
+import Project.Annotation.EducationInfo;
+import Project.Annotation.Identifier;
+import Project.Annotation.ValueRange;
+
 import java.time.LocalDate;
 import java.util.List;
 
 public class Student extends Person {
+    @Identifier(label = "GradeBook")
     private final int gradeBookId;
+
+    @ValueRange(min = 1, max = 6)
     private int course;
     private int group;
+
+    @EducationInfo(isMutable = false)
     private final int enrollmentYear;
+
+    @EducationInfo
     private String formOfEducation;
+
+    @EducationInfo
     private String studentStatus;
 
     public Student(int idPerson, String pib, LocalDate birthDate, String email, int phoneNumber, int gradeBookId, int course,
