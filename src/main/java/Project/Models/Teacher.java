@@ -1,14 +1,29 @@
 package Project.Models;
 
+import Project.Annotation.DisplayName;
+import Project.Annotation.Identifier;
+import Project.Annotation.WorkLoad;
+
 import java.time.LocalDate;
 
 public class Teacher extends Person {
+    @Identifier(label = "Teacher Id")
     private final int teacherId;
+
+    @DisplayName(value = "Position")
     private String position;
+
     private Department department;
+
+    @DisplayName(value = "Academic Degree")
     private String academicDegree;
+
+    @DisplayName(value = "Academic Rank")
     private String academicRank;
+
     private String hireDate;
+
+    @WorkLoad(minRate = 0.25, maxRate = 1.0)
     private double fullTimeEquivalent;
 
     public Teacher(int idPerson, String pib, LocalDate birthDate, String email,

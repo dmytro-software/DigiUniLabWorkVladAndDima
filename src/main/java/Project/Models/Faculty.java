@@ -1,16 +1,30 @@
 package Project.Models;
 
+import Project.Annotation.DisplayName;
+import Project.Annotation.HeadOfUnit;
+import Project.Annotation.Identifier;
+import Project.Annotation.ValidContact;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Faculty {
-
+    @Identifier(label = "Faculty ID")
     private final int idFaculty;
+
+    @DisplayName(value = "Name of Faculty")
     private String facultyName;
+
+    @DisplayName(value = "Short Name of Faculty")
     private String facultyShortName;
+
+    @HeadOfUnit(level = "Faculty")
     private String headOfFaculty;
+
+    @ValidContact(format = "Phone")
     private String contactsOfFaculty;
+
     private List<Department> departments = new ArrayList<>();
 
     public Faculty(int idFaculty,
