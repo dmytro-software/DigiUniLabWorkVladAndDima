@@ -20,7 +20,9 @@ public class Student extends Person {
         this.enrollmentYear = enrollmentYear;
         this.formOfEducation = formOfEducation;
         this.studentStatus = studentStatus;
+
     }
+
     public int getGradeBookId() {
         return gradeBookId;
     }

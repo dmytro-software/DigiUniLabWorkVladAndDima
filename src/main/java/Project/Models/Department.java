@@ -11,6 +11,7 @@ public class Department {
     private String headOfDepartment;
     private int roomNumber;
     private int facultyId;
+
     private List<Student> students = new ArrayList<>();
     private List<Teacher> teachers = new ArrayList<>();
 

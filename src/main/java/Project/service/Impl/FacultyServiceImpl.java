@@ -22,7 +22,7 @@ public class FacultyServiceImpl implements FacultyService {
         if (faculty == null)
             throw new IllegalArgumentException("Faculty cannot be null");
         faculties.add(faculty);
-        university.getFaculties().add(faculty);
+        university.faculties().add(faculty);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class FacultyServiceImpl implements FacultyService {
         }
 
         faculties.remove(fac);
-        university.getFaculties().remove(fac);
+        university.faculties().remove(fac);
         return true;
     }
 
@@ -65,6 +65,6 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     public List<Faculty> findAll() {
         //return new ArrayList<>(faculties);
-        return new ArrayList<>(university.getFaculties());
+        return new ArrayList<>(university.faculties());
     }
 }
