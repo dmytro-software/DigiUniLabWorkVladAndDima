@@ -1,8 +1,10 @@
 package Project.ui;
 import Project.Exceptions.EntityNotEmptyException;
 import Project.Exceptions.EntityNotFoundException;
+import Project.Exceptions.IsEmptyException;
 import Project.Exceptions.ValidationException;
 import Project.Models.Department;
+import Project.Reports.DepartmentReport;
 import Project.service.DepartmentService;
 import Project.service.FacultyService;
 import Project.validation.DepartmentValidator;
@@ -205,5 +207,23 @@ public class DepartmentConsoleHandler {
 
             System.out.println("\n==========================================\n");
         }
+    }
+
+    public void handleShowReportOfStudentGroupingByCourse(LineReader reader){
+
+
+       try {
+           int departmentId = Integer.parseInt(reader.readLine("Enter Department ID to show: "));
+           DepartmentValidator.validateFacultyId(departmentId);
+           Department department = departmentService.findById(departmentId);
+           DepartmentReport.showStudentReportByCourseFromDepartment(department);
+       }catch (IsEmptyException e){
+           System.out.println("Empty Error: " + e.getMessage());
+       } catch (EntityNotFoundException e) {
+           System.out.println("Not found Error: " + e.getMessage());
+       }
+       catch (Exception e) {
+           System.out.println("Error: "+ e.getMessage());
+       }
     }
 }

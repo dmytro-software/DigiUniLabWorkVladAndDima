@@ -5,6 +5,7 @@ import Project.Models.Faculty;
 import Project.Data.DemoDataSeeder;
 import Project.Models.ColorPalette;
 import Project.Models.University;
+import Project.Reports.DepartmentReport;
 import Project.Repository.*;
 import Project.service.*;
 import Project.service.Impl.*;
@@ -157,10 +158,10 @@ public class Main {
                 case "ls fac":
                     facultyHandler.handleShowAllFaculties();
                     break;
-                case "repo stu -f":
+                case "repo stu -f -p":
                     facultyHandler.handelShowStudentsReportByPibFromFaculty(reader);
                     break;
-                case "repo tch -f":
+                case "repo tch -f -p":
                     facultyHandler.handelShowTeacherReportByPibFromFaculty(reader);
                     break;
                 case "add dep":
@@ -176,6 +177,9 @@ public class Main {
 
                 case "ls dep":
                     deptHandler.handleShowAllDepartments();
+                    break;
+                case "repo stu -d -c":
+                    deptHandler.handleShowReportOfStudentGroupingByCourse(reader);
                     break;
 
                 case "add stu":

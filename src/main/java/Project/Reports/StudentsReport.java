@@ -26,29 +26,7 @@ public class StudentsReport {
         }
     }
 
-    public static void getStudentsByAlphabetFromFaculty(Faculty faculty){
-        if (faculty.getDepartments() == null || faculty.getDepartments().isEmpty()) {
-            System.out.println("No departments in this faculty");
-            return;
-        }
 
-        List<Student> allStudents = faculty.getDepartments().stream()
-                .filter(d -> d.getStudents() != null)
-                .flatMap(d -> d.getStudents().stream())
-                .sorted(Comparator.comparing(Student::getPib))
-                .toList();
-
-        System.out.println("Student Search: Faculty " + faculty.getFacultyName());
-        if (allStudents.isEmpty()) {
-            throw new EntityNotFoundException("No students found");
-        } else {
-            allStudents.forEach(System.out::println);
-        }
-
-    }
-    public static void printDeptStudentsByCourse(List<Student> Students, int targetDeptId) {
-
-    }
 
 
 }
