@@ -1,3 +1,8 @@
 University: Kyiv-Mohyla Academy;NaUKMA;Kyiv;Volodymyrska 60
-Faculty:221030;fdf;df;dfd;0980980989
-Department:216869;dff;221030;df;2
+Faculty:1;Факультет Інформатики;ФІ;Глибовець;0441112233
+Department:101;Інженерія програмного забезпечення;1;Бублик;320
+Department:102;Комп'ютерні науки;1;Франчук;115
+Faculty:2;Правничий Факультет;ФПрН;Азаров;0442223344
+Department:201;Загальнотеоретичне право;2;Козюбра;410
+Faculty:105741;sdsdds;sdsd;sdsds;0980980989
+Department:730891;fdfdf;105741;sfsffs;3

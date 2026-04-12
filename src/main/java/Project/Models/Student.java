@@ -24,8 +24,10 @@ public class Student extends Person {
     @EducationInfo
     private String studentStatus;
 
+    private int departmentId;
+
     public Student(int idPerson, String pib, LocalDate birthDate, String email, int phoneNumber, int gradeBookId, int course,
-                   int group, int  enrollmentYear, String formOfEducation, String studentStatus) {
+                   int group, int  enrollmentYear, String formOfEducation, String studentStatus, int departmentId) {
         super(idPerson, pib, birthDate, email, phoneNumber);
         this.course = course;
         this.group = group;
@@ -33,6 +35,7 @@ public class Student extends Person {
         this.enrollmentYear = enrollmentYear;
         this.formOfEducation = formOfEducation;
         this.studentStatus = studentStatus;
+        this.departmentId = departmentId;
 
     }
 
@@ -74,6 +77,10 @@ public class Student extends Person {
 
     public void setStudentStatus(String studentStatus) {
         this.studentStatus = studentStatus;
+    }
+
+    public int getDepartmentId() {
+        return departmentId;
     }
 
 

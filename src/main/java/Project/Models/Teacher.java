@@ -13,7 +13,8 @@ public class Teacher extends Person {
     @DisplayName(value = "Position")
     private String position;
 
-    private Department department;
+    @Identifier(label = "Department")
+    private int departmentId;
 
     @DisplayName(value = "Academic Degree")
     private String academicDegree;
@@ -27,11 +28,11 @@ public class Teacher extends Person {
     private double fullTimeEquivalent;
 
     public Teacher(int idPerson, String pib, LocalDate birthDate, String email,
-                   int phoneNumber, int teacherId, String position, Department department, String academicDegree, String academicRank, String hireDate, double fullTimeEquivalent) {
+                   int phoneNumber, int teacherId, String position, int departmentId, String academicDegree, String academicRank, String hireDate, double fullTimeEquivalent) {
         super(idPerson, pib, birthDate, email, phoneNumber);
         this.teacherId = teacherId;
         this.position = position;
-        this.department = department;
+        this.departmentId = departmentId;
         this.academicDegree = academicDegree;
         this.academicRank = academicRank;
         this.hireDate = hireDate;
@@ -49,12 +50,12 @@ public class Teacher extends Person {
         this.position = position;
     }
 
-    public Department getDepartment() {
-        return department;
+    public Integer getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartment(Department department) {
-        this.department = department;
+    public void setDepartment(Integer departmentId) {
+        this.departmentId = departmentId;
     }
 
     public String getAcademicDegree() {

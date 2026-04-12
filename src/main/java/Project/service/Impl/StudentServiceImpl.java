@@ -47,10 +47,10 @@ public class StudentServiceImpl implements StudentService {
                 group,
                 enrollmentYear,
                 formOfEducation,
-                studentStatus
+                studentStatus,
+                departmentId
         );
 
-        // 3. Додаємо до кафедри
         department.getStudents().add(newStudent);
     }
 

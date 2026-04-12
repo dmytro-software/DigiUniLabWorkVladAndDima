@@ -1,10 +1,7 @@
 package Project;
 
-import Project.Models.Department;
-import Project.Models.Faculty;
+import Project.Models.*;
 import Project.Data.DemoDataSeeder;
-import Project.Models.University;
-import Project.Reports.DepartmentReport;
 import Project.Repository.*;
 import Project.service.*;
 import Project.service.Impl.*;
@@ -23,8 +20,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-
-import static Project.Models.ConsoleColors.*;
 
 
 public class Main {
@@ -45,10 +40,11 @@ public class Main {
     private static final StudentConsoleHangler studentHandler = new StudentConsoleHangler(studentService);
     private static final TeacherConsoleHangler teacherHandler = new TeacherConsoleHangler(teacherService);
 
+    private static final StudentRepository studentRepository = new StudentRepository();
+    private static final TeacherRepository teacherRepository = new TeacherRepository();
     private static final FacultyRepository facultyRepository = new FacultyRepository();
-    private static final DepartmentRepository departmentRepository = new DepartmentRepository();
+    private static final DepartmentRepository departmentRepository = new DepartmentRepository(studentRepository, teacherRepository);
     private static final UniversityRepository universityRepository = new UniversityRepository(facultyRepository, departmentRepository);
-
 
     public static void main(String[] args) throws Exception {
 
@@ -72,11 +68,11 @@ public class Main {
     String role = authService.authorize(login, password);
 
     if (role == null) {
-        System.out.println(RED+ "Access denied" +RESET);
+        System.out.println("Access denied");
         continue;
     }
 
-    System.out.println(GREEN+ "Logged as: " + role + RESET);
+    System.out.println("Logged as: " + role);
     System.out.println("Type 'help -m' to see commands");
 
     if (role.equals("manager")) {
@@ -98,7 +94,7 @@ public class Main {
 
             switch (line) {
                 case "help -m":
-                    System.out.println(CYAN+ """
+                    System.out.println("""
 =====================================================
 |               DigiUni ADMIN CLI                   |
 =====================================================
@@ -131,18 +127,15 @@ public class Main {
 | find   | tch -id  | Find teacher by ID            |
 | find   | tch -n   | Find teacher by PIB           |
 |--------|----------|-------------------------------|
-| repo   | stu -f -p| Faculty students (by PIB)     |
-| repo   | tch -f -p| Faculty teachers (by PIB)     |
-| repo   | stu -d -c| Dept. students (by Course)    |
-| repo   | stu -c   | All students (by Course)      |
-|--------|----------|-------------------------------|
 | load   | uni      | Load data from files          |
 | load   | fac      | Load faculties from file      |
 | load   | dep      | Load departments from file    |
+| load   | stu      | Load students from file       |
+| load   | tch      | Load teachers from file       |
 =====================================================
 | exit              | Exit program                  |
 =====================================================
-"""+RESET);
+""");
                     break;
 
                 case "ls uni":
@@ -164,10 +157,10 @@ public class Main {
                 case "ls fac":
                     facultyHandler.handleShowAllFaculties();
                     break;
-                case "repo stu -f -p":
+                case "repo stu -f":
                     facultyHandler.handelShowStudentsReportByPibFromFaculty(reader);
                     break;
-                case "repo tch -f -p":
+                case "repo tch -f":
                     facultyHandler.handelShowTeacherReportByPibFromFaculty(reader);
                     break;
                 case "add dep":
@@ -183,9 +176,6 @@ public class Main {
 
                 case "ls dep":
                     deptHandler.handleShowAllDepartments();
-                    break;
-                case "repo stu -d -c":
-                    deptHandler.handleShowReportOfStudentGroupingByCourse(reader);
                     break;
 
                 case "add stu":
@@ -255,8 +245,18 @@ public class Main {
                     }
                     break;
 
+                case "load stu":
+                    StudentRepository stuRepo = new StudentRepository();
+                    Optional<List<Student>> optionalStudents = stuRepo.loadAll();
+                    break;
+
+                    case "load tch":
+                    TeacherRepository tchRepo = new TeacherRepository();
+                    Optional<List<Teacher>> optionalTeachers = tchRepo.loadAll();
+                    break;
+
                 case "load dep":
-                    DepartmentRepository dep = new DepartmentRepository();
+                    DepartmentRepository dep = new DepartmentRepository(studentRepository, teacherRepository);
                     Optional<List<Department>> optionalDepartments = dep.loadAll();
                     break;
 
@@ -269,6 +269,8 @@ public class Main {
                     departmentRepository.saveAll(deptService.findAll());
                     facultyRepository.saveAll(facultyService.findAll());
                     universityRepository.saveUniversity(myUniversity);
+                    studentRepository.saveAll(studentService.findAll());
+                    teacherRepository.saveAll(teacherService.findAll());
                     System.out.println("Saved. Bye!");
                     return;
 

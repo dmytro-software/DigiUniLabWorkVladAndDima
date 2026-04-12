@@ -46,7 +46,7 @@ public class TeacherServiceImpl implements TeacherService {
                 phoneNumber,
                 teacherId,
                 position,
-                department,
+                departmentId,
                 academicDegree,
                 academicRank,
                 hireDate,
