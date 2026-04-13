@@ -118,7 +118,7 @@ public class Main {
 | edit   | stu      | Edit a student                |
 | rm     | stu      | Remove a student              |
 | ls     | stu      | Show all students             |
-| find   | stu -n   | Find student by PIB           |
+| find   | stu -p   | Find student by PIB           |
 | find   | stu -g   | Find student by Group         |
 | find   | stu -c   | Find student by Course        |
 |--------|----------|-------------------------------|
