@@ -12,6 +12,8 @@ import org.jline.reader.LineReader;
 
 import java.util.List;
 
+import static Project.Models.ConsoleColors.*;
+
 public class FacultyConsoleHandler {
     private final FacultyService facultyService;
 
@@ -20,58 +22,62 @@ public class FacultyConsoleHandler {
     }
 
     public void handleAddFaculty(LineReader reader) {
+        System.out.println(CYAN_BOLD + "\n== ADD NEW FACULTY ==" + RESET);
         try {
             int id = (int) (Math.random() * 900000) + 100000;
-            System.out.println("Faculty id: " + id);
+            System.out.println(CYAN + " ℹ " + RESET + "Faculty id: " + id);
 
-            String name = reader.readLine("Faculty Name: ");
+            String name = reader.readLine(YELLOW + " ❯ " + RESET + "Faculty Name: ");
             FacultyValidator.validateFacultyName(name);
 
-            String shortName = reader.readLine("Short Name: ");
+            String shortName = reader.readLine(YELLOW + " ❯ " + RESET + "Short Name: ");
             FacultyValidator.validateFacultyShortName(shortName);
 
-            String head = reader.readLine("Head: ");
+            String head = reader.readLine(YELLOW + " ❯ " + RESET + "Head: ");
             FacultyValidator.validateHeadOfFaculty(head);
 
-            String contacts = reader.readLine("Contacts: ");
+            String contacts = reader.readLine(YELLOW + " ❯ " + RESET + "Contacts: ");
             FacultyValidator.validatePhoneNumber(contacts);
 
             Faculty newFaculty = new Faculty(id, name, shortName, head, contacts);
             facultyService.addFaculty(newFaculty);
-            System.out.println("Faculty created.");
+
+            System.out.println(GREEN + " ✓ Faculty created." + RESET);
+            System.out.println(CYAN + "----------------------------------------\n" + RESET);
         } catch (ValidationException e) {
-            System.out.println("Validation Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
         } catch (NumberFormatException e) {
-            System.out.println("Numeric format error");
+            System.out.println(RED + " ✗ Numeric format error" + RESET);
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
         }
     }
 
     public void handleRemoveFaculty(LineReader reader) {
+        System.out.println(CYAN_BOLD + "\n== REMOVE FACULTY ==" + RESET);
         try {
-            String idInput = reader.readLine("Enter Faculty Id for remove: ");
+            String idInput = reader.readLine(YELLOW + " ❯ " + RESET + "Enter Faculty Id for remove: ");
             int id = Integer.parseInt(idInput.trim());
 
             facultyService.removeFaculty(id);
 
-            System.out.println("Faculty with id " + id + " was successfully deleted");
+            System.out.println(GREEN + " ✓ Faculty with id " + id + " was successfully deleted" + RESET);
+            System.out.println(CYAN + "----------------------------------------\n" + RESET);
         } catch (EntityNotFoundException e) {
-            System.out.println("Search Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
         } catch (NumberFormatException e) {
-            System.out.println("Number format error");
+            System.out.println(RED + " ✗ Number format error" + RESET);
         } catch (EntityNotEmptyException e) {
-            System.out.println("Delete error: " + e.getMessage());
-        }
-        catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Delete error: " + e.getMessage() + RESET);
+        } catch (Exception e) {
+            System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
         }
     }
 
     public void handleEditFaculty(LineReader reader) {
-
+        System.out.println(CYAN_BOLD + "\n== EDIT FACULTY ==" + RESET);
         try {
-            String idInput = reader.readLine("Enter faculty id: ");
+            String idInput = reader.readLine(YELLOW + " ❯ " + RESET + "Enter faculty id: ");
             int idFaculty;
             if(idInput.isBlank()){
 //                idFaculty =
@@ -80,106 +86,113 @@ public class FacultyConsoleHandler {
 
             int id = Integer.parseInt(idInput);
 
-            String name = reader.readLine("Faculty Name: ");
+            String name = reader.readLine(YELLOW + " ❯ " + RESET + "Faculty Name: ");
             if (name == null || name.isBlank()) {
-                System.out.println("Faculty name cannot be empty.");
+                System.out.println(RED + " ✗ Faculty name cannot be empty." + RESET);
                 return;
             }
 
-            String shortName = reader.readLine("Short Name: ");
+            String shortName = reader.readLine(YELLOW + " ❯ " + RESET + "Short Name: ");
             if (shortName == null || shortName.isBlank()) {
-                System.out.println("Short name cannot be empty.");
+                System.out.println(RED + " ✗ Short name cannot be empty." + RESET);
                 return;
             }
 
-            String head = reader.readLine("Head: ");
+            String head = reader.readLine(YELLOW + " ❯ " + RESET + "Head: ");
             if (head == null || head.isBlank()) {
-                System.out.println("Head cannot be empty.");
+                System.out.println(RED + " ✗ Head cannot be empty." + RESET);
                 return;
             }
 
-            String contacts = reader.readLine("Contacts: ");
+            String contacts = reader.readLine(YELLOW + " ❯ " + RESET + "Contacts: ");
             if (contacts == null || contacts.isBlank()) {
-                System.out.println("Contacts cannot be empty.");
+                System.out.println(RED + " ✗ Contacts cannot be empty." + RESET);
                 return;
             }
 
             facultyService.editFaculty(id, name, shortName, head, contacts);
-            System.out.println("Faculty updated successfully.");
+            System.out.println(GREEN + " ✓ Faculty updated successfully." + RESET);
+            System.out.println(CYAN + "----------------------------------------\n" + RESET);
 
         } catch (ValidationException e) {
-            System.out.println("Validation Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
         } catch (EntityNotFoundException e) {
-            System.out.println("Search Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid faculty id. Please enter a number.");
+            System.out.println(RED + " ✗ Invalid faculty id. Please enter a number." + RESET);
         } catch (Exception e) {
-            System.out.println("Error updating faculty: " + e.getMessage());
+            System.out.println(RED + " ✗ Error updating faculty: " + e.getMessage() + RESET);
         }
     }
+
     public void handleShowAllFaculties() {
         List<Faculty> faculties = facultyService.findAll();
 
         if (faculties.isEmpty()) {
-            System.out.println("No faculties found in the system.");
+            System.out.println(YELLOW + "\n ⚠ " + RESET + "No faculties found in the system.\n");
             return;
         }
 
-        System.out.println("\n================ FACULTIES ================\n");
+        System.out.println(CYAN_BOLD + "\n================ FACULTIES ================" + RESET);
 
         for (Faculty f : faculties) {
 
-            System.out.println("Faculty ID: " + f.getIdFaculty());
+            System.out.println(CYAN + "\n[ Faculty ID: " + f.getIdFaculty() + " ]" + RESET);
             System.out.println("Name: " + f.getFacultyName());
             System.out.println("Short Name: " + f.getFacultyShortName());
             System.out.println("Head: " + f.getHeadOfFaculty());
             System.out.println("Contact number of faculty: " + f.getContactsOfFaculty());
-            System.out.println("------------------------------------------");
+            System.out.println(CYAN + "------------------------------------------" + RESET);
 
             if (f.getDepartments() == null || f.getDepartments().isEmpty()) {
-                System.out.println("   No departments.");
+                System.out.println(YELLOW + "   ℹ " + RESET + "No departments.");
             } else {
-                System.out.println("   Departments:");
+                System.out.println(CYAN_BOLD + "   Departments:" + RESET);
                 for (var d : f.getDepartments()) {
-                    System.out.println("ID: " + d.getIdDepartment()
+                    System.out.println("   ID: " + d.getIdDepartment()
                             + " | Name: " + d.getDepartmentName()
                             + " | Head: " + d.getHeadOfDepartment()
                             + " | Room: " + d.getRoomNumber());
                 }
             }
-
-            System.out.println("\n==========================================\n");
         }
+        System.out.println(CYAN_BOLD + "\n=============================================\n" + RESET);
     }
 
     public void handelShowStudentsReportByPibFromFaculty(LineReader reader){
+        System.out.println(CYAN_BOLD + "\n== STUDENTS REPORT BY PIB (FACULTY) ==" + RESET);
         try {
-            int facultyId = Integer.parseInt(reader.readLine("Enter Faculty ID: "));
+            int facultyId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter Faculty ID: "));
             FacultyValidator.validateId(facultyId);
             Faculty faculty = facultyService.findById(facultyId);
             if (faculty != null) {
                 FacultyReport.generateStudentsAlphabeticalReport(faculty);
             }
-        }catch (EntityNotEmptyException e){
-            System.out.println("Empty Error: " + e.getMessage());
+        } catch (EntityNotEmptyException e){
+            System.out.println(RED + " ✗ Empty Error: " + e.getMessage() + RESET);
+        } catch (NumberFormatException e) {
+            System.out.println(RED + " ✗ Numeric format error." + RESET);
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
         }
     }
 
     public void handelShowTeacherReportByPibFromFaculty(LineReader reader){
+        System.out.println(CYAN_BOLD + "\n== TEACHERS REPORT BY PIB (FACULTY) ==" + RESET);
         try {
-            int facultyId = Integer.parseInt(reader.readLine("Enter Faculty ID: "));
+            int facultyId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter Faculty ID: "));
             FacultyValidator.validateId(facultyId);
             Faculty faculty = facultyService.findById(facultyId);
 
             if (faculty != null) {
                 FacultyReport.generateTeachersAlphabeticalReport(faculty);
             }
-        }catch (EntityNotEmptyException e){
-            System.out.println("Empty Error: " + e.getMessage());
+        } catch (EntityNotEmptyException e){
+            System.out.println(RED + " ✗ Empty Error: " + e.getMessage() + RESET);
+        } catch (NumberFormatException e) {
+            System.out.println(RED + " ✗ Numeric format error." + RESET);
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
         }
     }
 }
