@@ -5,6 +5,8 @@ import Project.Annotation.DisplayName;
 import java.util.ArrayList;
 import java.util.List;
 
+import static Project.Models.ConsoleColors.*;
+
 public record University(
         @DisplayName(value = "Name of University")
         String universityName,
@@ -24,34 +26,35 @@ public record University(
         this(universityName, universityShortName, city, universityAddress, new ArrayList<>());
     }
     public void printInfo() {
-        System.out.println("Університет: " + universityName + " (" + universityShortName + ")");
-        System.out.println("Адреса: " + city + ", " + universityAddress);
-        System.out.println("\n==========================================");
+        System.out.println(CYAN_BOLD + "\n== UNIVERSITY INFO ==" + RESET);
+        System.out.println(CYAN + " ℹ " + RESET + "Університет: " + universityName + " (" + universityShortName + ")");
+        System.out.println(CYAN + " ℹ " + RESET + "Адреса: " + city + ", " + universityAddress);
+        System.out.println(CYAN_BOLD + "==========================================\n" + RESET);
 
         if (faculties == null || faculties.isEmpty()) {
-            System.out.println("Немає факультетів");
+            System.out.println(YELLOW + " ⚠ " + RESET + "Немає факультетів\n");
         } else {
             for (Faculty f : faculties) {
-                System.out.println("Faculty ID: " + f.getIdFaculty());
+                System.out.println(CYAN + "[ Faculty ID: " + f.getIdFaculty() + " ]" + RESET);
                 System.out.println("Name: " + f.getFacultyName());
                 System.out.println("Short Name: " + f.getFacultyShortName());
                 System.out.println("Head: " + f.getHeadOfFaculty());
                 System.out.println("Contact number of faculty: " + f.getContactsOfFaculty());
-                System.out.println("------------------------------------------");
+                System.out.println(CYAN + "------------------------------------------" + RESET);
 
                 if (f.getDepartments() == null || f.getDepartments().isEmpty()) {
-                    System.out.println("   No departments.");
+                    System.out.println(YELLOW + "   ℹ " + RESET + "No departments.");
                 } else {
-                    System.out.println("   Departments:");
+                    System.out.println(CYAN_BOLD + "   Departments:" + RESET);
                     for (Department d : f.getDepartments()) {
-                        System.out.println("      • ID: " + d.getIdDepartment()
+                        System.out.println("      " + CYAN + "•" + RESET + " ID: " + d.getIdDepartment()
                                 + " | Name: " + d.getDepartmentName()
                                 + " | Head: " + d.getHeadOfDepartment()
                                 + " | Room: " + d.getRoomNumber());
                     }
                 }
 
-                System.out.println("\n==========================================");
+                System.out.println(CYAN_BOLD + "\n==========================================\n" + RESET);
             }
         }
     }

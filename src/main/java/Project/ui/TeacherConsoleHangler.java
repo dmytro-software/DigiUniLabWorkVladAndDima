@@ -10,50 +10,54 @@ import org.jline.reader.LineReader;
 import java.time.LocalDate;
 import java.util.List;
 
+import static Project.Models.ConsoleColors.*;
+
 public class TeacherConsoleHangler {
     private TeacherService teacherService;
 
     public TeacherConsoleHangler(TeacherService teacherService) {
         this.teacherService = teacherService;
     }
+
     public void handleAddTeacher(LineReader reader) {
+        System.out.println(CYAN_BOLD + "\n== ADD NEW TEACHER ==" + RESET);
         try {
             int idPerson = (int) (Math.random() * 900000) + 100000;
-            System.out.println("Generated Person ID: " + idPerson);
+            System.out.println(CYAN + " ℹ " + RESET + "Generated Person ID: " + idPerson);
 
-            String pib = reader.readLine("Full Name (PIB): ");
+            String pib = reader.readLine(YELLOW + " ❯ " + RESET + "Full Name (PIB): ");
             TeacherValidator.validateName(pib);
 
-            String birthDate = reader.readLine("Birth Date (YYYYMMDD): ");
+            String birthDate = reader.readLine(YELLOW + " ❯ " + RESET + "Birth Date (YYYYMMDD): ");
             TeacherValidator.validateBirthDate(birthDate);
             LocalDate birthDatee = LocalDate.parse(birthDate, java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
 
-            String email = reader.readLine("Email: ");
+            String email = reader.readLine(YELLOW + " ❯ " + RESET + "Email: ");
             TeacherValidator.validateEmail(email);
 
-            String phoneStr = reader.readLine("Phone (10 digits): ");
+            String phoneStr = reader.readLine(YELLOW + " ❯ " + RESET + "Phone (10 digits): ");
             TeacherValidator.validatePhone(phoneStr);
             int phoneNumber = Integer.parseInt(phoneStr);
 
             int teacherId = (int) (Math.random() * 900000) + 100000;
-            System.out.println("Generated Teacher ID: " + teacherId);
+            System.out.println(CYAN + " ℹ " + RESET + "Generated Teacher ID: " + teacherId);
 
-            String position = reader.readLine("Position: ");
+            String position = reader.readLine(YELLOW + " ❯ " + RESET + "Position: ");
             TeacherValidator.validatePositionOrDegree(position);
 
-            String academicDegree = reader.readLine("Academic Degree: ");
+            String academicDegree = reader.readLine(YELLOW + " ❯ " + RESET + "Academic Degree: ");
             TeacherValidator.validatePositionOrDegree(academicDegree);
 
-            String academicRank = reader.readLine("Academic Rank: ");
+            String academicRank = reader.readLine(YELLOW + " ❯ " + RESET + "Academic Rank: ");
             TeacherValidator.validatePositionOrDegree(academicRank);
 
-            String hireDate = reader.readLine("Hire Date (YYYY.MM.DD): ");
+            String hireDate = reader.readLine(YELLOW + " ❯ " + RESET + "Hire Date (YYYY.MM.DD): ");
             TeacherValidator.validateHireDate(hireDate);
 
-            double fullTimeEquivalent = Double.parseDouble(reader.readLine("Full Time Equivalent: ").replace(',', '.'));
+            double fullTimeEquivalent = Double.parseDouble(reader.readLine(YELLOW + " ❯ " + RESET + "Full Time Equivalent: ").replace(',', '.'));
             TeacherValidator.validateFTE(fullTimeEquivalent);
 
-            int departmentId = Integer.parseInt(reader.readLine("Department ID: "));
+            int departmentId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Department ID: "));
             TeacherValidator.validateId(departmentId);
 
             teacherService.addTeacher(
@@ -70,198 +74,207 @@ public class TeacherConsoleHangler {
                     fullTimeEquivalent
             );
 
-            System.out.println("Teacher successfully added!");
+            System.out.println(GREEN + " ✓ Teacher successfully added!" + RESET);
+            System.out.println(CYAN + "----------------------------------------\n" + RESET);
 
         } catch (ValidationException e) {
-            System.out.println("Validation Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
         } catch (EntityNotFoundException e) {
-            System.out.println("Search Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
         } catch (NumberFormatException e) {
-            System.out.println("Numeric format error");
+            System.out.println(RED + " ✗ Numeric format error" + RESET);
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
         }
     }
 
     public void handleEditTeacher(LineReader reader) {
+        System.out.println(CYAN_BOLD + "\n== EDIT TEACHER ==" + RESET);
         try {
-            int teacherId = Integer.parseInt(reader.readLine("Enter teacher ID to edit: "));
+            int teacherId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter teacher ID to edit: "));
             Teacher teacher = teacherService.findByTeacherId(teacherId).orElseThrow(() -> new EntityNotFoundException("Teacher with Teacher ID " + teacherId + " not found."));
 
-
-            System.out.println("Editing teacher. Press Enter to keep current value.\n");
+            System.out.println(CYAN + " ℹ " + RESET + "Editing teacher. Press Enter to keep current value.");
 
             // pib
-            String pib = reader.readLine("Full Name (" + teacher.getPib() + "): ");
+            String pib = reader.readLine(YELLOW + " ❯ " + RESET + "Full Name (" + teacher.getPib() + "): ");
             if (!pib.isBlank()) {
                 if (!TeacherValidator.validateName(pib)) {
-                    System.out.println("Invalid name format.");
+                    System.out.println(RED + " ✗ Invalid name format." + RESET);
                     return;
                 }
                 teacher.setPib(pib);
             }
 
             // email
-            String email = reader.readLine("Email (" + teacher.getEmail() + "): ");
+            String email = reader.readLine(YELLOW + " ❯ " + RESET + "Email (" + teacher.getEmail() + "): ");
             if (!email.isBlank()) {
                 if (!TeacherValidator.validateEmail(email)) {
-                    System.out.println("Invalid email format.");
+                    System.out.println(RED + " ✗ Invalid email format." + RESET);
                     return;
                 }
                 teacher.setEmail(email);
             }
 
             // phoneNumber
-            String phoneStr = reader.readLine("Phone (" + teacher.getPhoneNumber() + "): ");
+            String phoneStr = reader.readLine(YELLOW + " ❯ " + RESET + "Phone (" + teacher.getPhoneNumber() + "): ");
             if (!phoneStr.isBlank()) {
                 if (!TeacherValidator.validatePhone(phoneStr)) {
-                    System.out.println("Phone must be 10 digits.");
+                    System.out.println(RED + " ✗ Phone must be 10 digits." + RESET);
                     return;
                 }
                 teacher.setPhoneNumber(Integer.parseInt(phoneStr));
             }
 
             // position
-            String position = reader.readLine("Position (" + teacher.getPosition() + "): ");
+            String position = reader.readLine(YELLOW + " ❯ " + RESET + "Position (" + teacher.getPosition() + "): ");
             if (!position.isBlank()) {
                 if (!TeacherValidator.validatePositionOrDegree(position)) {
-                    System.out.println("Invalid position format.");
+                    System.out.println(RED + " ✗ Invalid position format." + RESET);
                     return;
                 }
                 teacher.setPosition(position);
             }
 
             // academicDegree
-            String degree = reader.readLine("Academic Degree (" + teacher.getAcademicDegree() + "): ");
+            String degree = reader.readLine(YELLOW + " ❯ " + RESET + "Academic Degree (" + teacher.getAcademicDegree() + "): ");
             if (!degree.isBlank()) {
                 if (!TeacherValidator.validatePositionOrDegree(degree)) {
-                    System.out.println("Invalid academic degree format.");
+                    System.out.println(RED + " ✗ Invalid academic degree format." + RESET);
                     return;
                 }
                 teacher.setAcademicDegree(degree);
             }
 
             // academicRank
-            String rank = reader.readLine("Academic Rank (" + teacher.getAcademicRank() + "): ");
+            String rank = reader.readLine(YELLOW + " ❯ " + RESET + "Academic Rank (" + teacher.getAcademicRank() + "): ");
             if (!rank.isBlank()) {
                 teacher.setAcademicRank(rank);
             }
 
             // hireDate
-            String hireDate = reader.readLine("Hire Date (" + teacher.getHireDate() + ") YYYYMMDD: ");
+            String hireDate = reader.readLine(YELLOW + " ❯ " + RESET + "Hire Date (" + teacher.getHireDate() + ") YYYYMMDD: ");
             if (!hireDate.isBlank()) {
                 if (!TeacherValidator.validateHireDate(hireDate)) {
-                    System.out.println("Invalid hire date format.");
+                    System.out.println(RED + " ✗ Invalid hire date format." + RESET);
                     return;
                 }
                 teacher.setHireDate(hireDate);
             }
 
             // fullTimeEquivalent
-            String fteStr = reader.readLine("Full Time Equivalent (" + teacher.getFullTimeEquivalent() + "): ");
+            String fteStr = reader.readLine(YELLOW + " ❯ " + RESET + "Full Time Equivalent (" + teacher.getFullTimeEquivalent() + "): ");
             if (!fteStr.isBlank()) {
                 double fte = Double.parseDouble(fteStr.replace(',', '.'));
                 if (!TeacherValidator.validateFTE(fte)) {
-                    System.out.println("FTE should be between 0.1 and 1.0.");
+                    System.out.println(RED + " ✗ FTE should be between 0.1 and 1.0." + RESET);
                     return;
                 }
                 teacher.setFullTimeEquivalent(fte);
             }
 
-            System.out.println("Teacher updated successfully!");
+            System.out.println(GREEN + " ✓ Teacher updated successfully!" + RESET);
+            System.out.println(CYAN + "----------------------------------------\n" + RESET);
 
         } catch (ValidationException e) {
-            System.out.println("Validation Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
         } catch (EntityNotFoundException e) {
-            System.out.println("Search Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid number format: " + e.getMessage());
+            System.out.println(RED + " ✗ Invalid number format: " + e.getMessage() + RESET);
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
         }
     }
 
     public void handleRemoveTeacher(LineReader reader) {
+        System.out.println(CYAN_BOLD + "\n== REMOVE TEACHER ==" + RESET);
         try {
-            int teacherId = Integer.parseInt(reader.readLine("Enter teacher ID to remove: "));
+            int teacherId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter teacher ID to remove: "));
 
             boolean removed = teacherService.removeTeacher(teacherId);
 
             if (removed) {
-                System.out.println("Teacher removed successfully.");
+                System.out.println(GREEN + " ✓ Teacher removed successfully." + RESET);
             } else {
-                System.out.println("Teacher not found.");
+                System.out.println(RED + " ✗ Teacher not found." + RESET);
             }
+            System.out.println(CYAN + "----------------------------------------\n" + RESET);
 
         } catch (EntityNotFoundException e) {
-            System.out.println("Search Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a number.");
+            System.out.println(RED + " ✗ Invalid input. Please enter a number." + RESET);
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
         }
     }
 
     public void handelFindTeacherByPib(LineReader reader){
+        System.out.println(CYAN_BOLD + "\n== FIND TEACHER BY PIB ==" + RESET);
         try {
-            String teacherPib = reader.readLine("Enter teacher Pib: ");
+            String teacherPib = reader.readLine(YELLOW + " ❯ " + RESET + "Enter teacher Pib: ");
             TeacherValidator.validateName(teacherPib);
 
             Teacher teacher = teacherService.findByPib(teacherPib).orElseThrow(() -> new EntityNotFoundException("Teacher with Pib " + teacherPib + " not found."));
 
-            System.out.println("Teacher Found");
+            System.out.println(GREEN + " ✓ Teacher Found" + RESET);
             System.out.println(teacher);
-        }catch (ValidationException e) {
-            System.out.println("Validation Error: " + e.getMessage());
+            System.out.println(CYAN + "----------------------------------------\n" + RESET);
+        } catch (ValidationException e) {
+            System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
         } catch (Exception e){
-            System.out.println("Error: " + e.getMessage());
+            System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
         }
     }
 
     public void handleFindTeacherById(LineReader reader){
+        System.out.println(CYAN_BOLD + "\n== FIND TEACHER BY ID ==" + RESET);
         try{
-            int teacherID = Integer.parseInt(reader.readLine("Enter TeacherId: "));
+            int teacherID = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter TeacherId: "));
             TeacherValidator.validateId(teacherID);
 
             Teacher teacher = teacherService.findByTeacherId(teacherID).orElseThrow(() -> new EntityNotFoundException("Teacher with Teacher ID " + teacherID + " not found."));
 
-            System.out.println("Teacher Found");
+            System.out.println(GREEN + " ✓ Teacher Found" + RESET);
             System.out.println(teacher);
-        }catch (ValidationException e) {
-            System.out.println("Validation Error: " + e.getMessage());
-        }catch (Exception e){
-            System.out.println("Error: "+ e.getMessage() );
+            System.out.println(CYAN + "----------------------------------------\n" + RESET);
+        } catch (ValidationException e) {
+            System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+        } catch (Exception e){
+            System.out.println(RED + " ✗ Error: "+ e.getMessage() + RESET);
         }
     }
 
     public void handleShowAllTeachers() {
 
-       List<Teacher> teachers = teacherService.findAll();
+        List<Teacher> teachers = teacherService.findAll();
 
         if (teachers.isEmpty()) {
-            System.out.println("No teachers found.");
+            System.out.println(YELLOW + "\n ⚠ " + RESET + "No teachers found.\n");
             return;
         }
 
-        System.out.println("\n========== TEACHERS LIST ==========\n");
+        System.out.println(CYAN_BOLD + "\n========== TEACHERS LIST ==========" + RESET);
 
-            for (Teacher t : teachers) {
-                System.out.println("--------------------------------------------------");
-                System.out.println("Person ID: " + t.getIdPerson());
-                System.out.println("Full Name: " + t.getPib());
-                System.out.println("Birth Date: " + t.getBirthDate());
-                System.out.println("Email: " + t.getEmail());
-                System.out.println("Phone: " + t.getPhoneNumber());
-                System.out.println("ID: " + t.getTeacherId());
-                System.out.println("Full Name: " + t.getPib());
-                System.out.println("Email: " + t.getEmail());
-                System.out.println("Phone: " + t.getPhoneNumber());
-                System.out.println("Position: " + t.getPosition());
-                System.out.println("Degree: " + t.getAcademicDegree());
-                System.out.println("Rank: " + t.getAcademicRank());
-                System.out.println("Hire date: " + t.getHireDate());
-                System.out.println("FTE: " + t.getFullTimeEquivalent());
-            }
+        for (Teacher t : teachers) {
+            System.out.println(CYAN + "--------------------------------------------------" + RESET);
+            System.out.println("Person ID: " + t.getIdPerson());
+            System.out.println("Full Name: " + t.getPib());
+            System.out.println("Birth Date: " + t.getBirthDate());
+            System.out.println("Email: " + t.getEmail());
+            System.out.println("Phone: " + t.getPhoneNumber());
+            System.out.println("ID: " + t.getTeacherId());
+            System.out.println("Full Name: " + t.getPib());
+            System.out.println("Email: " + t.getEmail());
+            System.out.println("Phone: " + t.getPhoneNumber());
+            System.out.println("Position: " + t.getPosition());
+            System.out.println("Degree: " + t.getAcademicDegree());
+            System.out.println("Rank: " + t.getAcademicRank());
+            System.out.println("Hire date: " + t.getHireDate());
+            System.out.println("FTE: " + t.getFullTimeEquivalent());
+        }
+        System.out.println(CYAN_BOLD + "===================================\n" + RESET);
     }
 
 }
