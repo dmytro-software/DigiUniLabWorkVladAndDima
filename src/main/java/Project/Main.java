@@ -21,6 +21,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
+import static Project.Models.ConsoleColors.*;
+
 
 public class Main {
 
@@ -68,7 +70,7 @@ public class Main {
     String role = authService.authorize(login, password);
 
     if (role == null) {
-        System.out.println("Access denied");
+        System.out.println(RED + "✗ Access denied" + RESET);
         continue;
     }
 
@@ -176,6 +178,9 @@ public class Main {
 
                 case "ls dep":
                     deptHandler.handleShowAllDepartments();
+                    break;
+                case "repo dep -s -c":
+                    deptHandler.handleShowReportOfStudentGroupingByCourse(reader);
                     break;
 
                 case "add stu":
