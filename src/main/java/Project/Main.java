@@ -251,23 +251,56 @@ public class Main {
                     break;
 
                 case "load stu":
-                    StudentRepository stuRepo = new StudentRepository();
-                    Optional<List<Student>> optionalStudents = stuRepo.loadAll();
+                   Optional<List<Student>> optionalStudents = studentRepository.loadAll();
+
+                   optionalStudents.ifPresent(students -> {
+                       for (Student s : students) {
+
+                           Department department = deptService.findById(s.getDepartmentId());
+
+                           if (department != null) {
+                               department.getStudents().add(s);
+                           }
+                       }});
                     break;
 
                     case "load tch":
-                    TeacherRepository tchRepo = new TeacherRepository();
-                    Optional<List<Teacher>> optionalTeachers = tchRepo.loadAll();
+                    Optional<List<Teacher>> optionalTeachers = teacherRepository.loadAll();
+
+                    optionalTeachers.ifPresent(teachers -> {
+                        for (Teacher t : teachers) {
+
+                            Department department = deptService.findById(t.getDepartmentId());
+
+                            if (department != null) {
+                                department.getTeachers().add(t);
+                            }
+                        }
+                    });
                     break;
 
                 case "load dep":
-                    DepartmentRepository dep = new DepartmentRepository(studentRepository, teacherRepository);
-                    Optional<List<Department>> optionalDepartments = dep.loadAll();
-                    break;
+                    Optional<List<Department>> optionalDepartments = departmentRepository.loadAll();
 
+                    optionalDepartments.ifPresent(departments -> {
+                        for (Department d : departments) {
+
+                            Faculty faculty = facultyService.findById(d.getFacultyId());
+
+                            if (faculty != null) {
+                                faculty.getDepartments().add(d);
+                            }
+                        }
+                    });
+
+                    break;
                 case "load fac":
-                    FacultyRepository fac = new FacultyRepository();
-                    Optional<List<Faculty>> optionalFaculties = fac.loadAll();
+                    Optional<List<Faculty>> faculties = facultyRepository.loadAll();
+                    faculties.ifPresent(facultyList -> {
+                        for (Faculty f : facultyList) {
+                            myUniversity.faculties().add(f);
+                        }
+                    });
                     break;
 
                 case "exit":
