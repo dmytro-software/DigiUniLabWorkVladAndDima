@@ -5,11 +5,15 @@ import Project.Exceptions.IsEmptyException;
 import Project.Exceptions.ValidationException;
 import Project.Models.Department;
 import Project.Reports.DepartmentReport;
+import Project.Reports.StudentsReport;
 import Project.service.DepartmentService;
 import Project.service.FacultyService;
 import Project.validation.DepartmentValidator;
+import Project.validation.StudentValidator;
 import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
 
+import javax.sound.sampled.Line;
 import java.util.List;
 
 import static Project.Models.ConsoleColors.*;
@@ -230,4 +234,62 @@ public class DepartmentConsoleHandler {
             System.out.println(RED + " ✗ Error: "+ e.getMessage() + RESET);
         }
     }
+
+    public void handleShowReportOfStudentsByAlphabet(LineReader reader){
+        System.out.println(CYAN_BOLD + "\n== STUDENT REPORT BY ALPHABET ==" + RESET);
+        try{
+            int departmentId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter Department ID to show: "));
+            DepartmentValidator.validateFacultyId(departmentId);
+            Department department = departmentService.findById(departmentId);
+            DepartmentReport.showStudentsReportFromDepartmentByAlphabet(department);
+        }catch (IsEmptyException e){
+            System.out.println(RED + " ✗ Empty Error: " + e.getMessage() + RESET);
+        } catch (EntityNotFoundException e) {
+            System.out.println(RED + " ✗ Not found Error: " + e.getMessage() + RESET);
+        } catch (NumberFormatException e) {
+            System.out.println(RED + " ✗ Numeric format error: ID must be a number." + RESET);
+        } catch (Exception e) {
+            System.out.println(RED + " ✗ Error: "+ e.getMessage() + RESET);
+        }
+    }
+
+    public void handleShowReportOfTeachersByAlphabet(LineReader reader){
+        System.out.println(CYAN_BOLD + "\n== TEACHERS REPORT BY ALPHABET ==" + RESET);
+        try{
+            int departmentId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter Department ID to show: "));
+            DepartmentValidator.validateFacultyId(departmentId);
+            Department department = departmentService.findById(departmentId);
+            DepartmentReport.showTeachersReportFromDepartmentByAlphabet(department);
+        }catch (IsEmptyException e){
+            System.out.println(RED + " ✗ Empty Error: " + e.getMessage() + RESET);
+        } catch (EntityNotFoundException e) {
+            System.out.println(RED + " ✗ Not found Error: " + e.getMessage() + RESET);
+        } catch (NumberFormatException e) {
+            System.out.println(RED + " ✗ Numeric format error: ID must be a number." + RESET);
+        } catch (Exception e) {
+            System.out.println(RED + " ✗ Error: "+ e.getMessage() + RESET);
+        }
+    }
+
+    public void handleShowReportOfStudentsByChoosedCourse(LineReader reader){
+        System.out.println(CYAN_BOLD + "\n== STUDENT REPORT BY CHOOSED COURSE ==" + RESET);
+        try {
+            int departmentId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter Department ID to show: "));
+            DepartmentValidator.validateFacultyId(departmentId);
+            Department department = departmentService.findById(departmentId);
+            int course = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter course to show: "));
+            StudentValidator.valideCourse(course);
+
+            DepartmentReport.showStudnetsReportByChoosedCourseFromDepartment(department, course);
+        }catch (IsEmptyException e){
+            System.out.println(RED + " ✗ Empty Error: " + e.getMessage() + RESET);
+        } catch (EntityNotFoundException e) {
+            System.out.println(RED + " ✗ Not found Error: " + e.getMessage() + RESET);
+        } catch (NumberFormatException e) {
+            System.out.println(RED + " ✗ Numeric format error: ID must be a number." + RESET);
+        } catch (Exception e) {
+            System.out.println(RED + " ✗ Error: "+ e.getMessage() + RESET);
+        }
+    }
+
 }

@@ -29,7 +29,8 @@ public class DemoDataSeeder {
 
             studentService.addStudent(101, 1001, "Резанов Влад", LocalDate.of(2005, 8, 15),
                     "vlad@ukma.edu.ua", 980000001, 200001, 2, 1, 2024, "Денна", "Активний");
-
+            studentService.addStudent(101, 1001, "Алабай", LocalDate.of(2005, 8, 15),
+                    "vlad@ukma.edu.ua", 980000001, 200001, 2, 1, 2024, "Денна", "Активний");
             studentService.addStudent(101, 1002, "Діма Поплавський", LocalDate.of(2004, 10, 12),
                     "dima@ukma.edu.ua", 980000002, 200002, 2, 1, 2024, "Денна", "Активний");
 

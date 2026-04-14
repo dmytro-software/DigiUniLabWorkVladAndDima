@@ -61,31 +61,31 @@ public class Main {
                 .build();
     while (true) {
 
-    System.out.print("Login: ");
-    String login = reader.readLine();
+        System.out.print(YELLOW + " ❯ " + RESET + "Login: ");
+        String login = reader.readLine();
 
-    System.out.print("Password: ");
-    String password = reader.readLine();
+        System.out.print(YELLOW + " ❯ " + RESET + "Password: ");
+        String password = reader.readLine();
 
-    String role = authService.authorize(login, password);
+        String role = authService.authorize(login, password);
 
-    if (role == null) {
-        System.out.println(RED + "✗ Access denied" + RESET);
-        continue;
+        if (role == null) {
+            System.out.println(RED + " ✗ Access denied\n" + RESET);
+            continue;
+        }
+
+        System.out.println(GREEN + " ✓ Logged as: " + role + RESET);
+        System.out.println(CYAN + " ℹ Type 'help -m' to see commands\n" + RESET);
+
+        if (role.equals("manager")) {
+            managerMenu(reader, role);
+        }
+        if (role.equals("admin")) {
+            adminMenu(reader, role);
+        } else {
+            userMenu(reader, role);
+        }
     }
-
-    System.out.println("Logged as: " + role);
-    System.out.println("Type 'help -m' to see commands");
-
-    if (role.equals("manager")) {
-        managerMenu(reader, role);
-    }
-    if (role.equals("admin")) {
-        adminMenu(reader, role);
-    } else {
-        userMenu(reader, role);
-    }
-  }
     }
 
     private static void adminMenu(LineReader reader, String role) throws IOException {
@@ -96,11 +96,11 @@ public class Main {
 
             switch (line) {
                 case "help -m":
-                    System.out.println("""
-=====================================================
-|               DigiUni ADMIN CLI                   |
-=====================================================
-| Action | Target   | Description                   |
+                    System.out.println(CYAN_BOLD + """
+=====================================================""" + RESET + """
+\n|               DigiUni ADMIN CLI                   |\n""" + CYAN_BOLD + """
+=====================================================""" + RESET + """
+\n| Action | Target   | Description                   |
 |--------|----------|-------------------------------|
 | ls     | uni      | Show university               |
 |--------|----------|-------------------------------|
@@ -133,11 +133,10 @@ public class Main {
 | load   | fac      | Load faculties from file      |
 | load   | dep      | Load departments from file    |
 | load   | stu      | Load students from file       |
-| load   | tch      | Load teachers from file       |
+| load   | tch      | Load teachers from file       |\n""" + CYAN_BOLD + """
 =====================================================
 | exit              | Exit program                  |
-=====================================================
-""");
+=====================================================""" + RESET);
                     break;
 
                 case "ls uni":
@@ -181,6 +180,15 @@ public class Main {
                     break;
                 case "repo dep -s -c":
                     deptHandler.handleShowReportOfStudentGroupingByCourse(reader);
+                    break;
+                case "repo dep -s -a":
+                    deptHandler.handleShowReportOfStudentsByAlphabet(reader);
+                    break;
+                case "repo dep -t -a":
+                    deptHandler.handleShowReportOfTeachersByAlphabet(reader);
+                    break;
+                case "repo dep -s -cc":
+                    deptHandler.handleShowReportOfStudentsByChoosedCourse(reader);
                     break;
 
                 case "add stu":
@@ -246,7 +254,7 @@ public class Main {
                         University university = optionalUniversity.get();
                         university.printInfo();
                     } else {
-                        System.out.println("Університет не знайдено у файлі.");
+                        System.out.println(RED + " ✗ Університет не знайдено у файлі." + RESET);
                     }
                     break;
 
@@ -255,7 +263,7 @@ public class Main {
                     Optional<List<Student>> optionalStudents = stuRepo.loadAll();
                     break;
 
-                    case "load tch":
+                case "load tch":
                     TeacherRepository tchRepo = new TeacherRepository();
                     Optional<List<Teacher>> optionalTeachers = tchRepo.loadAll();
                     break;
@@ -276,11 +284,11 @@ public class Main {
                     universityRepository.saveUniversity(myUniversity);
                     studentRepository.saveAll(studentService.findAll());
                     teacherRepository.saveAll(teacherService.findAll());
-                    System.out.println("Saved. Bye!");
+                    System.out.println(GREEN + " ✓ Saved. Bye!" + RESET);
                     return;
 
                 default:
-                    System.out.println("Unknown command.");
+                    System.out.println(RED + " ✗ Unknown command." + RESET);
                     break;
             }
         }
@@ -294,11 +302,11 @@ public class Main {
 
             switch (line) {
                 case "help -m":
-                    System.out.println("""
-=====================================================
-|               DigiUni Manager CLI                 |
-=====================================================
-| Action | Target   | Description                   |
+                    System.out.println(CYAN_BOLD + """
+=====================================================""" + RESET + """
+\n|               DigiUni Manager CLI                 |\n""" + CYAN_BOLD + """
+=====================================================""" + RESET + """
+\n| Action | Target   | Description                   |
 |--------|----------|-------------------------------|
 | ls     | uni      | Show university               |
 |--------|----------|-------------------------------|
@@ -321,11 +329,10 @@ public class Main {
 | edit   | tch      | Edit a teacher                |
 | ls     | tch      | Show all teachers             |
 | find   | tch -id  | Find teacher by ID            |
-| find   | tch -n   | Find teacher by PIB           |
+| find   | tch -n   | Find teacher by PIB           |\n""" + CYAN_BOLD + """
 =====================================================
 | exit              | Exit program                  |
-=====================================================
-""");
+=====================================================""" + RESET);
                     break;
 
                 case "ls uni":
@@ -401,11 +408,11 @@ public class Main {
                     break;
 
                 case "exit":
-                    System.out.println("Bye!");
+                    System.out.println(GREEN + " ✓ Bye!" + RESET);
                     return;
 
                 default:
-                    System.out.println("Unknown command.");
+                    System.out.println(RED + " ✗ Unknown command." + RESET);
                     break;
             }
         }
@@ -418,12 +425,12 @@ public class Main {
             if (line.isEmpty()) continue;
 
             switch (line) {
-                case "help":
-                    System.out.println("""
-============================================================
-|                     DIGIUNI USER CLI                     |
-============================================================
-| COMMAND    | DESCRIPTION                                 |
+                case "h":
+                    System.out.println(CYAN_BOLD + """
+============================================================""" + RESET + """
+\n|                     DIGIUNI USER CLI                     |\n""" + CYAN_BOLD + """
+============================================================""" + RESET + """
+\n| COMMAND    | DESCRIPTION                                 |
 |------------|---------------------------------------------|
 | 1          | List all faculties                          |
 | 2          | List all departments                        |
@@ -439,14 +446,13 @@ public class Main {
 | f t -id    | Search teacher by ID                        |
 | f t -p     | Search teacher by name                      |
 |------------|---------------------------------------------|
-| h          | Show this menu                              |
+| h          | Show this menu                              |\n""" + CYAN_BOLD + """
 | exit       | Exit program                                |
-============================================================
-""");;
+============================================================""" + RESET);
                     break;
 
                 case "1":
-                     facultyHandler.handleShowAllFaculties();
+                    facultyHandler.handleShowAllFaculties();
                     break;
                 case "2":
                     deptHandler.handleShowAllDepartments();
@@ -473,10 +479,10 @@ public class Main {
                     teacherHandler.handelFindTeacherByPib(reader);
                     break;
                 case "exit":
-                    System.out.println("Bye!");
+                    System.out.println(GREEN + " ✓ Bye!" + RESET);
                     return;
                 default:
-                    System.out.println("Unknown command.");
+                    System.out.println(RED + " ✗ Unknown command." + RESET);
                     break;
             }
         }
