@@ -289,7 +289,11 @@ public class Main {
 
                 case "load dep":
                     Optional<List<Department>> optionalDepartments = departmentRepository.loadAll();
-
+                    facultyRepository.loadAll().ifPresent(facultyList -> {
+                        for (Faculty f : facultyList) {
+                            facultyService.addFaculty(f);
+                        }
+                    });
                     optionalDepartments.ifPresent(departments -> {
                         for (Department d : departments) {
 
