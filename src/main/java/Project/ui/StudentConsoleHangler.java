@@ -167,7 +167,6 @@ public class StudentConsoleHangler {
                 student.setStudentStatus(studentStatus);
             }
 
-            // У твоєму оригінальному коді було два System.out.println, залишив обидва для збереження логіки
             System.out.println(GREEN + " ✓ Student updated successfully!" + RESET);
 
             studentService.editStudent(gradeBooktId,
@@ -229,9 +228,24 @@ public class StudentConsoleHangler {
         System.out.println(CYAN_BOLD + "\n========== STUDENTS LIST ==========" + RESET);
 
         for (Student s : students) {
-            System.out.println(s);
+
+            System.out.println("\n================================");
+            System.out.println("ID Person: " + s.getIdPerson());
+            System.out.println("PIB: " + s.getPib());
+            System.out.println("Birth Date: " + s.getBirthDate());
+            System.out.println("Email: " + s.getEmail());
+            System.out.println("Phone: " + s.getPhoneNumber());
+            System.out.println("GradeBook ID: " + s.getGradeBookId());
+            System.out.println("Course: " + s.getCourse());
+            System.out.println("Group: " + s.getGroup());
+            System.out.println("Enrollment Year: " + s.getEnrollmentYear());
+            System.out.println("Form of Education: " + s.getFormOfEducation());
+            System.out.println("Status: " + s.getStudentStatus());
+            System.out.println("Department ID: " + s.getDepartmentId());
+            System.out.println("================================");
         }
-        System.out.println(CYAN_BOLD + "===================================\n" + RESET);
+
+        System.out.println(CYAN_BOLD + "\n===================================\n" + RESET);
     }
 
     public void handleFindStudentByPib(LineReader reader){
@@ -321,21 +335,3 @@ public class StudentConsoleHangler {
     }
 
 }
-
-
-// Department
-//String departmentInput = reader.readLine("Department ID (" + student.getDepartmentId() + "): ");
-//int departmentId;
-//
-//if (departmentInput.isBlank()) {
-//departmentId = student.getDepartmentId();
-//} else {
-//departmentId = Integer.parseInt(departmentInput);
-//
-//    if (studentService.getDepartmentService().findById(departmentId) == null) {
-//        System.out.println("Department with this ID does not exist!");
-//        return;
-//                }
-//
-//                student.setDepartmentId(departmentId);
-//}

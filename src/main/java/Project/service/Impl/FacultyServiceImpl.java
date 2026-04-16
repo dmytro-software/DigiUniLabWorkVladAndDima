@@ -29,9 +29,6 @@ public class FacultyServiceImpl implements FacultyService {
         this.universityRepository = universityRepository;
     }
 
-    // =========================
-    // ADD FACULTY
-    // =========================
     @Override
     public void addFaculty(Faculty faculty) throws IOException {
 
@@ -49,13 +46,9 @@ public class FacultyServiceImpl implements FacultyService {
 
         university.faculties().add(faculty);
 
-        // ❗ save full tree (JSON)
         facultyRepository.saveAll(university.faculties());
     }
 
-    // =========================
-    // REMOVE FACULTY
-    // =========================
     @Override
     public boolean removeFaculty(int id) throws IOException {
 
@@ -77,9 +70,6 @@ public class FacultyServiceImpl implements FacultyService {
         return true;
     }
 
-    // =========================
-    // EDIT FACULTY
-    // =========================
     @Override
     public void editFaculty(int id,
                             String name,
@@ -112,9 +102,6 @@ public class FacultyServiceImpl implements FacultyService {
         universityRepository.saveUniversity(uni);
     }
 
-    // =========================
-    // FIND BY ID
-    // =========================
     @Override
     public Faculty findById(int id) throws IOException {
 
@@ -128,13 +115,9 @@ public class FacultyServiceImpl implements FacultyService {
                 .orElseThrow(() ->
                         new EntityNotFoundException("Faculty with ID " + id + " not found"));
     }
-    // =========================
-    // FIND ALL
-    // =========================
+
     @Override
     public List<Faculty> findAll() {
-
-        // ❗ Departments вже мають бути завантажені в University (через load dep)
         return new ArrayList<>(university.faculties());
     }
 }

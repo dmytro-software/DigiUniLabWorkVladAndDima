@@ -20,9 +20,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         this.universityRepository = universityRepository;
     }
 
-    // =========================
-    // ADD DEPARTMENT
-    // =========================
     @Override
     public void addDepartment(int id, String name, int facultyId, String head, int room) throws IOException {
 
@@ -49,9 +46,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         universityRepository.saveUniversity(uni);
     }
 
-    // =========================
-    // REMOVE DEPARTMENT
-    // =========================
     @Override
     public boolean removeDepartment(int id) throws IOException {
 
@@ -84,9 +78,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         return false;
     }
 
-    // =========================
-    // EDIT DEPARTMENT
-    // =========================
     @Override
     public void editDepartment(int id, String name, int facultyId, String head, Integer roomNumber)
             throws IOException {
@@ -117,9 +108,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         throw new EntityNotFoundException("Department not found with ID: " + id);
     }
 
-    // =========================
-    // FIND BY ID
-    // =========================
     @Override
     public Department findById(int id) throws IOException {
 
@@ -134,9 +122,6 @@ public class DepartmentServiceImpl implements DepartmentService {
                         new EntityNotFoundException("Department with ID " + id + " not found"));
     }
 
-    // =========================
-    // FIND ALL
-    // =========================
     @Override
     public List<Department> findAll() throws IOException {
 

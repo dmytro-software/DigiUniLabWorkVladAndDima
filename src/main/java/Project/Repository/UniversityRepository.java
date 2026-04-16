@@ -19,14 +19,8 @@ public class UniversityRepository {
 
         this.mapper = new ObjectMapper();
 
-        // ✅ FIX 1: LocalDate support
         this.mapper.registerModule(new JavaTimeModule());
-
-        // optional: нормальний JSON формат
         this.mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
-        // optional (рекомендую): щоб не падало на зайвих полях
-        // this.mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public void saveUniversity(University university) throws IOException {
