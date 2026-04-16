@@ -4,87 +4,151 @@ import Project.Exceptions.EntityNotEmptyException;
 import Project.Exceptions.EntityNotFoundException;
 import Project.Models.Department;
 import Project.Models.Faculty;
+import Project.Models.University;
+import Project.Repository.UniversityRepository;
 import Project.service.DepartmentService;
-import Project.service.FacultyService;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class DepartmentServiceImpl implements DepartmentService {
 
-    private final FacultyService facultyService;
+    private final UniversityRepository universityRepository;
 
-    public DepartmentServiceImpl(FacultyService facultyService) {
-        this.facultyService = facultyService;
+    public DepartmentServiceImpl(UniversityRepository universityRepository) {
+        this.universityRepository = universityRepository;
     }
 
+    // =========================
+    // ADD DEPARTMENT
+    // =========================
     @Override
-    public void addDepartment(int id, String name, int facultyId, String head, int room) {
-        Faculty faculty = facultyService.findById(facultyId);
-        if (faculty == null) {
-            throw new EntityNotFoundException("Faculty not found with ID: " + facultyId);
+    public void addDepartment(int id, String name, int facultyId, String head, int room) throws IOException {
+
+        University uni = universityRepository.loadUniversity()
+                .orElseThrow(() -> new EntityNotFoundException("University not found"));
+
+        Faculty faculty = uni.faculties()
+                .stream()
+                .filter(f -> f.getIdFaculty() == facultyId)
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Faculty not found with ID: " + facultyId));
+
+        boolean exists = faculty.getDepartments()
+                .stream()
+                .anyMatch(d -> d.getIdDepartment() == id);
+
+        if (exists) {
+            throw new RuntimeException("Department already exists with ID: " + id);
         }
 
         Department newDepartment = new Department(id, name, facultyId, head, room);
-
         faculty.getDepartments().add(newDepartment);
+
+        universityRepository.saveUniversity(uni);
     }
+
+    // =========================
+    // REMOVE DEPARTMENT
+    // =========================
     @Override
-    public boolean removeDepartment(int id) {
+    public boolean removeDepartment(int id) throws IOException {
 
-        Department dep = findById(id);
+        University uni = universityRepository.loadUniversity()
+                .orElseThrow(() -> new EntityNotFoundException("University not found"));
 
-        if ((dep.getStudents() != null && !dep.getStudents().isEmpty()) ||
-                (dep.getTeachers() != null && !dep.getTeachers().isEmpty())) {
-            throw new EntityNotEmptyException("Cannot be deleted. Students or teachers exsist there");
-        }
+        for (Faculty faculty : uni.faculties()) {
 
-        for (Faculty faculty : facultyService.findAll()) {
-            if (faculty.getDepartments().remove(dep)) {
+            Department dep = faculty.getDepartments()
+                    .stream()
+                    .filter(d -> d.getIdDepartment() == id)
+                    .findFirst()
+                    .orElse(null);
+
+            if (dep != null) {
+
+                if ((dep.getStudents() != null && !dep.getStudents().isEmpty()) ||
+                        (dep.getTeachers() != null && !dep.getTeachers().isEmpty())) {
+                    throw new EntityNotEmptyException(
+                            "Cannot delete department. Students or teachers exist."
+                    );
+                }
+
+                faculty.getDepartments().remove(dep);
+                universityRepository.saveUniversity(uni);
                 return true;
             }
         }
+
         return false;
     }
 
+    // =========================
+    // EDIT DEPARTMENT
+    // =========================
     @Override
-    public void editDepartment(int id, String name, int facultyId, String head, Integer roomNumber) {
-        Department department = findById(id);
+    public void editDepartment(int id, String name, int facultyId, String head, Integer roomNumber)
+            throws IOException {
 
-        if (name != null && !name.isBlank())
-            department.setDepartmentName(name);
-        if (head != null && !head.isBlank())
-            department.setHeadOfDepartment(head);
-        if (roomNumber != null)
-            department.setRoomNumber(roomNumber);
-    }
+        University uni = universityRepository.loadUniversity()
+                .orElseThrow(() -> new EntityNotFoundException("University not found"));
 
-    @Override
-    public Department findById(int id) {
-        for (Faculty faculty : facultyService.findAll()) {
+        for (Faculty faculty : uni.faculties()) {
+            for (Department department : faculty.getDepartments()) {
 
-            for (Department dep : faculty.getDepartments()) {
+                if (department.getIdDepartment() == id) {
 
-                if (dep.getIdDepartment() == id) {
-                    return dep;
+                    if (name != null && !name.isBlank())
+                        department.setDepartmentName(name);
+
+                    if (head != null && !head.isBlank())
+                        department.setHeadOfDepartment(head);
+
+                    if (roomNumber != null)
+                        department.setRoomNumber(roomNumber);
+
+                    universityRepository.saveUniversity(uni);
+                    return;
                 }
             }
         }
-        throw new EntityNotFoundException("Department with ID " + id + " not found");
+
+        throw new EntityNotFoundException("Department not found with ID: " + id);
     }
 
+    // =========================
+    // FIND BY ID
+    // =========================
     @Override
-    public List<Department> findAll() {
+    public Department findById(int id) throws IOException {
 
-        List<Department> departments = new ArrayList<>();
+        University uni = universityRepository.loadUniversity()
+                .orElseThrow(() -> new EntityNotFoundException("University not found"));
 
-        for (Faculty faculty : facultyService.findAll()) {
-            for (Department department : faculty.getDepartments()) {
-                departments.add(department);
-            }
+        return uni.faculties().stream()
+                .flatMap(f -> f.getDepartments().stream())
+                .filter(d -> d.getIdDepartment() == id)
+                .findFirst()
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Department with ID " + id + " not found"));
+    }
+
+    // =========================
+    // FIND ALL
+    // =========================
+    @Override
+    public List<Department> findAll() throws IOException {
+
+        University uni = universityRepository.loadUniversity()
+                .orElseThrow(() -> new EntityNotFoundException("University not found"));
+
+        List<Department> result = new ArrayList<>();
+
+        for (Faculty faculty : uni.faculties()) {
+            result.addAll(faculty.getDepartments());
         }
 
-        return departments;
+        return result;
     }
-
 }

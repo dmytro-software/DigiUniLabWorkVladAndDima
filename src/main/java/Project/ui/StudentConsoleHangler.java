@@ -12,6 +12,7 @@ import Project.service.StudentService;
 import Project.validation.StudentValidator;
 import org.jline.reader.LineReader;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -144,7 +145,7 @@ public class StudentConsoleHangler {
             // Group
             String groupInput= reader.readLine(YELLOW + " ❯ " + RESET + "Group (" + student.getGroup() + "): ");
             int group;
-            if (!groupInput.isBlank()) {
+            if (groupInput.isBlank()) {
                 group = student.getGroup();
             } else {
                 group = Integer.parseInt(groupInput);
@@ -216,7 +217,7 @@ public class StudentConsoleHangler {
         }
     }
 
-    public void handleShowAllStudents() {
+    public void handleShowAllStudents() throws IOException {
 
         List<Student> students = studentService.findAll();
 

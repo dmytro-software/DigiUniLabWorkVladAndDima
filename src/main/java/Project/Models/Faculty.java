@@ -27,6 +27,10 @@ public class Faculty {
 
     private List<Department> departments = new ArrayList<>();
 
+    public Faculty() {
+        idFaculty = 0;
+    }
+
     public Faculty(int idFaculty,
                    String facultyName,
                    String facultyShortName,
@@ -78,6 +82,10 @@ public class Faculty {
 
     public List<Department> getDepartments() {
         return departments;
+    }
+
+    public void setDepartments(List<Department> departments) {
+        this.departments = departments;
     }
 
     @Override

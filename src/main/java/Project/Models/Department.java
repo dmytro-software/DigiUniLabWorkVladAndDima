@@ -26,6 +26,9 @@ public class Department {
     private List<Student> students = new ArrayList<>();
     private List<Teacher> teachers = new ArrayList<>();
 
+    public Department() {
+        idDepartment = 0;
+    }
 
     public Department(int idDepartment, String departmentName, int facultyId, String headOfDepartment, int roomNumber) {
         this.idDepartment = idDepartment;

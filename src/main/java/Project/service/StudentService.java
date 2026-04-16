@@ -2,6 +2,7 @@ package Project.service;
 
 import Project.Models.Student;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -18,9 +19,9 @@ public interface StudentService {
                     int group,
                     int enrollmentYear,
                     String formOfEducation,
-                    String studentStatus);
+                    String studentStatus) throws IOException;
 
-    boolean removeStudent(int gradeBookId);
+    boolean removeStudent(int gradeBookId) throws IOException;
 
     void editStudent(
             int gradeBookId,
@@ -30,17 +31,17 @@ public interface StudentService {
             int course,
             int group,
             String formOfEducation,
-            String studentStatus);
+            String studentStatus) throws IOException;
 
-    List<Student> findAll();
+    List<Student> findAll() throws IOException;
 
-    Optional<Student> findStudentByGradeBook(int gradeBookId);
+    Optional<Student> findStudentByGradeBook(int gradeBookId) throws IOException;
 
-    List<Student> findByPib(String pib);
+    List<Student> findByPib(String pib) throws IOException;
 
-    List<Student> findByGroup(int group);
+    List<Student> findByGroup(int group) throws IOException;
 
-    List<Student> findByCourse(int course);
+    List<Student> findByCourse(int course) throws IOException;
 
 
 }

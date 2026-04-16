@@ -14,6 +14,7 @@ import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 
 import javax.sound.sampled.Line;
+import java.io.IOException;
 import java.util.List;
 
 import static Project.Models.ConsoleColors.*;
@@ -152,7 +153,7 @@ public class DepartmentConsoleHandler {
         }
     }
 
-    public void handleShowAllDepartments() {
+    public void handleShowAllDepartments() throws IOException {
         List<Department> departments = departmentService.findAll();
 
         if (departments.isEmpty()) {
@@ -176,20 +177,20 @@ public class DepartmentConsoleHandler {
                 System.out.println(CYAN_BOLD + "   Teachers:" + RESET);
                 for (var t : department.getTeachers()) {
                     System.out.println("   " + CYAN + "----------------------------------------------" + RESET);
+
                     System.out.println("   Person ID: " + t.getIdPerson());
                     System.out.println("   Full Name: " + t.getPib());
                     System.out.println("   Birth Date: " + t.getBirthDate());
                     System.out.println("   Email: " + t.getEmail());
                     System.out.println("   Phone: " + t.getPhoneNumber());
-                    System.out.println("      • ID: " + t.getTeacherId()
-                            + " | Full Name: " + t.getPib()
-                            + " | Email: " + t.getEmail()
-                            + " | Phone: " + t.getPhoneNumber()
-                            + " | Position: " + t.getPosition()
-                            + " | Degree: " + t.getAcademicDegree()
-                            + " | Rank: " + t.getAcademicRank()
-                            + " | Hire date: " + t.getHireDate()
-                            + " | FTE: " + t.getFullTimeEquivalent());
+
+                    System.out.println("   Teacher ID: " + t.getTeacherId());
+                    System.out.println("   Position: " + t.getPosition());
+                    System.out.println("   Academic Degree: " + t.getAcademicDegree());
+                    System.out.println("   Academic Rank: " + t.getAcademicRank());
+                    System.out.println("   Department ID: " + t.getDepartmentId());
+                    System.out.println("   Hire Date: " + t.getHireDate());
+                    System.out.println("   Full Time Equivalent: " + t.getFullTimeEquivalent());
                 }
             }
 

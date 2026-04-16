@@ -7,6 +7,7 @@ import Project.service.TeacherService;
 import Project.validation.TeacherValidator;
 import org.jline.reader.LineReader;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -246,7 +247,7 @@ public class TeacherConsoleHangler {
         }
     }
 
-    public void handleShowAllTeachers() {
+    public void handleShowAllTeachers() throws IOException {
 
         List<Teacher> teachers = teacherService.findAll();
 

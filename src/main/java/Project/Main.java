@@ -1,7 +1,7 @@
 package Project;
 
+import Project.Exceptions.EntityNotFoundException;
 import Project.Models.*;
-import Project.Data.DemoDataSeeder;
 import Project.Repository.*;
 import Project.service.*;
 import Project.service.Impl.*;
@@ -17,7 +17,9 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,26 +33,22 @@ public class Main {
     );
     private static final AuthService authService = new AuthServiceImpl();
 
-    private static final FacultyService facultyService = new FacultyServiceImpl(myUniversity);
-    private static final DepartmentService deptService = new DepartmentServiceImpl(facultyService);
-    private static final StudentService studentService = new StudentServiceImpl(deptService);
-    private static final TeacherService teacherService = new TeacherServiceImpl(deptService);
+    private static UniversityRepository universityRepository = new UniversityRepository();
+    private static FacultyRepository  facultyRepository = new FacultyRepository(universityRepository);
+    private static DepartmentRepository departmentRepository = new DepartmentRepository(universityRepository);
+    private static StudentRepository  studentRepository = new StudentRepository(universityRepository);
 
+    private static final FacultyService facultyService = new FacultyServiceImpl(myUniversity, facultyRepository, departmentRepository, universityRepository);
+    public static final DepartmentService deptService = new DepartmentServiceImpl(universityRepository);
+    private static final StudentService studentService = new StudentServiceImpl(deptService, studentRepository, departmentRepository, universityRepository);
+    private static final TeacherService teacherService = new TeacherServiceImpl(deptService, departmentRepository, universityRepository);
 
     private static final FacultyConsoleHandler facultyHandler = new FacultyConsoleHandler(facultyService);
     private static final DepartmentConsoleHandler deptHandler = new DepartmentConsoleHandler(deptService, facultyService);
     private static final StudentConsoleHangler studentHandler = new StudentConsoleHangler(studentService);
     private static final TeacherConsoleHangler teacherHandler = new TeacherConsoleHangler(teacherService);
 
-    private static final StudentRepository studentRepository = new StudentRepository();
-    private static final TeacherRepository teacherRepository = new TeacherRepository();
-    private static final FacultyRepository facultyRepository = new FacultyRepository();
-    private static final DepartmentRepository departmentRepository = new DepartmentRepository(studentRepository, teacherRepository);
-    private static final UniversityRepository universityRepository = new UniversityRepository(facultyRepository, departmentRepository);
-
     public static void main(String[] args) throws Exception {
-
-        DemoDataSeeder.initDummyData(facultyService,deptService,teacherService,studentService);
 
         Terminal terminal = TerminalBuilder.terminal();
 
@@ -141,6 +139,7 @@ public class Main {
 
                 case "ls uni":
                     myUniversity.printInfo();
+                    universityRepository.saveUniversity(myUniversity);
                     break;
 
                 case "add fac":
@@ -158,6 +157,7 @@ public class Main {
                 case "ls fac":
                     facultyHandler.handleShowAllFaculties();
                     break;
+
                 case "repo stu -f":
                     facultyHandler.handelShowStudentsReportByPibFromFaculty(reader);
                     break;
@@ -178,6 +178,7 @@ public class Main {
                 case "ls dep":
                     deptHandler.handleShowAllDepartments();
                     break;
+
                 case "repo dep -s -c":
                     deptHandler.handleShowReportOfStudentGroupingByCourse(reader);
                     break;
@@ -244,84 +245,339 @@ public class Main {
                 case "find tch -p":
                     teacherHandler.handelFindTeacherByPib(reader);
                     break;
+                case "load dep": {
+
+                    Optional<University> uniOpt = universityRepository.loadUniversity();
+
+                    if (uniOpt.isEmpty()) {
+                        System.out.println("⚠ university.json not found");
+                        break;
+                    }
+
+                    University loaded = uniOpt.get();
+
+                    for (Faculty fLoaded : loaded.faculties()) {
+
+                        for (Faculty fCurrent : myUniversity.faculties()) {
+
+                            if (fCurrent.getIdFaculty() == fLoaded.getIdFaculty()) {
+
+                                fCurrent.getDepartments().clear();
+
+                                if (fLoaded.getDepartments() != null) {
+                                    fCurrent.getDepartments().addAll(fLoaded.getDepartments());
+                                }
+                            }
+                        }
+                    }
+
+                    System.out.println(GREEN + "✓ Departments loaded successfully" + RESET);
+
+                    // =========================
+                    // DEBUG OUTPUT
+                    // =========================
+                    for (Faculty f : myUniversity.faculties()) {
+                        System.out.println("\nFaculty: " + f.getFacultyName());
+
+                        if (f.getDepartments() == null || f.getDepartments().isEmpty()) {
+                            System.out.println("  (no departments)");
+                            continue;
+                        }
+
+                        for (Department d : f.getDepartments()) {
+                            System.out.println("  ------------------------");
+                            System.out.println("  Dept ID: " + d.getIdDepartment());
+                            System.out.println("  Name: " + d.getDepartmentName());
+                            System.out.println("  Faculty ID: " + d.getFacultyId());
+                            System.out.println("  Head: " + d.getHeadOfDepartment());
+                            System.out.println("  Room Number: " + d.getRoomNumber());
+                        }
+                    }
+
+                    break;
+                }
 
                 case "load uni":
-                    UniversityRepository repo = new UniversityRepository(facultyRepository, departmentRepository);
 
-                    Optional<University> optionalUniversity = repo.loadUniversity();
+                    Optional<University> uniOpt = universityRepository.loadUniversity();
 
-                    if (optionalUniversity.isPresent()) {
-                        University university = optionalUniversity.get();
-                        university.printInfo();
-                    } else {
-                        System.out.println(RED + " ✗ Університет не знайдено у файлі." + RESET);
+                    if (uniOpt.isEmpty()) {
+                        System.out.println("⚠ university.json not found");
+                        break;
                     }
+
+                    University loaded = uniOpt.get();
+
+                    // =========================
+                    // RESET CURRENT STATE
+                    // =========================
+                    myUniversity.faculties().clear();
+
+                    // =========================
+                    // LOAD WHOLE TREE
+                    // =========================
+                    myUniversity.faculties().addAll(loaded.faculties());
+
+                    System.out.println(GREEN + "✓ University loaded successfully" + RESET);
+
+                    // =========================
+                    // OPTIONAL DEBUG PRINT
+                    // =========================
+                    for (Faculty f : myUniversity.faculties()) {
+
+                        System.out.println("\nFaculty: " + f.getFacultyName());
+
+                        for (Department d : f.getDepartments()) {
+
+                            System.out.println("  Department: " + d.getDepartmentName());
+
+                            System.out.println("    Students: " +
+                                    (d.getStudents() == null ? 0 : d.getStudents().size()));
+
+                            System.out.println("    Teachers: " +
+                                    (d.getTeachers() == null ? 0 : d.getTeachers().size()));
+                        }
+                    }
+
                     break;
 
-                case "load stu":
-                   Optional<List<Student>> optionalStudents = studentRepository.loadAll();
+                case "load fac": {
 
-                   optionalStudents.ifPresent(students -> {
-                       for (Student s : students) {
+                    Optional<University> uniOpt1 = universityRepository.loadUniversity();
 
-                           Department department = deptService.findById(s.getDepartmentId());
+                    if (uniOpt1.isEmpty()) {
+                        System.out.println("⚠ university.json not found");
+                        break;
+                    }
 
-                           if (department != null) {
-                               department.getStudents().add(s);
-                           }
-                       }});
+                    University loaded1 = uniOpt1.get();
+
+                    // ⚠ очищаємо поточні факультети в пам’яті
+                    myUniversity.faculties().clear();
+
+                    if (loaded1.faculties() != null) {
+                        myUniversity.faculties().addAll(loaded1.faculties());
+                    }
+
+                    System.out.println(GREEN + "✓ Faculties loaded successfully" + RESET);
+
+                    // =========================
+                    // DEBUG FACULTIES
+                    // =========================
+                    System.out.println("\n========== FACULTIES ==========");
+
+                    for (Faculty f : myUniversity.faculties()) {
+
+                        System.out.println("================================");
+                        System.out.println("Faculty ID: " + f.getIdFaculty());
+                        System.out.println("Name: " + f.getFacultyName());
+                        System.out.println("Short Name: " + f.getFacultyShortName());
+                        System.out.println("Head: " + f.getHeadOfFaculty());
+                        System.out.println("Contacts: " + f.getContactsOfFaculty());
+
+                        System.out.println("Departments count: " +
+                                (f.getDepartments() == null ? 0 : f.getDepartments().size()));
+                    }
+
+                    System.out.println("================================");
+
                     break;
+                }
+                case "load stu": {
 
-                    case "load tch":
-                    Optional<List<Teacher>> optionalTeachers = teacherRepository.loadAll();
+                    Optional<University> uniOpt2 = universityRepository.loadUniversity();
 
-                    optionalTeachers.ifPresent(teachers -> {
-                        for (Teacher t : teachers) {
+                    if (uniOpt2.isEmpty()) {
+                        System.out.println("⚠ university.json not found");
+                        break;
+                    }
 
-                            Department department = deptService.findById(t.getDepartmentId());
+                    University loaded2 = uniOpt2.get();
 
-                            if (department != null) {
-                                department.getTeachers().add(t);
+                    // =========================
+                    // CLEAR CURRENT STUDENTS
+                    // =========================
+                    for (Faculty f : myUniversity.faculties()) {
+
+                        if (f.getDepartments() == null) continue;
+
+                        for (Department d : f.getDepartments()) {
+
+                            if (d.getStudents() != null) {
+                                d.getStudents().clear();
                             }
                         }
-                    });
-                    break;
+                    }
 
-                case "load dep":
-                    Optional<List<Department>> optionalDepartments = departmentRepository.loadAll();
-                    facultyRepository.loadAll().ifPresent(facultyList -> {
-                        for (Faculty f : facultyList) {
-                            facultyService.addFaculty(f);
-                        }
-                    });
-                    optionalDepartments.ifPresent(departments -> {
-                        for (Department d : departments) {
+                    // =========================
+                    // LOAD STUDENTS FROM FILE
+                    // =========================
+                    for (Faculty fLoaded : loaded2.faculties()) {
 
-                            Faculty faculty = facultyService.findById(d.getFacultyId());
+                        for (Faculty fCurrent : myUniversity.faculties()) {
 
-                            if (faculty != null) {
-                                faculty.getDepartments().add(d);
+                            if (fCurrent.getIdFaculty() == fLoaded.getIdFaculty()) {
+
+                                for (Department dLoaded : fLoaded.getDepartments()) {
+
+                                    for (Department dCurrent : fCurrent.getDepartments()) {
+
+                                        if (dCurrent.getIdDepartment() == dLoaded.getIdDepartment()) {
+
+                                            if (dLoaded.getStudents() != null) {
+
+                                                dCurrent.getStudents().addAll(dLoaded.getStudents());
+
+                                                // =========================
+                                                // PRINT LOADED STUDENTS
+                                                // =========================
+                                                for (var s : dLoaded.getStudents()) {
+
+                                                    System.out.println("\n================================");
+                                                    System.out.println("✓ STUDENT LOADED");
+                                                    System.out.println("ID Person: " + s.getIdPerson());
+                                                    System.out.println("PIB: " + s.getPib());
+                                                    System.out.println("Birth Date: " + s.getBirthDate());
+                                                    System.out.println("Email: " + s.getEmail());
+                                                    System.out.println("Phone: " + s.getPhoneNumber());
+                                                    System.out.println("GradeBook ID: " + s.getGradeBookId());
+                                                    System.out.println("Course: " + s.getCourse());
+                                                    System.out.println("Group: " + s.getGroup());
+                                                    System.out.println("Enrollment Year: " + s.getEnrollmentYear());
+                                                    System.out.println("Form of Education: " + s.getFormOfEducation());
+                                                    System.out.println("Status: " + s.getStudentStatus());
+                                                    System.out.println("Department ID: " + s.getDepartmentId());
+                                                    System.out.println("================================");
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
-                    });
+                    }
+
+                    System.out.println(GREEN + "✓ Students loaded successfully" + RESET);
+
+                    // =========================
+                    // FINAL DEBUG SUMMARY
+                    // =========================
+                    for (Faculty f : myUniversity.faculties()) {
+
+                        System.out.println("\nFaculty: " + f.getFacultyName());
+
+                        if (f.getDepartments() == null) continue;
+
+                        for (Department d : f.getDepartments()) {
+
+                            System.out.println("  Department: " + d.getDepartmentName());
+                            System.out.println("    Students: " +
+                                    (d.getStudents() == null ? 0 : d.getStudents().size()));
+                        }
+                    }
 
                     break;
-                case "load fac":
-                    Optional<List<Faculty>> faculties = facultyRepository.loadAll();
-                    faculties.ifPresent(facultyList -> {
-                        for (Faculty f : facultyList) {
-                            myUniversity.faculties().add(f);
+                }
+
+                case "load tch": {
+
+                    Optional<University> uniOpt3 = universityRepository.loadUniversity();
+
+                    if (uniOpt3.isEmpty()) {
+                        System.out.println("⚠ university.json not found");
+                        break;
+                    }
+
+                    University loaded3 = uniOpt3.get();
+
+                    // =========================
+                    // CLEAR CURRENT TEACHERS
+                    // =========================
+                    for (Faculty f : myUniversity.faculties()) {
+
+                        if (f.getDepartments() == null) continue;
+
+                        for (Department d : f.getDepartments()) {
+
+                            if (d.getTeachers() != null) {
+                                d.getTeachers().clear();
+                            }
                         }
-                    });
+                    }
+
+                    // =========================
+                    // LOAD TEACHERS FROM FILE
+                    // =========================
+                    for (Faculty fLoaded : loaded3.faculties()) {
+
+                        for (Faculty fCurrent : myUniversity.faculties()) {
+
+                            if (fCurrent.getIdFaculty() == fLoaded.getIdFaculty()) {
+
+                                for (Department dLoaded : fLoaded.getDepartments()) {
+
+                                    for (Department dCurrent : fCurrent.getDepartments()) {
+
+                                        if (dCurrent.getIdDepartment() == dLoaded.getIdDepartment()) {
+
+                                            if (dLoaded.getTeachers() != null) {
+
+                                                dCurrent.getTeachers().addAll(dLoaded.getTeachers());
+
+                                                // =========================
+                                                // DEBUG OUTPUT
+                                                // =========================
+                                                for (var t : dLoaded.getTeachers()) {
+
+                                                    System.out.println("\n================================");
+                                                    System.out.println("✓ TEACHER LOADED");
+                                                    System.out.println("ID Person: " + t.getIdPerson());
+                                                    System.out.println("PIB: " + t.getPib());
+                                                    System.out.println("Birth Date: " + t.getBirthDate());
+                                                    System.out.println("Email: " + t.getEmail());
+                                                    System.out.println("Phone: " + t.getPhoneNumber());
+                                                    System.out.println("Teacher ID: " + t.getTeacherId());
+                                                    System.out.println("Position: " + t.getPosition());
+                                                    System.out.println("Department ID: " + t.getDepartmentId());
+                                                    System.out.println("Academic Degree: " + t.getAcademicDegree());
+                                                    System.out.println("Academic Rank: " + t.getAcademicRank());
+                                                    System.out.println("Hire Date: " + t.getHireDate());
+                                                    System.out.println("FTE: " + t.getFullTimeEquivalent());
+                                                    System.out.println("================================");
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    System.out.println(GREEN + "✓ Teachers loaded successfully" + RESET);
+
+                    // =========================
+                    // FINAL DEBUG SUMMARY
+                    // =========================
+                    for (Faculty f : myUniversity.faculties()) {
+
+                        System.out.println("\nFaculty: " + f.getFacultyName());
+
+                        if (f.getDepartments() == null) continue;
+
+                        for (Department d : f.getDepartments()) {
+
+                            System.out.println("  Department: " + d.getDepartmentName());
+                            System.out.println("    Teachers: " +
+                                    (d.getTeachers() == null ? 0 : d.getTeachers().size()));
+                        }
+                    }
+
                     break;
+                }
 
                 case "exit":
-                    departmentRepository.saveAll(deptService.findAll());
-                    facultyRepository.saveAll(facultyService.findAll());
                     universityRepository.saveUniversity(myUniversity);
-                    studentRepository.saveAll(studentService.findAll());
-                    teacherRepository.saveAll(teacherService.findAll());
-                    System.out.println(GREEN + " ✓ Saved. Bye!" + RESET);
+                    System.out.println(GREEN + "✓ Saved. Bye!" + RESET);
                     return;
 
                 default:
@@ -332,7 +588,7 @@ public class Main {
 
     }
 
-    private static void managerMenu(LineReader reader, String role) {
+    private static void managerMenu(LineReader reader, String role) throws IOException {
         while (true) {
             String line = reader.readLine("Manager>> ").trim();
             if (line.isEmpty()) continue;
@@ -456,7 +712,7 @@ public class Main {
     }
 
 
-    private static void userMenu(LineReader reader, String role) {
+    private static void userMenu(LineReader reader, String role) throws IOException {
         while (true) {
             String line = reader.readLine("User>> ").trim();
             if (line.isEmpty()) continue;

@@ -2,6 +2,7 @@ package Project.service;
 
 import Project.Models.Department;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface DepartmentService {
@@ -9,18 +10,18 @@ public interface DepartmentService {
                        String name,
                        int facultyId,
                        String head,
-                       int room);
+                       int room) throws IOException;
 
-    boolean removeDepartment(int id);
+    boolean removeDepartment(int id) throws IOException;
 
     void editDepartment(int id,
                         String name,
                         int facultyId,
                         String head,
-                        Integer roomNumber);
+                        Integer roomNumber) throws IOException;
 
-    Department findById(int id);
+    Department findById(int id) throws IOException;
 
-    List<Department> findAll();
+    List<Department> findAll() throws IOException;
 
 }
