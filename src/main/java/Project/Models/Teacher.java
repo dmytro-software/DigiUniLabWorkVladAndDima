@@ -39,6 +39,11 @@ public class Teacher extends Person {
         this.fullTimeEquivalent = fullTimeEquivalent;
     }
 
+    public Teacher() {
+        super();
+        this.teacherId = 0;
+    }
+
     public int getTeacherId() {
         return teacherId;
     }

@@ -26,6 +26,14 @@ public class Student extends Person {
 
     private int departmentId;
 
+    public Student() {
+        super();
+
+        gradeBookId = 0;
+        enrollmentYear = 0;
+    }
+    
+
     public Student(int idPerson, String pib, LocalDate birthDate, String email, int phoneNumber, int gradeBookId, int course,
                    int group, int  enrollmentYear, String formOfEducation, String studentStatus, int departmentId) {
         super(idPerson, pib, birthDate, email, phoneNumber);

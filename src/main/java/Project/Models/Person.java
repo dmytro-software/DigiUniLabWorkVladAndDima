@@ -30,6 +30,11 @@ public abstract class Person {
         this.phoneNumber = phoneNumber;
     }
 
+    public Person() {
+        this.idPerson = 0;
+        this.birthDate = LocalDate.now();
+    }
+
     public int getIdPerson() {
         return idPerson;
     }

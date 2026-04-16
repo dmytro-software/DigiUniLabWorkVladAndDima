@@ -1,0 +1,55 @@
+{
+  "universityName" : "Kyiv-Mohyla Academy",
+  "universityShortName" : "NaUKMA",
+  "city" : "Kyiv",
+  "universityAddress" : "Volodymyrska 60",
+  "faculties" : [ {
+    "idFaculty" : 523238,
+    "facultyName" : "Faculty of Informatics",
+    "facultyShortName" : "FI",
+    "headOfFaculty" : "Dr. Smith",
+    "contactsOfFaculty" : "0981112233",
+    "departments" : [ ]
+  }, {
+    "idFaculty" : 669539,
+    "facultyName" : "Faculty of Mathematics",
+    "facultyShortName" : "FM",
+    "headOfFaculty" : "Dr. Brown",
+    "contactsOfFaculty" : "0982223344",
+    "departments" : [ {
+      "idDepartment" : 765344,
+      "departmentName" : "Computer Science",
+      "headOfDepartment" : "Prof. Johnson",
+      "roomNumber" : 3,
+      "facultyId" : 669539,
+      "students" : [ {
+        "idPerson" : 960562,
+        "pib" : "Ivan Petrenko",
+        "birthDate" : [ 2000, 1, 1 ],
+        "email" : "ivan@gmail.com",
+        "phoneNumber" : 974567890,
+        "gradeBookId" : 111111,
+        "course" : 1,
+        "group" : 1,
+        "enrollmentYear" : 2024,
+        "formOfEducation" : "fulltime",
+        "studentStatus" : "active",
+        "departmentId" : 765344
+      } ],
+      "teachers" : [ {
+        "idPerson" : 432224,
+        "pib" : "dddssd",
+        "birthDate" : [ 2000, 9, 9 ],
+        "email" : "sdfdds@gmail.com",
+        "phoneNumber" : 980987898,
+        "teacherId" : 313513,
+        "position" : "sdff",
+        "departmentId" : 765344,
+        "academicDegree" : "fdsfds",
+        "academicRank" : "dsfsd",
+        "hireDate" : "2000.01.02",
+        "fullTimeEquivalent" : 1.0
+      } ]
+    } ]
+  } ]
+}

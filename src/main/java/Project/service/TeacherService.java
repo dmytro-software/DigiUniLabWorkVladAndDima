@@ -2,6 +2,7 @@ package Project.service;
 
 import Project.Models.Teacher;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +20,9 @@ public interface TeacherService {
                     String academicDegree,
                     String academicRank,
                     String hireDate,
-                    double fullTimeEquivalent);
+                    double fullTimeEquivalent) throws IOException;
 
-    boolean removeTeacher(int teacherId);
+    boolean removeTeacher(int teacherId) throws IOException;
 
     void editTeacher(int departmentId,
                      int idPerson,
@@ -34,11 +35,11 @@ public interface TeacherService {
                      String academicDegree,
                      String academicRank,
                      String hireDate,
-                     Double fullTimeEquivalent);
+                     Double fullTimeEquivalent) throws IOException;
 
-    List<Teacher> findAll();
+    List<Teacher> findAll() throws IOException;
 
-    Optional<Teacher> findByTeacherId(int teacherId);
+    Optional<Teacher> findByTeacherId(int teacherId) throws IOException;
 
-    Optional<Teacher> findByPib(String pib);
+    Optional<Teacher> findByPib(String pib) throws IOException;
 }

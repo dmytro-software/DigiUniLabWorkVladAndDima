@@ -2,12 +2,15 @@ package Project.service.Impl;
 
 import Project.Exceptions.EntityNotFoundException;
 import Project.Models.Department;
-import Project.Models.Student;
+import Project.Models.Faculty;
 import Project.Models.Teacher;
+import Project.Models.University;
+import Project.Repository.DepartmentRepository;
+import Project.Repository.UniversityRepository;
 import Project.service.DepartmentService;
 import Project.service.TeacherService;
 
-import java.time.LocalDate;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,30 +18,70 @@ import java.util.Optional;
 public class TeacherServiceImpl implements TeacherService {
 
     private final DepartmentService departmentService;
+    private final DepartmentRepository departmentRepository;
+    private final UniversityRepository universityRepository;
 
-    public TeacherServiceImpl(DepartmentService departmentService) {
+    public TeacherServiceImpl(DepartmentService departmentService,
+                              DepartmentRepository departmentRepository,
+                              UniversityRepository universityRepository) {
         this.departmentService = departmentService;
+        this.departmentRepository = departmentRepository;
+        this.universityRepository = universityRepository;
     }
 
+    // =========================
+    // ADD TEACHER
+    // =========================
     @Override
-    public void addTeacher(int departmentId,
-                           int idPerson,
-                           String pib,
-                           LocalDate birthDate,
-                           String email,
-                           int phoneNumber,
-                           int teacherId,
-                           String position,
-                           String academicDegree,
-                           String academicRank,
-                           String hireDate,
-                           double fullTimeEquivalent) {
+    public void addTeacher(
+            int departmentId,
+            int idPerson,
+            String pib,
+            java.time.LocalDate birthDate,
+            String email,
+            int phoneNumber,
+            int teacherId,
+            String position,
+            String academicDegree,
+            String academicRank,
+            String hireDate,
+            double fullTimeEquivalent
+    ) throws IOException {
 
-        // 1. Знаходимо кафедру
-        Department department = departmentService.findById(departmentId);
+        University uni = universityRepository.loadUniversity()
+                .orElseThrow(() -> new EntityNotFoundException("University not found"));
 
-        // 2. Створюємо викладача
-        Teacher newTeacher = new Teacher(
+        Department department = null;
+
+        for (Faculty faculty : uni.faculties()) {
+
+            department = faculty.getDepartments()
+                    .stream()
+                    .filter(d -> d.getIdDepartment() == departmentId)
+                    .findFirst()
+                    .orElse(null);
+
+            if (department != null) break;
+        }
+
+        if (department == null) {
+            throw new EntityNotFoundException("Department not found with ID: " + departmentId);
+        }
+
+        // init teachers list
+        if (department.getTeachers() == null) {
+            department.setTeachers(new ArrayList<>());
+        }
+
+        boolean exists = department.getTeachers()
+                .stream()
+                .anyMatch(t -> t.getIdPerson() == idPerson);
+
+        if (exists) {
+            throw new RuntimeException("Teacher already exists with ID: " + idPerson);
+        }
+
+        Teacher teacher = new Teacher(
                 idPerson,
                 pib,
                 birthDate,
@@ -53,103 +96,162 @@ public class TeacherServiceImpl implements TeacherService {
                 fullTimeEquivalent
         );
 
-        // 3. Додаємо до кафедри
-        department.getTeachers().add(newTeacher);
+        department.getTeachers().add(teacher);
+
+        universityRepository.saveUniversity(uni);
     }
 
+    // =========================
+    // REMOVE TEACHER
+    // =========================
     @Override
-    public boolean removeTeacher(int teacherId) {
+    public boolean removeTeacher(int teacherId) throws IOException {
 
-        for (Department department : departmentService.findAll()) {
+        University uni = universityRepository.loadUniversity()
+                .orElseThrow(() -> new EntityNotFoundException("University not found"));
 
-            boolean removed = department.getTeachers()
-                    .removeIf(t -> t.getTeacherId() == teacherId);
+        for (Faculty faculty : uni.faculties()) {
 
-            if (removed) return true;
+            for (Department d : faculty.getDepartments()) {
+
+                if (d.getTeachers() == null) continue;
+
+                boolean removed = d.getTeachers()
+                        .removeIf(t -> t.getTeacherId() == teacherId);
+
+                if (removed) {
+                    universityRepository.saveUniversity(uni);
+                    return true;
+                }
+            }
         }
 
         return false;
     }
 
     @Override
-    public void editTeacher(int departmentId,
-                            int idPerson,
-                            String pib,
-                            String birthDate,
-                            String email,
-                            int phoneNumber,
-                            int teacherId,
-                            String position,
-                            String academicDegree,
-                            String academicRank,
-                            String hireDate,
-                            Double fullTimeEquivalent) {
+    public void editTeacher(
+            int departmentId,
+            int idPerson,
+            String pib,
+            String birthDate,
+            String email,
+            int phoneNumber,
+            int teacherId,
+            String position,
+            String academicDegree,
+            String academicRank,
+            String hireDate,
+            Double fullTimeEquivalent
+    ) throws IOException {
 
-        for (Department department : departmentService.findAll()) {
+        University uni = universityRepository.loadUniversity()
+                .orElseThrow(() -> new EntityNotFoundException("University not found"));
 
-            for (Teacher teacher : department.getTeachers()) {
+        Teacher targetTeacher = null;
+        Department targetDepartment = null;
 
-                if (teacher.getTeacherId() == teacherId) {
+        // =========================
+        // FIND TEACHER
+        // =========================
+        outer:
+        for (Faculty faculty : uni.faculties()) {
 
-                    if (position != null && !position.isBlank())
-                        teacher.setPosition(position);
+            if (faculty.getDepartments() == null) continue;
 
-                    if (academicDegree != null && !academicDegree.isBlank())
-                        teacher.setAcademicDegree(academicDegree);
+            for (Department d : faculty.getDepartments()) {
 
-                    if (academicRank != null && !academicRank.isBlank())
-                        teacher.setAcademicRank(academicRank);
+                if (d.getTeachers() == null) continue;
 
-                    if (hireDate != null && !hireDate.isBlank())
-                        teacher.setHireDate(hireDate);
+                for (Teacher t : d.getTeachers()) {
 
-                    if (fullTimeEquivalent != null)
-                        teacher.setFullTimeEquivalent(fullTimeEquivalent);
-
-                    return;
+                    if (t.getIdPerson() == idPerson) {
+                        targetTeacher = t;
+                        targetDepartment = d;
+                        break outer;
+                    }
                 }
             }
         }
 
-        throw new EntityNotFoundException("Teacher not found with ID: " + teacherId);
-    }
-
-    public Optional<Teacher> findByTeacherId(int teacherId) {
-
-        for (Department dep : departmentService.findAll()) {
-
-            for (Teacher teach : dep.getTeachers()) {
-
-                if (teach.getTeacherId() == teacherId) {
-
-                    return Optional.of(teach);
-
-                }
-            }
+        if (targetTeacher == null) {
+            throw new EntityNotFoundException("Teacher not found with idPerson: " + idPerson);
         }
-        return Optional.empty();
+
+        // =========================
+        // UPDATE FIELDS
+        // =========================
+        targetTeacher.setPib(pib);
+        targetTeacher.setEmail(email);
+        targetTeacher.setPhoneNumber(phoneNumber);
+
+        targetTeacher.setPosition(position);
+        targetTeacher.setAcademicDegree(academicDegree);
+        targetTeacher.setAcademicRank(academicRank);
+        targetTeacher.setHireDate(hireDate);
+        targetTeacher.setFullTimeEquivalent(fullTimeEquivalent);
+
+        // =========================
+        // SAVE WHOLE TREE
+        // =========================
+        universityRepository.saveUniversity(uni);
     }
 
+    // =========================
+    // FIND ALL
+    // =========================
     @Override
-    public Optional<Teacher> findByPib(String pib) {
-        for(Department dep : departmentService.findAll()){
-            for( Teacher teacher : dep.getTeachers()){
-                if(teacher.getPib().equals(pib)){
-                    return Optional.of(teacher);
+    public List<Teacher> findAll() throws IOException {
+
+        List<Teacher> result = new ArrayList<>();
+
+        for (Department d : departmentService.findAll()) {
+
+            if (d.getTeachers() != null) {
+                result.addAll(d.getTeachers());
+            }
+        }
+
+        return result;
+    }
+
+    // =========================
+    // FIND BY PIB
+    // =========================
+    @Override
+    public Optional<Teacher> findByPib(String pib) throws IOException {
+
+        for (Department d : departmentService.findAll()) {
+
+            if (d.getTeachers() == null) continue;
+
+            for (Teacher t : d.getTeachers()) {
+                if (t.getPib().equalsIgnoreCase(pib)) {
+                    return Optional.of(t);
                 }
             }
         }
+
         return Optional.empty();
     }
 
-    public List<Teacher> findAll() {
+    // =========================
+    // FIND BY TEACHER ID
+    // =========================
+    @Override
+    public Optional<Teacher> findByTeacherId(int teacherId) throws IOException {
 
-        List<Teacher> allTeachers = new ArrayList<>();
+        for (Department d : departmentService.findAll()) {
 
-        for (Department department : departmentService.findAll()) {
-            allTeachers.addAll(department.getTeachers());
+            if (d.getTeachers() == null) continue;
+
+            for (Teacher t : d.getTeachers()) {
+                if (t.getTeacherId() == teacherId) {
+                    return Optional.of(t);
+                }
+            }
         }
 
-        return allTeachers;
+        return Optional.empty();
     }
 }
