@@ -1,5 +1,6 @@
 package Project;
 
+import Project.BootImitation.BootImitaion;
 import Project.Models.*;
 import Project.Data.DemoDataSeeder;
 import Project.Repository.*;
@@ -50,6 +51,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+       BootImitaion.systemStartup();
         DemoDataSeeder.initDummyData(facultyService,deptService,teacherService,studentService);
 
         Terminal terminal = TerminalBuilder.terminal();
