@@ -16,9 +16,6 @@ public class TeacherRepository {
         this.universityRepository = universityRepository;
     }
 
-    // =========================
-    // GET ALL TEACHERS
-    // =========================
     public List<Teacher> findAll() {
 
         Optional<University> uniOpt = safeLoad();
@@ -38,9 +35,6 @@ public class TeacherRepository {
         return result;
     }
 
-    // =========================
-    // FIND BY ID
-    // =========================
     public Teacher findById(int idPerson) {
 
         return findAll().stream()
@@ -50,9 +44,6 @@ public class TeacherRepository {
                         new RuntimeException("Teacher not found: " + idPerson));
     }
 
-    // =========================
-    // SAVE (FULL UNIVERSITY)
-    // =========================
     public void save() {
         try {
             universityRepository.saveUniversity(getUniversity());
@@ -61,9 +52,6 @@ public class TeacherRepository {
         }
     }
 
-    // =========================
-    // HELPER
-    // =========================
     private University getUniversity() {
         try {
             return universityRepository.loadUniversity()

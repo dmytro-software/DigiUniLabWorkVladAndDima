@@ -30,7 +30,6 @@ public class FacultyRepository {
                         new RuntimeException("Faculty not found: " + id));
     }
 
-    // ❗ ЗБЕРІГАННЯ ТІЛЬКИ ЧЕРЕЗ UNIVERSITY
     public void saveAll(List<Faculty> faculties) {
         try {
             University uni = universityRepository.loadUniversity()

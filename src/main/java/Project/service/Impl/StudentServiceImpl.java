@@ -34,9 +34,6 @@ public class StudentServiceImpl implements StudentService {
         this.universityRepository = universityRepository;
     }
 
-    // =========================
-    // ADD STUDENT
-    // =========================
     @Override
     public void addStudent(
             int departmentId,
@@ -56,7 +53,6 @@ public class StudentServiceImpl implements StudentService {
         University uni = universityRepository.loadUniversity()
                 .orElseThrow(() -> new EntityNotFoundException("University not found"));
 
-        // 🔥 знайти кафедру через всі факультети
         Department department = null;
 
         for (Faculty faculty : uni.faculties()) {
@@ -73,7 +69,6 @@ public class StudentServiceImpl implements StudentService {
             throw new EntityNotFoundException("Department not found with ID: " + departmentId);
         }
 
-        // 🔥 ініціалізація списку студентів
         if (department.getStudents() == null) {
             department.setStudents(new ArrayList<>());
         }
@@ -106,9 +101,6 @@ public class StudentServiceImpl implements StudentService {
         universityRepository.saveUniversity(uni);
     }
 
-    // =========================
-    // REMOVE STUDENT
-    // =========================
     @Override
     public boolean removeStudent(int gradeBookId) throws IOException {
 
@@ -126,9 +118,6 @@ public class StudentServiceImpl implements StudentService {
         return false;
     }
 
-    // =========================
-    // EDIT STUDENT
-    // =========================
     @Override
     public void editStudent(int gradeBookId,
                             String pib,
@@ -163,9 +152,6 @@ public class StudentServiceImpl implements StudentService {
         throw new EntityNotFoundException("Student not found with gradeBookId: " + gradeBookId);
     }
 
-    // =========================
-    // FIND ALL
-    // =========================
     @Override
     public List<Student> findAll() throws IOException {
 
@@ -180,9 +166,6 @@ public class StudentServiceImpl implements StudentService {
         return allStudents;
     }
 
-    // =========================
-    // FIND BY GRADEBOOK
-    // =========================
     @Override
     public Optional<Student> findStudentByGradeBook(int gradeBookId) throws IOException {
 
@@ -200,9 +183,6 @@ public class StudentServiceImpl implements StudentService {
         return Optional.empty();
     }
 
-    // =========================
-    // FIND BY PIB
-    // =========================
     @Override
     public List<Student> findByPib(String pib) throws IOException {
 
@@ -222,9 +202,6 @@ public class StudentServiceImpl implements StudentService {
         return found;
     }
 
-    // =========================
-    // FIND BY GROUP
-    // =========================
     @Override
     public List<Student> findByGroup(int group) throws IOException {
 
@@ -244,9 +221,6 @@ public class StudentServiceImpl implements StudentService {
         return found;
     }
 
-    // =========================
-    // FIND BY COURSE
-    // =========================
     @Override
     public List<Student> findByCourse(int course) throws IOException {
 

@@ -29,9 +29,6 @@ public class TeacherServiceImpl implements TeacherService {
         this.universityRepository = universityRepository;
     }
 
-    // =========================
-    // ADD TEACHER
-    // =========================
     @Override
     public void addTeacher(
             int departmentId,
@@ -150,10 +147,6 @@ public class TeacherServiceImpl implements TeacherService {
 
         Teacher targetTeacher = null;
         Department targetDepartment = null;
-
-        // =========================
-        // FIND TEACHER
-        // =========================
         outer:
         for (Faculty faculty : uni.faculties()) {
 
@@ -178,9 +171,6 @@ public class TeacherServiceImpl implements TeacherService {
             throw new EntityNotFoundException("Teacher not found with idPerson: " + idPerson);
         }
 
-        // =========================
-        // UPDATE FIELDS
-        // =========================
         targetTeacher.setPib(pib);
         targetTeacher.setEmail(email);
         targetTeacher.setPhoneNumber(phoneNumber);
@@ -191,15 +181,10 @@ public class TeacherServiceImpl implements TeacherService {
         targetTeacher.setHireDate(hireDate);
         targetTeacher.setFullTimeEquivalent(fullTimeEquivalent);
 
-        // =========================
-        // SAVE WHOLE TREE
-        // =========================
+
         universityRepository.saveUniversity(uni);
     }
 
-    // =========================
-    // FIND ALL
-    // =========================
     @Override
     public List<Teacher> findAll() throws IOException {
 
@@ -215,9 +200,6 @@ public class TeacherServiceImpl implements TeacherService {
         return result;
     }
 
-    // =========================
-    // FIND BY PIB
-    // =========================
     @Override
     public Optional<Teacher> findByPib(String pib) throws IOException {
 
@@ -235,9 +217,6 @@ public class TeacherServiceImpl implements TeacherService {
         return Optional.empty();
     }
 
-    // =========================
-    // FIND BY TEACHER ID
-    // =========================
     @Override
     public Optional<Teacher> findByTeacherId(int teacherId) throws IOException {
 

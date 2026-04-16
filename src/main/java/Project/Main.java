@@ -15,12 +15,7 @@ import org.jline.reader.impl.DefaultParser;
 import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
-
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
 import java.util.Optional;
 
 import static Project.Models.ConsoleColors.*;
@@ -32,6 +27,8 @@ public class Main {
             "Kyiv-Mohyla Academy", "NaUKMA", "Kyiv", "Volodymyrska 60"
     );
     private static final AuthService authService = new AuthServiceImpl();
+
+    private static final LoadStateManager loadStateManager = new LoadStateManager();
 
     private static UniversityRepository universityRepository = new UniversityRepository();
     private static FacultyRepository  facultyRepository = new FacultyRepository(universityRepository);
@@ -247,6 +244,11 @@ public class Main {
                     break;
                 case "load dep": {
 
+                    if (!loadStateManager.canLoadDepartments()) {
+                        System.out.println("⚠ Load faculties first");
+                        break;
+                    }
+
                     Optional<University> uniOpt = universityRepository.loadUniversity();
 
                     if (uniOpt.isEmpty()) {
@@ -273,9 +275,6 @@ public class Main {
 
                     System.out.println(GREEN + "✓ Departments loaded successfully" + RESET);
 
-                    // =========================
-                    // DEBUG OUTPUT
-                    // =========================
                     for (Faculty f : myUniversity.faculties()) {
                         System.out.println("\nFaculty: " + f.getFacultyName());
 
@@ -291,14 +290,14 @@ public class Main {
                             System.out.println("  Faculty ID: " + d.getFacultyId());
                             System.out.println("  Head: " + d.getHeadOfDepartment());
                             System.out.println("  Room Number: " + d.getRoomNumber());
+                            System.out.println("  ------------------------");
                         }
                     }
-
+                    loadStateManager.setState(LoadState.DEPARTMENTS_LOADED);
                     break;
                 }
 
                 case "load uni":
-
                     Optional<University> uniOpt = universityRepository.loadUniversity();
 
                     if (uniOpt.isEmpty()) {
@@ -308,24 +307,23 @@ public class Main {
 
                     University loaded = uniOpt.get();
 
-                    // =========================
-                    // RESET CURRENT STATE
-                    // =========================
                     myUniversity.faculties().clear();
 
-                    // =========================
-                    // LOAD WHOLE TREE
-                    // =========================
                     myUniversity.faculties().addAll(loaded.faculties());
 
                     System.out.println(GREEN + "✓ University loaded successfully" + RESET);
 
-                    // =========================
-                    // OPTIONAL DEBUG PRINT
-                    // =========================
+                    System.out.println("\n========== FACULTIES ==========");
+
                     for (Faculty f : myUniversity.faculties()) {
 
-                        System.out.println("\nFaculty: " + f.getFacultyName());
+                        System.out.println("================================");
+                        System.out.println("Faculty ID: " + f.getIdFaculty());
+                        System.out.println("Name: " + f.getFacultyName());
+                        System.out.println("Short Name: " + f.getFacultyShortName());
+                        System.out.println("Head: " + f.getHeadOfFaculty());
+                        System.out.println("Contacts: " + f.getContactsOfFaculty());
+                        System.out.println("================================");
 
                         for (Department d : f.getDepartments()) {
 
@@ -338,10 +336,15 @@ public class Main {
                                     (d.getTeachers() == null ? 0 : d.getTeachers().size()));
                         }
                     }
-
+                    loadStateManager.setState(LoadState.UNIVERSITY_LOADED);
                     break;
 
                 case "load fac": {
+
+                    if (!loadStateManager.canLoadFaculties()) {
+                        System.out.println("⚠ Load university first");
+                        break;
+                    }
 
                     Optional<University> uniOpt1 = universityRepository.loadUniversity();
 
@@ -352,7 +355,6 @@ public class Main {
 
                     University loaded1 = uniOpt1.get();
 
-                    // ⚠ очищаємо поточні факультети в пам’яті
                     myUniversity.faculties().clear();
 
                     if (loaded1.faculties() != null) {
@@ -361,9 +363,6 @@ public class Main {
 
                     System.out.println(GREEN + "✓ Faculties loaded successfully" + RESET);
 
-                    // =========================
-                    // DEBUG FACULTIES
-                    // =========================
                     System.out.println("\n========== FACULTIES ==========");
 
                     for (Faculty f : myUniversity.faculties()) {
@@ -380,11 +379,15 @@ public class Main {
                     }
 
                     System.out.println("================================");
-
+                    loadStateManager.setState(LoadState.FACULTIES_LOADED);
                     break;
                 }
                 case "load stu": {
 
+                    if (!loadStateManager.canLoadStudents()) {
+                        System.out.println("⚠ Load departments first");
+                        break;
+                    }
                     Optional<University> uniOpt2 = universityRepository.loadUniversity();
 
                     if (uniOpt2.isEmpty()) {
@@ -394,9 +397,6 @@ public class Main {
 
                     University loaded2 = uniOpt2.get();
 
-                    // =========================
-                    // CLEAR CURRENT STUDENTS
-                    // =========================
                     for (Faculty f : myUniversity.faculties()) {
 
                         if (f.getDepartments() == null) continue;
@@ -409,9 +409,6 @@ public class Main {
                         }
                     }
 
-                    // =========================
-                    // LOAD STUDENTS FROM FILE
-                    // =========================
                     for (Faculty fLoaded : loaded2.faculties()) {
 
                         for (Faculty fCurrent : myUniversity.faculties()) {
@@ -428,12 +425,8 @@ public class Main {
 
                                                 dCurrent.getStudents().addAll(dLoaded.getStudents());
 
-                                                // =========================
-                                                // PRINT LOADED STUDENTS
-                                                // =========================
                                                 for (var s : dLoaded.getStudents()) {
 
-                                                    System.out.println("\n================================");
                                                     System.out.println("✓ STUDENT LOADED");
                                                     System.out.println("ID Person: " + s.getIdPerson());
                                                     System.out.println("PIB: " + s.getPib());
@@ -447,7 +440,6 @@ public class Main {
                                                     System.out.println("Form of Education: " + s.getFormOfEducation());
                                                     System.out.println("Status: " + s.getStudentStatus());
                                                     System.out.println("Department ID: " + s.getDepartmentId());
-                                                    System.out.println("================================");
                                                 }
                                             }
                                         }
@@ -459,9 +451,6 @@ public class Main {
 
                     System.out.println(GREEN + "✓ Students loaded successfully" + RESET);
 
-                    // =========================
-                    // FINAL DEBUG SUMMARY
-                    // =========================
                     for (Faculty f : myUniversity.faculties()) {
 
                         System.out.println("\nFaculty: " + f.getFacultyName());
@@ -475,11 +464,16 @@ public class Main {
                                     (d.getStudents() == null ? 0 : d.getStudents().size()));
                         }
                     }
-
+                    loadStateManager.setState(LoadState.STUDENTS_LOADED);
                     break;
                 }
 
+
                 case "load tch": {
+                    if (!loadStateManager.canLoadStudents()) {
+                        System.out.println("⚠ Load departments first");
+                        break;
+                    }
 
                     Optional<University> uniOpt3 = universityRepository.loadUniversity();
 
@@ -490,9 +484,6 @@ public class Main {
 
                     University loaded3 = uniOpt3.get();
 
-                    // =========================
-                    // CLEAR CURRENT TEACHERS
-                    // =========================
                     for (Faculty f : myUniversity.faculties()) {
 
                         if (f.getDepartments() == null) continue;
@@ -505,9 +496,6 @@ public class Main {
                         }
                     }
 
-                    // =========================
-                    // LOAD TEACHERS FROM FILE
-                    // =========================
                     for (Faculty fLoaded : loaded3.faculties()) {
 
                         for (Faculty fCurrent : myUniversity.faculties()) {
@@ -524,9 +512,6 @@ public class Main {
 
                                                 dCurrent.getTeachers().addAll(dLoaded.getTeachers());
 
-                                                // =========================
-                                                // DEBUG OUTPUT
-                                                // =========================
                                                 for (var t : dLoaded.getTeachers()) {
 
                                                     System.out.println("\n================================");
@@ -555,14 +540,12 @@ public class Main {
 
                     System.out.println(GREEN + "✓ Teachers loaded successfully" + RESET);
 
-                    // =========================
-                    // FINAL DEBUG SUMMARY
-                    // =========================
                     for (Faculty f : myUniversity.faculties()) {
 
                         System.out.println("\nFaculty: " + f.getFacultyName());
 
-                        if (f.getDepartments() == null) continue;
+                        if (f.getDepartments() == null)
+                            continue;
 
                         for (Department d : f.getDepartments()) {
 
@@ -571,7 +554,7 @@ public class Main {
                                     (d.getTeachers() == null ? 0 : d.getTeachers().size()));
                         }
                     }
-
+                    loadStateManager.setState(LoadState.TEACHERS_LOADED);
                     break;
                 }
 
@@ -585,7 +568,6 @@ public class Main {
                     break;
             }
         }
-
     }
 
     private static void managerMenu(LineReader reader, String role) throws IOException {
