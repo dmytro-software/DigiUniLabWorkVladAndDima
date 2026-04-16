@@ -180,4 +180,10 @@ public class StudentServiceImpl implements StudentService {
         return foundStudents;
 
     }
+
+    @Override
+    public void changeDepartment(Department department, Student student) {
+
+
+    }
 }

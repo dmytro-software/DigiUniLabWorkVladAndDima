@@ -1,5 +1,6 @@
 package Project.service;
 
+import Project.Models.Department;
 import Project.Models.Student;
 
 import java.time.LocalDate;
@@ -41,6 +42,8 @@ public interface StudentService {
     List<Student> findByGroup(int group);
 
     List<Student> findByCourse(int course);
+
+    void changeDepartment(Department department, Student student);
 
 
 }

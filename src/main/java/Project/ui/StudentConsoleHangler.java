@@ -12,8 +12,10 @@ import Project.service.StudentService;
 import Project.validation.StudentValidator;
 import org.jline.reader.LineReader;
 
+import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static Project.Models.ConsoleColors.*;
 
@@ -313,11 +315,31 @@ public class StudentConsoleHangler {
             System.out.println(CYAN_BOLD + "\n--- Report Search By Course ---" + RESET);
             StudentsReport.getStudentsGroupedByCourse(allStudents);
         } catch (EntityNotEmptyException e) {
-            throw new EntityNotFoundException(RED + " ✗ Not found Error: " + e.getMessage() + RESET);
+            System.out.println(RED + " ✗ Not found Error: " + e.getMessage() + RESET);
         } catch (Exception e) {
-            throw new RuntimeException(RED + " ✗ ERROR: " + e.getMessage() + RESET);
+            System.out.println(RED + " ✗ ERROR: " + e.getMessage() + RESET);
         }
     }
+
+    public void handelChangeStudentDepartment(LineReader reader){
+        try{
+            int studentId = Integer.parseInt(reader.readLine(YELLOW + ">" + RESET + "Enter Student GradebookId to change the Department: "));
+            StudentValidator.validateId(studentId);
+            Optional<Student> student = studentService.findStudentByGradeBook(studentId);
+            if(!student.isPresent()){
+                System.out.println(RED + " ✗ Student with GradebookID " + studentId + " is not found");
+                return;
+            }
+            System.out.println("===SEARCH RESULTS=======");
+            System.out.println(student);
+
+
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }
 
