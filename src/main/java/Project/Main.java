@@ -313,6 +313,13 @@ public class Main {
 
                     System.out.println(GREEN + "✓ University loaded successfully" + RESET);
 
+                    System.out.println("\n========== UNIVERSITY ==========");
+
+                    System.out.println("Name: " + myUniversity.universityName());
+                    System.out.println("Short Name: " + myUniversity.universityShortName());
+                    System.out.println("City: " + myUniversity.city());
+                    System.out.println("Address: " + myUniversity.universityAddress());
+
                     System.out.println("\n========== FACULTIES ==========");
 
                     for (Faculty f : myUniversity.faculties()) {
