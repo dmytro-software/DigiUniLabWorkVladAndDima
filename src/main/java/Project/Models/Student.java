@@ -91,6 +91,9 @@ public class Student extends Person {
         return departmentId;
     }
 
+    public void setDepartmentId(int departmentId) {
+        this.departmentId = departmentId;
+    }
 
     @Override
     public String toString() {

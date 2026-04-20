@@ -34,9 +34,10 @@ public class DepartmentValidator {
         }
     }
 
-    public static void validateFacultyId(int id) {
+    public static void validateDepartmentId(int id) {
         if (id <= 0) {
             throw new ValidationException(RED + "Department ID must be a positive number." + RESET);
         }
     }
+
 }

@@ -44,7 +44,7 @@ public interface StudentService {
 
     List<Student> findByCourse(int course) throws IOException;
 
-    void changeDepartment(Department department, Student student);
+    void changeDepartment(Student student, Department to) throws IOException;
 
 
 }

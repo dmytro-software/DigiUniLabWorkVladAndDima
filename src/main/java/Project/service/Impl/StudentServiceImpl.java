@@ -241,8 +241,39 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void changeDepartment(Department department, Student student) {
+    public void changeDepartment(Student student, Department to) throws IOException {
+       University uni = universityRepository.loadUniversity().orElseThrow(() -> new RuntimeException("University not found in database"));
+
+       Department currentDepartment = null;
+       Department newDepartment = null;
+
+       for(Faculty faculty : uni.faculties()){
+           for(Department department : faculty.getDepartments()){
+               if(department.getIdDepartment() == student.getDepartmentId()){
+                   currentDepartment = department;
+               }
+               if(department.getIdDepartment() == to.getIdDepartment()){
+                   newDepartment = department;
+               }
+           }
+       }
+
+        if (currentDepartment == null || newDepartment == null) {
+            throw new RuntimeException("Departments not found in the current university state");
+        }
+
+        currentDepartment.getStudents().removeIf(s -> s.getGradeBookId() == student.getGradeBookId());
+        newDepartment.getStudents().add(student);
+        student.setDepartmentId(newDepartment.getIdDepartment());
+
+        universityRepository.saveUniversity(uni);
+
+
+
+
 
 
     }
+
+
 }

@@ -41,7 +41,7 @@ public class Main {
     private static final TeacherService teacherService = new TeacherServiceImpl(deptService, departmentRepository, universityRepository);
 
     private static final FacultyConsoleHandler facultyHandler = new FacultyConsoleHandler(facultyService);
-    private static final DepartmentConsoleHandler deptHandler = new DepartmentConsoleHandler(deptService, facultyService);
+    private static final DepartmentConsoleHandler deptHandler = new DepartmentConsoleHandler(deptService, facultyService, studentService);
     private static final StudentConsoleHangler studentHandler = new StudentConsoleHangler(studentService);
     private static final TeacherConsoleHangler teacherHandler = new TeacherConsoleHangler(teacherService);
 
@@ -187,6 +187,9 @@ public class Main {
                     break;
                 case "repo dep -s -cc":
                     deptHandler.handleShowReportOfStudentsByChoosedCourse(reader);
+                    break;
+                case "update dep -s":
+                    deptHandler.changeStudentDepartment(reader);
                     break;
 
                 case "add stu":

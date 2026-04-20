@@ -4,28 +4,30 @@ import Project.Exceptions.EntityNotFoundException;
 import Project.Exceptions.IsEmptyException;
 import Project.Exceptions.ValidationException;
 import Project.Models.Department;
+import Project.Models.Student;
 import Project.Reports.DepartmentReport;
-import Project.Reports.StudentsReport;
 import Project.service.DepartmentService;
 import Project.service.FacultyService;
+import Project.service.StudentService;
 import Project.validation.DepartmentValidator;
 import Project.validation.StudentValidator;
 import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
 
-import javax.sound.sampled.Line;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static Project.Models.ConsoleColors.*;
 
 public class DepartmentConsoleHandler {
     private final DepartmentService departmentService;
     private final FacultyService facultyService;
+    private final StudentService studentService;
 
-    public DepartmentConsoleHandler(DepartmentService departmentService, FacultyService facultyService) {
+    public DepartmentConsoleHandler(DepartmentService departmentService, FacultyService facultyService, StudentService studentService) {
         this.departmentService = departmentService;
         this.facultyService = facultyService;
+        this.studentService = studentService;
     }
 
     public void handleAddDepartment(LineReader reader) {
@@ -35,7 +37,7 @@ public class DepartmentConsoleHandler {
             DepartmentValidator.validateDepartmentName(name);
 
             int facultyId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Faculty ID: "));
-            DepartmentValidator.validateFacultyId(facultyId);
+            DepartmentValidator.validateDepartmentId(facultyId);
 
             String head = reader.readLine(YELLOW + " ❯ " + RESET + "Head: ");
             DepartmentValidator.validateHeadOfDepartment(head);
@@ -114,7 +116,7 @@ public class DepartmentConsoleHandler {
                     System.out.println(RED + " ✗ Department with this ID does not exist!" + RESET);
                     return;
                 }
-                DepartmentValidator.validateFacultyId(departmentId);
+                DepartmentValidator.validateDepartmentId(departmentId);
                 department.setFacultyId(facultyId);
             }
 
@@ -222,7 +224,7 @@ public class DepartmentConsoleHandler {
         System.out.println(CYAN_BOLD + "\n== STUDENT REPORT BY COURSE ==" + RESET);
         try {
             int departmentId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter Department ID to show: "));
-            DepartmentValidator.validateFacultyId(departmentId);
+            DepartmentValidator.validateDepartmentId(departmentId);
             Department department = departmentService.findById(departmentId);
             DepartmentReport.showStudentReportByCourseFromDepartment(department);
         } catch (IsEmptyException e){
@@ -240,7 +242,7 @@ public class DepartmentConsoleHandler {
         System.out.println(CYAN_BOLD + "\n== STUDENT REPORT BY ALPHABET ==" + RESET);
         try{
             int departmentId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter Department ID to show: "));
-            DepartmentValidator.validateFacultyId(departmentId);
+            DepartmentValidator.validateDepartmentId(departmentId);
             Department department = departmentService.findById(departmentId);
             DepartmentReport.showStudentsReportFromDepartmentByAlphabet(department);
         }catch (IsEmptyException e){
@@ -258,7 +260,7 @@ public class DepartmentConsoleHandler {
         System.out.println(CYAN_BOLD + "\n== TEACHERS REPORT BY ALPHABET ==" + RESET);
         try{
             int departmentId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter Department ID to show: "));
-            DepartmentValidator.validateFacultyId(departmentId);
+            DepartmentValidator.validateDepartmentId(departmentId);
             Department department = departmentService.findById(departmentId);
             DepartmentReport.showTeachersReportFromDepartmentByAlphabet(department);
         }catch (IsEmptyException e){
@@ -276,7 +278,7 @@ public class DepartmentConsoleHandler {
         System.out.println(CYAN_BOLD + "\n== STUDENT REPORT BY CHOOSED COURSE ==" + RESET);
         try {
             int departmentId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter Department ID to show: "));
-            DepartmentValidator.validateFacultyId(departmentId);
+            DepartmentValidator.validateDepartmentId(departmentId);
             Department department = departmentService.findById(departmentId);
             int course = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter course to show: "));
             StudentValidator.valideCourse(course);
@@ -290,6 +292,40 @@ public class DepartmentConsoleHandler {
             System.out.println(RED + " ✗ Numeric format error: ID must be a number." + RESET);
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: "+ e.getMessage() + RESET);
+        }
+    }
+
+    public void changeStudentDepartment(LineReader reader){
+        try{
+            System.out.println(CYAN_BOLD + "===== CHANGE STUDENT DEPARTMENT =====" + RESET);
+
+            int gradeBookId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter Student GradeBookId: "));
+            StudentValidator.validateId(gradeBookId);
+
+            Student student = studentService.findStudentByGradeBook(gradeBookId)
+                    .orElseThrow(() -> new EntityNotFoundException("Student with id " + gradeBookId + " not found"));
+
+            Department currentDepartment = departmentService.findById(student.getDepartmentId());
+
+            System.out.println(" Student: " + student.getPib());
+            System.out.println(" Current Department: " + currentDepartment.getDepartmentName() + " (ID: " + currentDepartment.getIdDepartment() + ")");
+
+            int changeDepartmentId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter New Department Id: "));
+
+            if (changeDepartmentId == currentDepartment.getIdDepartment()) {
+                System.out.println(YELLOW + " ⚠ Student is already in this department. Transfer cancelled." + RESET);
+                return;
+            }
+
+            DepartmentValidator.validateDepartmentId(changeDepartmentId);
+            Department departmentToChange = departmentService.findById(changeDepartmentId);
+
+            studentService.changeDepartment(student, departmentToChange);
+
+            System.out.println(GREEN + " ✓ Successfully transferred to: " + departmentToChange.getDepartmentName() + RESET);
+
+        } catch (Exception e) {
+            System.out.println(RED + " ✗ ERROR: " + e.getMessage() + RESET);
         }
     }
 
