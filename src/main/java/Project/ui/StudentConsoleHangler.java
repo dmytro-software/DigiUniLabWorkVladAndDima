@@ -104,77 +104,86 @@ public class StudentConsoleHangler {
     public void handleEditStudent(LineReader reader) {
         System.out.println(CYAN_BOLD + "\n== EDIT STUDENT ==" + RESET);
         try {
-            int gradeBooktId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter GradeBook ID of student to edit: "));
-            StudentValidator.validateId(gradeBooktId);
-            Student student = studentService.findStudentByGradeBook(gradeBooktId)
-                    .orElseThrow(() -> new EntityNotFoundException("Student with GradeBook ID " + gradeBooktId + " not found."));
+            int gradeBookId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter GradeBook ID of student to edit: "));
+            StudentValidator.validateId(gradeBookId);
+
+            Student student = studentService.findStudentByGradeBook(gradeBookId)
+                    .orElseThrow(() -> new EntityNotFoundException("Student with GradeBook ID " + gradeBookId + " not found."));
 
             System.out.println(CYAN + " ℹ " + RESET + "Editing student. Press Enter to keep current value.");
 
-            // PIB
-            String pib = reader.readLine(YELLOW + " ❯ " + RESET + "Full Name (" + student.getPib() + "): ");
-            if (!pib.isBlank()) {
-                StudentValidator.validatePib(pib);
-                student.setPib(pib);
+            String pibInput = reader.readLine(YELLOW + " ❯ " + RESET + "Full Name (" + student.getPib() + "): ");
+            String pib = student.getPib();
+            if (!pibInput.isBlank()) {
+                if (!StudentValidator.validatePib(pibInput)) {
+                    System.out.println(RED + " ✗ Invalid name format." + RESET);
+                    return;
+                }
+                pib = pibInput;
             }
 
-            // Email
-            String email = reader.readLine(YELLOW + " ❯ " + RESET + "Email (" + student.getEmail() + "): ");
-            if (!email.isBlank()) {
-                StudentValidator.validateEmail(email);
-                student.setEmail(email);
+            String emailInput = reader.readLine(YELLOW + " ❯ " + RESET + "Email (" + student.getEmail() + "): ");
+            String email = student.getEmail();
+            if (!emailInput.isBlank()) {
+                if (!StudentValidator.validateEmail(emailInput)) {
+                    System.out.println(RED + " ✗ Invalid email format." + RESET);
+                    return;
+                }
+                email = emailInput;
             }
 
-            // Phone
             String phoneStr = reader.readLine(YELLOW + " ❯ " + RESET + "Phone (" + student.getPhoneNumber() + "): ");
-            int phoneNumber;
-            if (phoneStr.isBlank()) {
-                phoneNumber = student.getPhoneNumber();
-            } else {
-                StudentValidator.validatePhoneNumber(phoneStr);
+            int phoneNumber = student.getPhoneNumber();
+            if (!phoneStr.isBlank()) {
+                if (!StudentValidator.validatePhoneNumber(phoneStr)) {
+                    System.out.println(RED + " ✗ Phone must be exactly 10 digits." + RESET);
+                    return;
+                }
                 phoneNumber = Integer.parseInt(phoneStr);
-                student.setPhoneNumber(phoneNumber);
             }
 
-            // Course
             String courseInput = reader.readLine(YELLOW + " ❯ " + RESET + "Course (" + student.getCourse() + "): ");
-            int finalCourse;
-            if (courseInput.isBlank()) {
-                finalCourse = student.getCourse();
-            } else {
+            int finalCourse = student.getCourse();
+            if (!courseInput.isBlank()) {
                 finalCourse = Integer.parseInt(courseInput);
-                StudentValidator.valideCourse(finalCourse);
-                student.setCourse(finalCourse);
+                if (!StudentValidator.valideCourse(finalCourse)) {
+                    System.out.println(RED + " ✗ Invalid course: Must be between 1 and 5." + RESET);
+                    return;
+                }
             }
 
-            // Group
-            String groupInput= reader.readLine(YELLOW + " ❯ " + RESET + "Group (" + student.getGroup() + "): ");
-            int group;
+            String groupInput = reader.readLine(YELLOW + " ❯ " + RESET + "Group (" + student.getGroup() + "): ");
+            int group = student.getGroup();
             if (!groupInput.isBlank()) {
-                group = student.getGroup();
-            } else {
                 group = Integer.parseInt(groupInput);
-                StudentValidator.valideGroup(group);
-                student.setGroup(group);
+                if (!StudentValidator.valideGroup(group)) {
+                    System.out.println(RED + " ✗ Invalid group: Group must be between 1 and 4." + RESET);
+                    return;
+                }
             }
 
-            // Form of Education
-            String formOfEducation = reader.readLine(YELLOW + " ❯ " + RESET + "Form of Education (" + student.getFormOfEducation() + "): ");
-            if (!formOfEducation.isBlank()) {
-                StudentValidator.valideFormOfEducation(formOfEducation);
-                student.setFormOfEducation(formOfEducation);
+            String formOfEducationInput = reader.readLine(YELLOW + " ❯ " + RESET + "Form of Education (" + student.getFormOfEducation() + "): ");
+            String formOfEducation = student.getFormOfEducation();
+            if (!formOfEducationInput.isBlank()) {
+                if (!StudentValidator.valideFormOfEducation(formOfEducationInput)) {
+                    System.out.println(RED + " ✗ Invalid form of education format." + RESET);
+                    return;
+                }
+                formOfEducation = formOfEducationInput;
             }
 
-            // Status
-            String studentStatus = reader.readLine(YELLOW + " ❯ " + RESET + "Status (" + student.getStudentStatus() + "): ");
-            if (!studentStatus.isBlank()) {
-                StudentValidator.valideStudentStatus(studentStatus);
-                student.setStudentStatus(studentStatus);
+            String studentStatusInput = reader.readLine(YELLOW + " ❯ " + RESET + "Status (" + student.getStudentStatus() + "): ");
+            String studentStatus = student.getStudentStatus();
+            if (!studentStatusInput.isBlank()) {
+                if (!StudentValidator.valideStudentStatus(studentStatusInput)) {
+                    System.out.println(RED + " ✗ Invalid student status format." + RESET);
+                    return;
+                }
+                studentStatus = studentStatusInput;
             }
 
-            System.out.println(GREEN + " ✓ Student updated successfully!" + RESET);
-
-            studentService.editStudent(gradeBooktId,
+            studentService.editStudent(
+                    gradeBookId,
                     pib,
                     email,
                     phoneNumber,
@@ -183,6 +192,8 @@ public class StudentConsoleHangler {
                     formOfEducation,
                     studentStatus
             );
+
+
 
             System.out.println(GREEN + " ✓ Student successfully updated!" + RESET);
             System.out.println(CYAN + "----------------------------------------\n" + RESET);

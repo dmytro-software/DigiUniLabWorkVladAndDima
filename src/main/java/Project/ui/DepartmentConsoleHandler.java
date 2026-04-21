@@ -89,8 +89,9 @@ public class DepartmentConsoleHandler {
         System.out.println(CYAN_BOLD + "\n== EDIT DEPARTMENT ==" + RESET);
         try {
             int departmentId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter Department ID to edit: "));
-            Department department = departmentService.findById(departmentId);
+            DepartmentValidator.validateDepartmentId(departmentId);
 
+            Department department = departmentService.findById(departmentId);
             if (department == null) {
                 System.out.println(RED + " ✗ Department not found." + RESET);
                 return;
@@ -98,47 +99,55 @@ public class DepartmentConsoleHandler {
 
             System.out.println(CYAN + " ℹ " + RESET + "Editing department. Press Enter to keep current value.");
 
-            // Name
-            String name = reader.readLine(YELLOW + " ❯ " + RESET + "New Name (" + department.getDepartmentName() + "): ");
-            if (!name.isBlank()) {
-                DepartmentValidator.validateDepartmentName(name);
-                department.setDepartmentName(name);
-            }
-
-            // Faculty ID
-            String facultyInput = reader.readLine(YELLOW + " ❯ " + RESET + "New Faculty ID (" + department.getFacultyId() + "): ");
-            int facultyId;
-            if (facultyInput.isBlank()) {
-                facultyId = department.getFacultyId();
-            } else {
-                facultyId = Integer.parseInt(facultyInput);
-                if (facultyService.findById(facultyId) == null) {
-                    System.out.println(RED + " ✗ Department with this ID does not exist!" + RESET);
+            // --- Name ---
+            String nameInput = reader.readLine(YELLOW + " ❯ " + RESET + "New Name (" + department.getDepartmentName() + "): ");
+            String finalName = department.getDepartmentName();
+            if (!nameInput.isBlank()) {
+                if (!DepartmentValidator.validateDepartmentName(nameInput)) {
+                    System.out.println(RED + " ✗ Invalid department name format." + RESET);
                     return;
                 }
-                DepartmentValidator.validateDepartmentId(departmentId);
-                department.setFacultyId(facultyId);
+                finalName = nameInput;
             }
 
-            // Head
-            String head = reader.readLine(YELLOW + " ❯ " + RESET + "New Head (" + department.getHeadOfDepartment() + "): ");
-            if (!head.isBlank()) {
-                DepartmentValidator.validateHeadOfDepartment(head);
-                department.setHeadOfDepartment(head);
+            // --- Faculty ID ---
+            String facultyInput = reader.readLine(YELLOW + " ❯ " + RESET + "New Faculty ID (" + department.getFacultyId() + "): ");
+            int finalFacultyId = department.getFacultyId();
+            if (!facultyInput.isBlank()) {
+                int inputFacId = Integer.parseInt(facultyInput);
+
+                // Перевіряємо, чи існує новий факультет
+                if (facultyService.findById(inputFacId) == null) {
+                    System.out.println(RED + " ✗ Faculty with this ID does not exist!" + RESET);
+                    return;
+                }
+                finalFacultyId = inputFacId;
             }
 
-            // Room Number
+            // --- Head ---
+            String headInput = reader.readLine(YELLOW + " ❯ " + RESET + "New Head (" + department.getHeadOfDepartment() + "): ");
+            String finalHead = department.getHeadOfDepartment();
+            if (!headInput.isBlank()) {
+                if (!DepartmentValidator.validateHeadOfDepartment(headInput)) {
+                    System.out.println(RED + " ✗ Invalid head of department format." + RESET);
+                    return;
+                }
+                finalHead = headInput;
+            }
+
+            // --- Room Number ---
             String roomInput = reader.readLine(YELLOW + " ❯ " + RESET + "New Room Number (" + department.getRoomNumber() + "): ");
-            int roomNumber;
-            if (roomInput.isBlank()) {
-                roomNumber = department.getRoomNumber();
-            } else {
-                roomNumber = Integer.parseInt(roomInput);
-                DepartmentValidator.validateRoomNumber(roomNumber);
-                department.setRoomNumber(roomNumber);
+            int finalRoomNumber = department.getRoomNumber();
+            if (!roomInput.isBlank()) {
+                int inputRoom = Integer.parseInt(roomInput);
+                if (!DepartmentValidator.validateRoomNumber(inputRoom)) {
+                    System.out.println(RED + " ✗ Invalid room number format." + RESET);
+                    return;
+                }
+                finalRoomNumber = inputRoom;
             }
 
-            departmentService.editDepartment(departmentId, name, facultyId, head, roomNumber);
+            departmentService.editDepartment(departmentId, finalName, finalFacultyId, finalHead, finalRoomNumber);
             System.out.println(GREEN + " ✓ Department updated successfully." + RESET);
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
 

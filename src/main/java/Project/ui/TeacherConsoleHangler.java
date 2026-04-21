@@ -174,6 +174,8 @@ public class TeacherConsoleHangler {
                 teacher.setFullTimeEquivalent(fte);
             }
 
+
+
             System.out.println(GREEN + " ✓ Teacher updated successfully!" + RESET);
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
 

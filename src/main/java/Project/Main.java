@@ -103,11 +103,18 @@ public class Main {
 | edit   | fac      | Edit a faculty                |
 | rm     | fac      | Remove a faculty              |
 | ls     | fac      | Show all faculties            |
+| repo   | stu -f   | Report students by faculty    |
+| repo   | tch -f   | Report teachers by faculty    |
 |--------|----------|-------------------------------|
 | add    | dep      | Add a department              |
 | edit   | dep      | Edit a department             |
 | rm     | dep      | Remove a department           |
 | ls     | dep      | Show all departments          |
+| repo   | dep -s -c| Report students grouped by crs|
+| repo   | dep -s -a| Report students by alphabet   |
+| repo   | dep -s -cc| Report students by exact crs |
+| repo   | dep -t -a| Report teachers by alphabet   |
+| update | dep -s   | Change student's department   |
 |--------|----------|-------------------------------|
 | add    | stu      | Add a student                 |
 | edit   | stu      | Edit a student                |
@@ -116,13 +123,14 @@ public class Main {
 | find   | stu -p   | Find student by PIB           |
 | find   | stu -g   | Find student by Group         |
 | find   | stu -c   | Find student by Course        |
+| repo   | stu -c   | Report students by course     |
 |--------|----------|-------------------------------|
 | add    | tch      | Add a teacher                 |
 | edit   | tch      | Edit a teacher                |
 | rm     | tch      | Remove a teacher              |
 | ls     | tch      | Show all teachers             |
 | find   | tch -id  | Find teacher by ID            |
-| find   | tch -n   | Find teacher by PIB           |
+| find   | tch -p   | Find teacher by PIB           |
 |--------|----------|-------------------------------|
 | load   | uni      | Load data from files          |
 | load   | fac      | Load faculties from file      |

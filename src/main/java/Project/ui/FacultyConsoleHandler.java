@@ -77,40 +77,46 @@ public class FacultyConsoleHandler {
     public void handleEditFaculty(LineReader reader) {
         System.out.println(CYAN_BOLD + "\n== EDIT FACULTY ==" + RESET);
         try {
-            String idInput = reader.readLine(YELLOW + " ❯ " + RESET + "Enter faculty id: ");
-            int idFaculty;
-            if(idInput.isBlank()){
-//                idFaculty =
+            int id = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter faculty id to edit: "));
+            FacultyValidator.validateId(id);
+            Faculty faculty = facultyService.findById(id);
 
+            System.out.println(CYAN + " ℹ " + RESET + "Editing faculty. Press Enter to keep current value.");
+
+            // 2. Faculty Name
+            String nameInput = reader.readLine(YELLOW + " ❯ " + RESET + "Faculty Name (" + faculty.getFacultyName() + "): ");
+            String finalName = faculty.getFacultyName();
+            if (!nameInput.isBlank()) {
+                FacultyValidator.validateFacultyName(nameInput); // Викидає ValidationException, якщо помилка
+                finalName = nameInput;
             }
 
-            int id = Integer.parseInt(idInput);
-
-            String name = reader.readLine(YELLOW + " ❯ " + RESET + "Faculty Name: ");
-            if (name == null || name.isBlank()) {
-                System.out.println(RED + " ✗ Faculty name cannot be empty." + RESET);
-                return;
+            // 3. Short Name
+            String shortNameInput = reader.readLine(YELLOW + " ❯ " + RESET + "Short Name (" + faculty.getFacultyShortName() + "): ");
+            String finalShortName = faculty.getFacultyShortName();
+            if (!shortNameInput.isBlank()) {
+                FacultyValidator.validateFacultyShortName(shortNameInput);
+                finalShortName = shortNameInput;
             }
 
-            String shortName = reader.readLine(YELLOW + " ❯ " + RESET + "Short Name: ");
-            if (shortName == null || shortName.isBlank()) {
-                System.out.println(RED + " ✗ Short name cannot be empty." + RESET);
-                return;
+            // 4. Head of Faculty
+            String headInput = reader.readLine(YELLOW + " ❯ " + RESET + "Head (" + faculty.getHeadOfFaculty() + "): ");
+            String finalHead = faculty.getHeadOfFaculty();
+            if (!headInput.isBlank()) {
+                FacultyValidator.validateHeadOfFaculty(headInput);
+                finalHead = headInput;
             }
 
-            String head = reader.readLine(YELLOW + " ❯ " + RESET + "Head: ");
-            if (head == null || head.isBlank()) {
-                System.out.println(RED + " ✗ Head cannot be empty." + RESET);
-                return;
+            // 5. Contacts
+            String contactsInput = reader.readLine(YELLOW + " ❯ " + RESET + "Contacts (" + faculty.getContactsOfFaculty() + "): ");
+            String finalContacts = faculty.getContactsOfFaculty();
+            if (!contactsInput.isBlank()) {
+                FacultyValidator.validatePhoneNumber(contactsInput);
+                finalContacts = contactsInput;
             }
 
-            String contacts = reader.readLine(YELLOW + " ❯ " + RESET + "Contacts: ");
-            if (contacts == null || contacts.isBlank()) {
-                System.out.println(RED + " ✗ Contacts cannot be empty." + RESET);
-                return;
-            }
+            facultyService.editFaculty(id, finalName, finalShortName, finalHead, finalContacts);
 
-            facultyService.editFaculty(id, name, shortName, head, contacts);
             System.out.println(GREEN + " ✓ Faculty updated successfully." + RESET);
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
 
