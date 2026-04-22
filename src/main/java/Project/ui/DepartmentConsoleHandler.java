@@ -12,14 +12,23 @@ import Project.service.StudentService;
 import Project.validation.DepartmentValidator;
 import Project.validation.StudentValidator;
 import org.jline.reader.LineReader;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static Project.Models.ConsoleColors.*;
 
 public class DepartmentConsoleHandler {
+
+
+
+
+    private static final Logger log = LoggerFactory.getLogger(DepartmentConsoleHandler.class);
+
     private final DepartmentService departmentService;
     private final FacultyService facultyService;
     private final StudentService studentService;
@@ -52,12 +61,21 @@ public class DepartmentConsoleHandler {
 
             System.out.println(GREEN + " ✓ Department '" + name + "' linked and created successfully!" + RESET);
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
+
+            log.info("Department created successfully. ID: {}, Name: '{}', Linked FacultyID: {}", id, name, facultyId);
+
         } catch (ValidationException e) {
             System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+            log.warn("Validation failed during department creation: {}", e.getMessage());
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
+            log.warn("Faculty not found during department creation: {}", e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println(RED + " ✗ Numeric format error: Please enter valid numbers." + RESET);
+            log.warn("Invalid number format entered during department creation: {}", e.getMessage());
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error occurred while adding a department", e);
         }
     }
 
@@ -70,18 +88,25 @@ public class DepartmentConsoleHandler {
 
             if (removed) {
                 System.out.println(GREEN + " ✓ Department removed successfully." + RESET);
+                log.info("Department with ID: {} was removed successfully", departmentId);
             } else {
                 System.out.println(RED + " ✗ Department not found." + RESET);
+                log.info("Attempted to remove non-existent department. ID: {}", departmentId);
             }
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
+
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
+            log.warn("EntityNotFound exception during department removal: {}", e.getMessage());
         } catch (EntityNotEmptyException e) {
             System.out.println(RED + " ✗ Delete Error: " + e.getMessage() + RESET);
+            log.warn("Attempted to delete non-empty department: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Numeric format error: ID must be a number." + RESET);
+            log.warn("Invalid ID format entered for department removal");
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error occurred while removing department", e);
         }
     }
 
@@ -94,77 +119,85 @@ public class DepartmentConsoleHandler {
             Department department = departmentService.findById(departmentId);
             if (department == null) {
                 System.out.println(RED + " ✗ Department not found." + RESET);
+                log.info("Edit failed: Department with ID {} not found", departmentId);
                 return;
             }
 
             System.out.println(CYAN + " ℹ " + RESET + "Editing department. Press Enter to keep current value.");
 
-            // --- Name ---
             String nameInput = reader.readLine(YELLOW + " ❯ " + RESET + "New Name (" + department.getDepartmentName() + "): ");
             String finalName = department.getDepartmentName();
             if (!nameInput.isBlank()) {
                 if (!DepartmentValidator.validateDepartmentName(nameInput)) {
                     System.out.println(RED + " ✗ Invalid department name format." + RESET);
+                    log.warn("Invalid department name format entered during edit: '{}'", nameInput);
                     return;
                 }
                 finalName = nameInput;
             }
 
-            // --- Faculty ID ---
             String facultyInput = reader.readLine(YELLOW + " ❯ " + RESET + "New Faculty ID (" + department.getFacultyId() + "): ");
             int finalFacultyId = department.getFacultyId();
             if (!facultyInput.isBlank()) {
                 int inputFacId = Integer.parseInt(facultyInput);
-
-                // Перевіряємо, чи існує новий факультет
                 if (facultyService.findById(inputFacId) == null) {
                     System.out.println(RED + " ✗ Faculty with this ID does not exist!" + RESET);
+                    log.warn("Edit failed: Attempted to link to non-existent Faculty ID: {}", inputFacId);
                     return;
                 }
                 finalFacultyId = inputFacId;
             }
 
-            // --- Head ---
             String headInput = reader.readLine(YELLOW + " ❯ " + RESET + "New Head (" + department.getHeadOfDepartment() + "): ");
             String finalHead = department.getHeadOfDepartment();
             if (!headInput.isBlank()) {
                 if (!DepartmentValidator.validateHeadOfDepartment(headInput)) {
                     System.out.println(RED + " ✗ Invalid head of department format." + RESET);
+                    log.warn("Invalid head format entered during edit: '{}'", headInput);
                     return;
                 }
                 finalHead = headInput;
             }
 
-            // --- Room Number ---
             String roomInput = reader.readLine(YELLOW + " ❯ " + RESET + "New Room Number (" + department.getRoomNumber() + "): ");
             int finalRoomNumber = department.getRoomNumber();
             if (!roomInput.isBlank()) {
                 int inputRoom = Integer.parseInt(roomInput);
                 if (!DepartmentValidator.validateRoomNumber(inputRoom)) {
                     System.out.println(RED + " ✗ Invalid room number format." + RESET);
+                    log.warn("Invalid room number format entered during edit: {}", inputRoom);
                     return;
                 }
                 finalRoomNumber = inputRoom;
             }
 
             departmentService.editDepartment(departmentId, finalName, finalFacultyId, finalHead, finalRoomNumber);
+
             System.out.println(GREEN + " ✓ Department updated successfully." + RESET);
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
 
+            log.info("Department ID: {} was updated successfully", departmentId);
+
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
+            log.warn("EntityNotFound exception during department edit: {}", e.getMessage());
         } catch (ValidationException e) {
             System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+            log.warn("Validation failed during department edit: {}", e.getMessage());
         } catch (EntityNotEmptyException e) {
             System.out.println(RED + " ✗ Delete Error: " + e.getMessage() + RESET);
+            log.warn("EntityNotEmpty exception during department edit: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Numeric format error: Please enter a valid number." + RESET);
+            log.warn("Invalid number format entered during department edit: {}", e.getMessage());
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error occurred while editing department", e);
         }
     }
 
     public void handleShowAllDepartments() throws IOException {
+        log.info("User requested to view all departments");
         List<Department> departments = departmentService.findAll();
 
         if (departments.isEmpty()) {
@@ -175,7 +208,6 @@ public class DepartmentConsoleHandler {
         System.out.println(CYAN_BOLD + "\n================ DEPARTMENTS ================" + RESET);
 
         for (Department department : departments) {
-
             System.out.println(CYAN + "\n[ Department ID: " + department.getIdDepartment() + " ]" + RESET);
             System.out.println("Name: " + department.getDepartmentName());
             System.out.println("Head: " + department.getHeadOfDepartment());
@@ -188,13 +220,11 @@ public class DepartmentConsoleHandler {
                 System.out.println(CYAN_BOLD + "   Teachers:" + RESET);
                 for (var t : department.getTeachers()) {
                     System.out.println("   " + CYAN + "----------------------------------------------" + RESET);
-
                     System.out.println("   Person ID: " + t.getIdPerson());
                     System.out.println("   Full Name: " + t.getPib());
                     System.out.println("   Birth Date: " + t.getBirthDate());
                     System.out.println("   Email: " + t.getEmail());
                     System.out.println("   Phone: " + t.getPhoneNumber());
-
                     System.out.println("   Teacher ID: " + t.getTeacherId());
                     System.out.println("   Position: " + t.getPosition());
                     System.out.println("   Academic Degree: " + t.getAcademicDegree());
@@ -216,7 +246,6 @@ public class DepartmentConsoleHandler {
                     System.out.println("   Birth Date: " + s.getBirthDate());
                     System.out.println("   Email: " + s.getEmail());
                     System.out.println("   Phone: " + s.getPhoneNumber());
-
                     System.out.println("   GradeBook ID: " + s.getGradeBookId());
                     System.out.println("   Course: " + s.getCourse());
                     System.out.println("   Group: " + s.getGroup());
@@ -235,15 +264,22 @@ public class DepartmentConsoleHandler {
             int departmentId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter Department ID to show: "));
             DepartmentValidator.validateDepartmentId(departmentId);
             Department department = departmentService.findById(departmentId);
+
             DepartmentReport.showStudentReportByCourseFromDepartment(department);
+            log.info("Generated 'Student Grouping By Course' report for Department ID: {}", departmentId);
+
         } catch (IsEmptyException e){
             System.out.println(RED + " ✗ Empty Error: " + e.getMessage() + RESET);
+            log.warn("Report empty: {}", e.getMessage());
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Not found Error: " + e.getMessage() + RESET);
+            log.warn("Department not found for report: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Numeric format error: ID must be a number." + RESET);
+            log.warn("Invalid number format for department ID report");
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: "+ e.getMessage() + RESET);
+            log.error("Unexpected error generating student course report", e);
         }
     }
 
@@ -253,15 +289,22 @@ public class DepartmentConsoleHandler {
             int departmentId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter Department ID to show: "));
             DepartmentValidator.validateDepartmentId(departmentId);
             Department department = departmentService.findById(departmentId);
+
             DepartmentReport.showStudentsReportFromDepartmentByAlphabet(department);
+            log.info("Generated 'Students By Alphabet' report for Department ID: {}", departmentId);
+
         }catch (IsEmptyException e){
             System.out.println(RED + " ✗ Empty Error: " + e.getMessage() + RESET);
+            log.warn("Report empty: {}", e.getMessage());
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Not found Error: " + e.getMessage() + RESET);
+            log.warn("Department not found for report: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Numeric format error: ID must be a number." + RESET);
+            log.warn("Invalid number format for department ID report");
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: "+ e.getMessage() + RESET);
+            log.error("Unexpected error generating student alphabetical report", e);
         }
     }
 
@@ -271,15 +314,22 @@ public class DepartmentConsoleHandler {
             int departmentId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter Department ID to show: "));
             DepartmentValidator.validateDepartmentId(departmentId);
             Department department = departmentService.findById(departmentId);
+
             DepartmentReport.showTeachersReportFromDepartmentByAlphabet(department);
+            log.info("Generated 'Teachers By Alphabet' report for Department ID: {}", departmentId);
+
         }catch (IsEmptyException e){
             System.out.println(RED + " ✗ Empty Error: " + e.getMessage() + RESET);
+            log.warn("Report empty: {}", e.getMessage());
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Not found Error: " + e.getMessage() + RESET);
+            log.warn("Department not found for report: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Numeric format error: ID must be a number." + RESET);
+            log.warn("Invalid number format for department ID report");
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: "+ e.getMessage() + RESET);
+            log.error("Unexpected error generating teacher alphabetical report", e);
         }
     }
 
@@ -289,18 +339,28 @@ public class DepartmentConsoleHandler {
             int departmentId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter Department ID to show: "));
             DepartmentValidator.validateDepartmentId(departmentId);
             Department department = departmentService.findById(departmentId);
+
             int course = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter course to show: "));
             StudentValidator.valideCourse(course);
 
             DepartmentReport.showStudnetsReportByChoosedCourseFromDepartment(department, course);
+            log.info("Generated 'Students By Choosed Course ({})' report for Department ID: {}", course, departmentId);
+
         }catch (IsEmptyException e){
             System.out.println(RED + " ✗ Empty Error: " + e.getMessage() + RESET);
+            log.warn("Report empty: {}", e.getMessage());
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Not found Error: " + e.getMessage() + RESET);
+            log.warn("Department not found for report: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Numeric format error: ID must be a number." + RESET);
+            log.warn("Invalid number format entered for report");
+        } catch (ValidationException e) {
+            System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+            log.warn("Validation error during report generation: {}", e.getMessage());
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: "+ e.getMessage() + RESET);
+            log.error("Unexpected error generating specific course report", e);
         }
     }
 
@@ -323,6 +383,7 @@ public class DepartmentConsoleHandler {
 
             if (changeDepartmentId == currentDepartment.getIdDepartment()) {
                 System.out.println(YELLOW + " ⚠ Student is already in this department. Transfer cancelled." + RESET);
+                log.info("Transfer cancelled: Student (GradeBook: {}) is already in department ID: {}", gradeBookId, changeDepartmentId);
                 return;
             }
 
@@ -332,9 +393,21 @@ public class DepartmentConsoleHandler {
             studentService.changeDepartment(student, departmentToChange);
 
             System.out.println(GREEN + " ✓ Successfully transferred to: " + departmentToChange.getDepartmentName() + RESET);
+            log.info("Student (GradeBook: {}) successfully transferred from Dept ID: {} to Dept ID: {}",
+                    gradeBookId, currentDepartment.getIdDepartment(), changeDepartmentId);
 
+        } catch (ValidationException e) {
+            System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+            log.warn("Validation failed during student transfer: {}", e.getMessage());
+        } catch (EntityNotFoundException e) {
+            System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
+            log.warn("Entity not found during student transfer: {}", e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println(RED + " ✗ Numeric format error: ID must be a number." + RESET);
+            log.warn("Invalid ID format entered during student transfer");
         } catch (Exception e) {
             System.out.println(RED + " ✗ ERROR: " + e.getMessage() + RESET);
+            log.error("Unexpected error occurred while changing student department", e);
         }
     }
 
