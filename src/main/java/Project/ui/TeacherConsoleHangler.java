@@ -6,6 +6,8 @@ import Project.Models.Teacher;
 import Project.service.TeacherService;
 import Project.validation.TeacherValidator;
 import org.jline.reader.LineReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -14,6 +16,9 @@ import java.util.List;
 import static Project.Models.ConsoleColors.*;
 
 public class TeacherConsoleHangler {
+
+
+    private static final Logger log = LoggerFactory.getLogger(TeacherConsoleHangler.class);
     private TeacherService teacherService;
 
     public TeacherConsoleHangler(TeacherService teacherService) {
@@ -78,14 +83,20 @@ public class TeacherConsoleHangler {
             System.out.println(GREEN + " ✓ Teacher successfully added!" + RESET);
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
 
+            log.info("Teacher added successfully. TeacherID: {}, PIB: '{}', DeptID: {}", teacherId, pib, departmentId);
+
         } catch (ValidationException e) {
             System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+            log.warn("Validation failed during teacher creation: {}", e.getMessage());
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
+            log.warn("Entity not found during teacher creation: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Numeric format error" + RESET);
+            log.warn("Invalid number format entered during teacher creation");
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error occurred while adding a teacher", e);
         }
     }
 
@@ -93,7 +104,8 @@ public class TeacherConsoleHangler {
         System.out.println(CYAN_BOLD + "\n== EDIT TEACHER ==" + RESET);
         try {
             int teacherId = Integer.parseInt(reader.readLine(YELLOW + " ❯ " + RESET + "Enter teacher ID to edit: "));
-            Teacher teacher = teacherService.findByTeacherId(teacherId).orElseThrow(() -> new EntityNotFoundException("Teacher with Teacher ID " + teacherId + " not found."));
+            Teacher teacher = teacherService.findByTeacherId(teacherId)
+                    .orElseThrow(() -> new EntityNotFoundException("Teacher with Teacher ID " + teacherId + " not found."));
 
             System.out.println(CYAN + " ℹ " + RESET + "Editing teacher. Press Enter to keep current value.");
 
@@ -102,6 +114,7 @@ public class TeacherConsoleHangler {
             if (!pib.isBlank()) {
                 if (!TeacherValidator.validateName(pib)) {
                     System.out.println(RED + " ✗ Invalid name format." + RESET);
+                    log.warn("Invalid name format entered during teacher edit: '{}'", pib);
                     return;
                 }
                 teacher.setPib(pib);
@@ -112,6 +125,7 @@ public class TeacherConsoleHangler {
             if (!email.isBlank()) {
                 if (!TeacherValidator.validateEmail(email)) {
                     System.out.println(RED + " ✗ Invalid email format." + RESET);
+                    log.warn("Invalid email format entered during teacher edit: '{}'", email);
                     return;
                 }
                 teacher.setEmail(email);
@@ -122,6 +136,7 @@ public class TeacherConsoleHangler {
             if (!phoneStr.isBlank()) {
                 if (!TeacherValidator.validatePhone(phoneStr)) {
                     System.out.println(RED + " ✗ Phone must be 10 digits." + RESET);
+                    log.warn("Invalid phone format entered during teacher edit: '{}'", phoneStr);
                     return;
                 }
                 teacher.setPhoneNumber(Integer.parseInt(phoneStr));
@@ -132,6 +147,7 @@ public class TeacherConsoleHangler {
             if (!position.isBlank()) {
                 if (!TeacherValidator.validatePositionOrDegree(position)) {
                     System.out.println(RED + " ✗ Invalid position format." + RESET);
+                    log.warn("Invalid position format entered during teacher edit: '{}'", position);
                     return;
                 }
                 teacher.setPosition(position);
@@ -142,6 +158,7 @@ public class TeacherConsoleHangler {
             if (!degree.isBlank()) {
                 if (!TeacherValidator.validatePositionOrDegree(degree)) {
                     System.out.println(RED + " ✗ Invalid academic degree format." + RESET);
+                    log.warn("Invalid academic degree format entered during teacher edit: '{}'", degree);
                     return;
                 }
                 teacher.setAcademicDegree(degree);
@@ -158,6 +175,7 @@ public class TeacherConsoleHangler {
             if (!hireDate.isBlank()) {
                 if (!TeacherValidator.validateHireDate(hireDate)) {
                     System.out.println(RED + " ✗ Invalid hire date format." + RESET);
+                    log.warn("Invalid hire date format entered during teacher edit: '{}'", hireDate);
                     return;
                 }
                 teacher.setHireDate(hireDate);
@@ -169,24 +187,29 @@ public class TeacherConsoleHangler {
                 double fte = Double.parseDouble(fteStr.replace(',', '.'));
                 if (!TeacherValidator.validateFTE(fte)) {
                     System.out.println(RED + " ✗ FTE should be between 0.1 and 1.0." + RESET);
+                    log.warn("Invalid FTE entered during teacher edit: {}", fte);
                     return;
                 }
                 teacher.setFullTimeEquivalent(fte);
             }
 
-
-
             System.out.println(GREEN + " ✓ Teacher updated successfully!" + RESET);
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
 
+            log.info("Teacher with TeacherID: {} was updated successfully", teacherId);
+
         } catch (ValidationException e) {
             System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+            log.warn("Validation failed during teacher edit: {}", e.getMessage());
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
+            log.warn("EntityNotFound exception during teacher edit: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Invalid number format: " + e.getMessage() + RESET);
+            log.warn("Invalid number format entered during teacher edit");
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error occurred while editing a teacher", e);
         }
     }
 
@@ -199,17 +222,22 @@ public class TeacherConsoleHangler {
 
             if (removed) {
                 System.out.println(GREEN + " ✓ Teacher removed successfully." + RESET);
+                log.info("Teacher with TeacherID: {} was removed successfully", teacherId);
             } else {
                 System.out.println(RED + " ✗ Teacher not found." + RESET);
+                log.info("Attempted to remove non-existent teacher. TeacherID: {}", teacherId);
             }
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
 
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
+            log.warn("EntityNotFound exception during teacher removal: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Invalid input. Please enter a number." + RESET);
+            log.warn("Invalid number format entered for teacher removal");
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error occurred while removing a teacher", e);
         }
     }
 
@@ -224,10 +252,15 @@ public class TeacherConsoleHangler {
             System.out.println(GREEN + " ✓ Teacher Found" + RESET);
             System.out.println(teacher);
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
+
+            log.info("Successfully found teacher by PIB: '{}'", teacherPib);
+
         } catch (ValidationException e) {
             System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+            log.warn("Validation failed during teacher search by PIB: {}", e.getMessage());
         } catch (Exception e){
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error during teacher search by PIB", e);
         }
     }
 
@@ -242,14 +275,20 @@ public class TeacherConsoleHangler {
             System.out.println(GREEN + " ✓ Teacher Found" + RESET);
             System.out.println(teacher);
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
+
+            log.info("Successfully found teacher by ID: {}", teacherID);
+
         } catch (ValidationException e) {
             System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+            log.warn("Validation failed during teacher search by ID: {}", e.getMessage());
         } catch (Exception e){
             System.out.println(RED + " ✗ Error: "+ e.getMessage() + RESET);
+            log.error("Unexpected error during teacher search by ID", e);
         }
     }
 
     public void handleShowAllTeachers() throws IOException {
+        log.info("requested to view all teachers");
 
         List<Teacher> teachers = teacherService.findAll();
 
