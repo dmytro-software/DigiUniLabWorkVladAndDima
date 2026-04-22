@@ -15,6 +15,8 @@ import Project.service.StudentService;
 import Project.validation.DepartmentValidator;
 import Project.validation.StudentValidator;
 import org.jline.reader.LineReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -25,6 +27,9 @@ import static Project.Models.ConsoleColors.*;
 
 
 public class StudentConsoleHangler {
+
+
+    private static final Logger log = LoggerFactory.getLogger(StudentConsoleHangler.class);
     private StudentService studentService;
 
     public StudentConsoleHangler(StudentService studentService) {
@@ -90,14 +95,20 @@ public class StudentConsoleHangler {
             System.out.println(GREEN + " ✓ Student successfully added!" + RESET);
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
 
+            log.info("Student added successfully. GradeBookID: {}, PIB: '{}', DeptID: {}", gradeBookId, pib, departmentId);
+
         } catch (ValidationException e) {
             System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+            log.warn("Validation failed during student creation: {}", e.getMessage());
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
+            log.warn("Entity not found during student creation: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Numeric format error. Please enter valid numbers." + RESET);
+            log.warn("Invalid number format entered during student creation");
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error occurred while adding a student", e);
         }
     }
 
@@ -117,6 +128,7 @@ public class StudentConsoleHangler {
             if (!pibInput.isBlank()) {
                 if (!StudentValidator.validatePib(pibInput)) {
                     System.out.println(RED + " ✗ Invalid name format." + RESET);
+                    log.warn("Invalid name format entered during student edit: '{}'", pibInput);
                     return;
                 }
                 pib = pibInput;
@@ -127,6 +139,7 @@ public class StudentConsoleHangler {
             if (!emailInput.isBlank()) {
                 if (!StudentValidator.validateEmail(emailInput)) {
                     System.out.println(RED + " ✗ Invalid email format." + RESET);
+                    log.warn("Invalid email format entered during student edit: '{}'", emailInput);
                     return;
                 }
                 email = emailInput;
@@ -137,6 +150,7 @@ public class StudentConsoleHangler {
             if (!phoneStr.isBlank()) {
                 if (!StudentValidator.validatePhoneNumber(phoneStr)) {
                     System.out.println(RED + " ✗ Phone must be exactly 10 digits." + RESET);
+                    log.warn("Invalid phone format entered during student edit: '{}'", phoneStr);
                     return;
                 }
                 phoneNumber = Integer.parseInt(phoneStr);
@@ -148,6 +162,7 @@ public class StudentConsoleHangler {
                 finalCourse = Integer.parseInt(courseInput);
                 if (!StudentValidator.valideCourse(finalCourse)) {
                     System.out.println(RED + " ✗ Invalid course: Must be between 1 and 5." + RESET);
+                    log.warn("Invalid course entered during student edit: {}", finalCourse);
                     return;
                 }
             }
@@ -158,6 +173,7 @@ public class StudentConsoleHangler {
                 group = Integer.parseInt(groupInput);
                 if (!StudentValidator.valideGroup(group)) {
                     System.out.println(RED + " ✗ Invalid group: Group must be between 1 and 4." + RESET);
+                    log.warn("Invalid group entered during student edit: {}", group);
                     return;
                 }
             }
@@ -167,6 +183,7 @@ public class StudentConsoleHangler {
             if (!formOfEducationInput.isBlank()) {
                 if (!StudentValidator.valideFormOfEducation(formOfEducationInput)) {
                     System.out.println(RED + " ✗ Invalid form of education format." + RESET);
+                    log.warn("Invalid form of education entered during student edit: '{}'", formOfEducationInput);
                     return;
                 }
                 formOfEducation = formOfEducationInput;
@@ -177,6 +194,7 @@ public class StudentConsoleHangler {
             if (!studentStatusInput.isBlank()) {
                 if (!StudentValidator.valideStudentStatus(studentStatusInput)) {
                     System.out.println(RED + " ✗ Invalid student status format." + RESET);
+                    log.warn("Invalid student status entered during student edit: '{}'", studentStatusInput);
                     return;
                 }
                 studentStatus = studentStatusInput;
@@ -193,19 +211,23 @@ public class StudentConsoleHangler {
                     studentStatus
             );
 
-
-
             System.out.println(GREEN + " ✓ Student successfully updated!" + RESET);
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
 
+            log.info("Student with GradeBookID: {} was updated successfully", gradeBookId);
+
         } catch (ValidationException e) {
             System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+            log.warn("Validation failed during student edit: {}", e.getMessage());
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
+            log.warn("EntityNotFound exception during student edit: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Numeric format error" + RESET);
+            log.warn("Invalid number format entered during student edit");
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error occurred while editing a student", e);
         }
     }
 
@@ -218,22 +240,27 @@ public class StudentConsoleHangler {
 
             if (removed) {
                 System.out.println(GREEN + " ✓ Student removed successfully." + RESET);
+                log.info("Student with GradeBookID: {} was removed successfully", gradeBookId);
             } else {
                 System.out.println(RED + " ✗ Student not found." + RESET);
+                log.info("Attempted to remove non-existent student. GradeBookID: {}", gradeBookId);
             }
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
 
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
+            log.warn("EntityNotFound exception during student removal: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Invalid input. Please enter a number." + RESET);
+            log.warn("Invalid number format entered for student removal");
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error occurred while removing a student", e);
         }
     }
 
     public void handleShowAllStudents() throws IOException {
-
+        log.info("User requested to view all students");
         List<Student> students = studentService.findAll();
 
         if (students.isEmpty()) {
@@ -244,7 +271,6 @@ public class StudentConsoleHangler {
         System.out.println(CYAN_BOLD + "\n========== STUDENTS LIST ==========" + RESET);
 
         for (Student s : students) {
-
             System.out.println("\n================================");
             System.out.println("ID Person: " + s.getIdPerson());
             System.out.println("PIB: " + s.getPib());
@@ -273,8 +299,12 @@ public class StudentConsoleHangler {
 
             if (result.isEmpty()) {
                 System.out.println(YELLOW + " ⚠ " + RESET + "No students found with PIB: " + studentPib);
+                log.info("Student search by PIB yielded no results: '{}'", studentPib);
                 return;
             }
+
+            log.info("Successfully found {} student(s) by PIB: '{}'", result.size(), studentPib);
+
             System.out.println(CYAN_BOLD + "\n--- Search Results ---" + RESET);
             for( Student s : result){
                 System.out.println(s);
@@ -283,8 +313,10 @@ public class StudentConsoleHangler {
 
         } catch (ValidationException e) {
             System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+            log.warn("Validation failed during student search by PIB: {}", e.getMessage());
         } catch (Exception e){
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error during student search by PIB", e);
         }
     }
 
@@ -297,8 +329,12 @@ public class StudentConsoleHangler {
 
             if (result.isEmpty()) {
                 System.out.println(YELLOW + " ⚠ " + RESET + "No students found with this course: " + course);
+                log.info("Student search by course yielded no results: {}", course);
                 return;
             }
+
+            log.info("Successfully found {} student(s) by course: {}", result.size(), course);
+
             System.out.println(CYAN_BOLD + "\n--- Search Results ---" + RESET);
             for( Student s : result){
                 System.out.println(s);
@@ -307,8 +343,10 @@ public class StudentConsoleHangler {
 
         } catch (ValidationException e) {
             System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+            log.warn("Validation failed during student search by course: {}", e.getMessage());
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error during student search by course", e);
         }
     }
 
@@ -322,8 +360,12 @@ public class StudentConsoleHangler {
 
             if (result.isEmpty()) {
                 System.out.println(YELLOW + " ⚠ " + RESET + "No students found with this group: " + group);
+                log.info("Student search by group yielded no results: {}", group);
                 return;
             }
+
+            log.info("Successfully found {} student(s) by group: {}", result.size(), group);
+
             System.out.println(CYAN_BOLD + "\n--- Search Results ---" + RESET);
             for (Student s : result) {
                 System.out.println(s);
@@ -332,8 +374,10 @@ public class StudentConsoleHangler {
 
         } catch (ValidationException e) {
             System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+            log.warn("Validation failed during student search by group: {}", e.getMessage());
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error during student search by group", e);
         }
     }
 
@@ -343,10 +387,15 @@ public class StudentConsoleHangler {
             StudentValidator.validateList(allStudents);
             System.out.println(CYAN_BOLD + "\n--- Report Search By Course ---" + RESET);
             StudentsReport.getStudentsGroupedByCourse(allStudents);
+
+            log.info("Generated 'Students Grouped By Course' report");
+
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Not found Error: " + e.getMessage() + RESET);
+            log.warn("EntityNotFound exception during student report generation: {}", e.getMessage());
         } catch (Exception e) {
             System.out.println(RED + " ✗ ERROR: " + e.getMessage() + RESET);
+            log.error("Unexpected error generating student report by course", e);
         }
     }
 
