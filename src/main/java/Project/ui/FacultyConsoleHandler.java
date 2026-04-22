@@ -9,12 +9,17 @@ import Project.service.FacultyService;
 
 import Project.validation.FacultyValidator;
 import org.jline.reader.LineReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 import static Project.Models.ConsoleColors.*;
 
 public class FacultyConsoleHandler {
+
+
+    private static final Logger log = LoggerFactory.getLogger(FacultyConsoleHandler.class);
     private final FacultyService facultyService;
 
     public FacultyConsoleHandler(FacultyService facultyService) {
@@ -44,12 +49,18 @@ public class FacultyConsoleHandler {
 
             System.out.println(GREEN + " ✓ Faculty created." + RESET);
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
+
+            log.info("Faculty created successfully. ID: {}, Name: '{}'", id, name);
+
         } catch (ValidationException e) {
             System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+            log.warn("Validation failed during faculty creation: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Numeric format error" + RESET);
+            log.warn("Invalid number format entered during faculty creation");
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error occurred while adding a faculty", e);
         }
     }
 
@@ -63,14 +74,21 @@ public class FacultyConsoleHandler {
 
             System.out.println(GREEN + " ✓ Faculty with id " + id + " was successfully deleted" + RESET);
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
+
+            log.info("Faculty with ID: {} was removed successfully", id);
+
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
+            log.warn("EntityNotFound exception during faculty removal: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Number format error" + RESET);
+            log.warn("Invalid ID format entered for faculty removal");
         } catch (EntityNotEmptyException e) {
             System.out.println(RED + " ✗ Delete error: " + e.getMessage() + RESET);
+            log.warn("Attempted to delete non-empty faculty: {}", e.getMessage());
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error occurred while removing a faculty", e);
         }
     }
 
@@ -87,7 +105,11 @@ public class FacultyConsoleHandler {
             String nameInput = reader.readLine(YELLOW + " ❯ " + RESET + "Faculty Name (" + faculty.getFacultyName() + "): ");
             String finalName = faculty.getFacultyName();
             if (!nameInput.isBlank()) {
-                FacultyValidator.validateFacultyName(nameInput); // Викидає ValidationException, якщо помилка
+                if (!FacultyValidator.validateFacultyName(nameInput)) {
+                    System.out.println(RED + " ✗ Invalid faculty name format." + RESET);
+                    log.warn("Invalid faculty name format entered during edit: '{}'", nameInput);
+                    return;
+                }
                 finalName = nameInput;
             }
 
@@ -95,7 +117,11 @@ public class FacultyConsoleHandler {
             String shortNameInput = reader.readLine(YELLOW + " ❯ " + RESET + "Short Name (" + faculty.getFacultyShortName() + "): ");
             String finalShortName = faculty.getFacultyShortName();
             if (!shortNameInput.isBlank()) {
-                FacultyValidator.validateFacultyShortName(shortNameInput);
+                if (!FacultyValidator.validateFacultyShortName(shortNameInput)) {
+                    System.out.println(RED + " ✗ Invalid short name format." + RESET);
+                    log.warn("Invalid short name format entered during edit: '{}'", shortNameInput);
+                    return;
+                }
                 finalShortName = shortNameInput;
             }
 
@@ -103,7 +129,11 @@ public class FacultyConsoleHandler {
             String headInput = reader.readLine(YELLOW + " ❯ " + RESET + "Head (" + faculty.getHeadOfFaculty() + "): ");
             String finalHead = faculty.getHeadOfFaculty();
             if (!headInput.isBlank()) {
-                FacultyValidator.validateHeadOfFaculty(headInput);
+                if (!FacultyValidator.validateHeadOfFaculty(headInput)) {
+                    System.out.println(RED + " ✗ Invalid head of faculty format." + RESET);
+                    log.warn("Invalid head format entered during edit: '{}'", headInput);
+                    return;
+                }
                 finalHead = headInput;
             }
 
@@ -111,7 +141,11 @@ public class FacultyConsoleHandler {
             String contactsInput = reader.readLine(YELLOW + " ❯ " + RESET + "Contacts (" + faculty.getContactsOfFaculty() + "): ");
             String finalContacts = faculty.getContactsOfFaculty();
             if (!contactsInput.isBlank()) {
-                FacultyValidator.validatePhoneNumber(contactsInput);
+                if (!FacultyValidator.validatePhoneNumber(contactsInput)) {
+                    System.out.println(RED + " ✗ Invalid contacts format." + RESET);
+                    log.warn("Invalid contacts format entered during edit: '{}'", contactsInput);
+                    return;
+                }
                 finalContacts = contactsInput;
             }
 
@@ -120,18 +154,25 @@ public class FacultyConsoleHandler {
             System.out.println(GREEN + " ✓ Faculty updated successfully." + RESET);
             System.out.println(CYAN + "----------------------------------------\n" + RESET);
 
+            log.info("Faculty ID: {} was updated successfully", id);
+
         } catch (ValidationException e) {
             System.out.println(RED + " ✗ Validation Error: " + e.getMessage() + RESET);
+            log.warn("Validation failed during faculty edit: {}", e.getMessage());
         } catch (EntityNotFoundException e) {
             System.out.println(RED + " ✗ Search Error: " + e.getMessage() + RESET);
+            log.warn("EntityNotFound exception during faculty edit: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Invalid faculty id. Please enter a number." + RESET);
+            log.warn("Invalid number format entered during faculty edit");
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error updating faculty: " + e.getMessage() + RESET);
+            log.error("Unexpected error occurred while editing a faculty", e);
         }
     }
 
     public void handleShowAllFaculties() {
+        log.info("User requested to view all faculties");
         List<Faculty> faculties = facultyService.findAll();
 
         if (faculties.isEmpty()) {
@@ -173,13 +214,17 @@ public class FacultyConsoleHandler {
             Faculty faculty = facultyService.findById(facultyId);
             if (faculty != null) {
                 FacultyReport.generateStudentsAlphabeticalReport(faculty);
+                log.info("Generated 'Students Alphabetical' report for Faculty ID: {}", facultyId);
             }
         } catch (EntityNotEmptyException e){
             System.out.println(RED + " ✗ Empty Error: " + e.getMessage() + RESET);
+            log.warn("Report empty: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Numeric format error." + RESET);
+            log.warn("Invalid number format for faculty ID report");
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error generating student report by faculty", e);
         }
     }
 
@@ -192,13 +237,17 @@ public class FacultyConsoleHandler {
 
             if (faculty != null) {
                 FacultyReport.generateTeachersAlphabeticalReport(faculty);
+                log.info("Generated 'Teachers Alphabetical' report for Faculty ID: {}", facultyId);
             }
         } catch (EntityNotEmptyException e){
             System.out.println(RED + " ✗ Empty Error: " + e.getMessage() + RESET);
+            log.warn("Report empty: {}", e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println(RED + " ✗ Numeric format error." + RESET);
+            log.warn("Invalid number format for faculty ID report");
         } catch (Exception e) {
             System.out.println(RED + " ✗ Error: " + e.getMessage() + RESET);
+            log.error("Unexpected error generating teacher report by faculty", e);
         }
     }
 }

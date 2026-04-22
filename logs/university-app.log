@@ -1,0 +1,2 @@
+2026-04-23 00:45:43 [main] INFO  Project.ui.FacultyConsoleHandler - Faculty created successfully. ID: 542303, Name: 'test'
+2026-04-23 00:49:15 [main] WARN  Project.ui.FacultyConsoleHandler - Validation failed during faculty creation: [31mInvalid faculty name: It cannot be empty and should contain only letters and spaces.[0m
