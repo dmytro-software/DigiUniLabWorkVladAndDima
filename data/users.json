@@ -7,13 +7,13 @@
   },
   "user" : {
     "username" : "user",
-    "password" : "1634",
+    "password" : "user",
     "role" : "USER",
     "blocked" : true
   },
-  "user2" : {
-    "username" : "user2",
-    "password" : "123",
+  "manager" : {
+    "username" : "manager",
+    "password" : "manager",
     "role" : "ADMIN",
     "blocked" : false
   }
