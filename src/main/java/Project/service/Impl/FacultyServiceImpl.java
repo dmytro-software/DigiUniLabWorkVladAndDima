@@ -77,10 +77,7 @@ public class FacultyServiceImpl implements FacultyService {
                             String head,
                             String contacts) throws IOException {
 
-        University uni = universityRepository.loadUniversity()
-                .orElseThrow(() -> new EntityNotFoundException("University not found"));
-
-        Faculty faculty = uni.faculties()
+        Faculty faculty = university.faculties()
                 .stream()
                 .filter(f -> f.getIdFaculty() == id)
                 .findFirst()
@@ -99,7 +96,7 @@ public class FacultyServiceImpl implements FacultyService {
         if (contacts != null && !contacts.isBlank())
             faculty.setContactsOfFaculty(contacts);
 
-        universityRepository.saveUniversity(uni);
+        facultyRepository.saveAll(university.faculties());
     }
 
     @Override
