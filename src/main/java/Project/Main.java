@@ -158,6 +158,7 @@ public class Main {
                     break;
                 case "ls user":
                     userHandler.handelShowAllUsers();
+                    break;
                 case "add user":
                     userHandler.handleAddUser(reader);
                     break;
