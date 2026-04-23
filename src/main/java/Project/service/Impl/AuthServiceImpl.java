@@ -1,5 +1,6 @@
 package Project.service.Impl;
 
+import Project.Exceptions.EntityNotFoundException;
 import Project.Models.Role;
 import Project.Models.User;
 import Project.Repository.UserRepository;
@@ -84,5 +85,25 @@ public class AuthServiceImpl implements AuthService {
         user.setRole(newRole);
         userRepository.saveUsers(users);
         log.info("Role of user '{}' changed to {}", username, newRole);
+    }
+
+    @Override
+    public Map<String, User> getAllUsers() {
+        return users;
+    }
+
+    @Override
+    public void deleteUser(String username) throws Exception {
+        User user = users.get(username);
+        if (user == null) throw new Exception("User not found!");
+
+        if (user.getRole() == Role.ADMIN) {
+            throw new RuntimeException("You cannot delete an administrator!");
+        }
+
+        users.remove(username);
+        userRepository.saveUsers(users);
+        log.info("Removed user '{}' from the system", username);
+
     }
 }

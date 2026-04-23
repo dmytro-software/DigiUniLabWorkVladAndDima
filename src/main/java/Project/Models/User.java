@@ -46,4 +46,20 @@ public class User {
     public void setBlocked(boolean blocked) {
         isBlocked = blocked;
     }
+
+    @Override
+    public String toString() {
+
+        String ifBlocked;
+        if(isBlocked)
+            ifBlocked = "BLOCKED";
+        else
+            ifBlocked = "ACTIVE";
+
+
+        return  "| Username: " + username  +
+                " | Password: " + password  +
+                " | Role: " + role +
+                " | Status: " + ifBlocked;
+    }
 }

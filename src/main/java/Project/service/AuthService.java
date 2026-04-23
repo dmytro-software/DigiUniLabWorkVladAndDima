@@ -3,6 +3,8 @@ package Project.service;
 import Project.Models.Role;
 import Project.Models.User;
 
+import java.util.Map;
+
 public interface AuthService {
     User login(String username, String password) throws Exception;
 
@@ -13,4 +15,8 @@ public interface AuthService {
     void unblockUser(String username) throws Exception;
 
     void changeUserRole(String username, Role newRole) throws Exception;
+
+    Map<String ,User> getAllUsers();
+
+    void deleteUser(String username) throws Exception;
 }

@@ -5,10 +5,7 @@ import Project.Models.*;
 import Project.Repository.*;
 import Project.service.*;
 import Project.service.Impl.*;
-import Project.ui.DepartmentConsoleHandler;
-import Project.ui.FacultyConsoleHandler;
-import Project.ui.StudentConsoleHangler;
-import Project.ui.TeacherConsoleHangler;
+import Project.ui.*;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.impl.DefaultParser;
@@ -27,6 +24,7 @@ public class Main {
             "Kyiv-Mohyla Academy", "NaUKMA", "Kyiv", "Volodymyrska 60"
     );
     private static final AuthService authService = new AuthServiceImpl();
+    private static final UserConsoleHandler userHandler = new UserConsoleHandler(authService);
 
     private static final LoadStateManager loadStateManager = new LoadStateManager();
 
@@ -62,20 +60,21 @@ public class Main {
         System.out.print(YELLOW + " ❯ " + RESET + "Password: ");
         String password = reader.readLine();
 
-        String role = authService.authorize(login, password);
-
-        if (role == null) {
-            System.out.println(RED + " ✗ Access denied\n" + RESET);
+        User currentUser = null;
+        try {
+            currentUser = authService.login(login, password);
+        } catch (Exception e) {
+            System.out.println(RED + " ✗ " + e.getMessage() + "\n" + RESET);
             continue;
         }
+        String role = currentUser.getRole().name().toLowerCase();
 
         System.out.println(GREEN + " ✓ Logged as: " + role + RESET);
-        System.out.println(CYAN + " ℹ Type 'help -m' to see commands\n" + RESET);
+        System.out.println(CYAN + " ℹ Type 'help' to see commands\n" + RESET);
 
         if (role.equals("manager")) {
             managerMenu(reader, role);
-        }
-        if (role.equals("admin")) {
+        } else if (role.equals("admin")) {
             adminMenu(reader, role);
         } else {
             userMenu(reader, role);
@@ -90,7 +89,7 @@ public class Main {
             if (line.isEmpty()) continue;
 
             switch (line) {
-                case "help -m":
+                case "help":
                     System.out.println(CYAN_BOLD + """
 =====================================================""" + RESET + """
 \n|               DigiUni ADMIN CLI                   |\n""" + CYAN_BOLD + """
@@ -136,10 +135,33 @@ public class Main {
 | load   | fac      | Load faculties from file      |
 | load   | dep      | Load departments from file    |
 | load   | stu      | Load students from file       |
-| load   | tch      | Load teachers from file       |\n""" + CYAN_BOLD + """
+| load   | tch      | Load teachers from file       |
+|--------|----------|-------------------------------|
+| ls     | user     | Show all users                |
+| add    | user     | Create a new user account     |
+| block  | user     | Block a user account          |
+| unblock| user     | Unblock a user account        |
+| edit   | role     | Change user's role            |\n""" + CYAN_BOLD + """
 =====================================================
 | exit              | Exit program                  |
 =====================================================""" + RESET);
+                    break;
+                case "ls user":
+                    userHandler.handelShowAllUsers();
+                case "add user":
+                    userHandler.handleAddUser(reader);
+                    break;
+
+                case "block user":
+                    userHandler.handleBlockUser(reader);
+                    break;
+
+                case "unblock user":
+                    userHandler.handleUnblockUser(reader);
+                    break;
+
+                case "edit role":
+                    userHandler.handleEditRole(reader);
                     break;
 
                 case "ls uni":

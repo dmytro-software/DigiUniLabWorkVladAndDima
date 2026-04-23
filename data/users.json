@@ -1,0 +1,20 @@
+{
+  "admin" : {
+    "username" : "admin",
+    "password" : "admin",
+    "role" : "ADMIN",
+    "blocked" : false
+  },
+  "user" : {
+    "username" : "user",
+    "password" : "1634",
+    "role" : "USER",
+    "blocked" : true
+  },
+  "user2" : {
+    "username" : "user2",
+    "password" : "123",
+    "role" : "ADMIN",
+    "blocked" : false
+  }
+}
