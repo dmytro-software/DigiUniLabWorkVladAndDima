@@ -128,23 +128,29 @@ public class StudentServiceImpl implements StudentService {
                             String formOfEducation,
                             String studentStatus) throws IOException {
 
-        for (Department department : departmentService.findAll()) {
+        University uni = universityRepository.loadUniversity()
+                .orElseThrow(() -> new EntityNotFoundException("University not found"));
 
-            for (Student student : department.getStudents()) {
+        for (Faculty faculty : uni.faculties()) {
+            for (Department department : faculty.getDepartments()) {
 
-                if (student.getGradeBookId() == gradeBookId) {
+                if (department.getStudents() == null) continue;
 
-                    student.setPib(pib);
-                    student.setEmail(email);
-                    student.setPhoneNumber(phoneNumber);
-                    student.setCourse(course);
-                    student.setGroup(group);
-                    student.setFormOfEducation(formOfEducation);
-                    student.setStudentStatus(studentStatus);
+                for (Student student : department.getStudents()) {
 
-                    // ❗ save whole university tree
-                    departmentRepository.save();
-                    return;
+                    if (student.getGradeBookId() == gradeBookId) {
+
+                        student.setPib(pib);
+                        student.setEmail(email);
+                        student.setPhoneNumber(phoneNumber);
+                        student.setCourse(course);
+                        student.setGroup(group);
+                        student.setFormOfEducation(formOfEducation);
+                        student.setStudentStatus(studentStatus);
+
+                        universityRepository.saveUniversity(uni);
+                        return;
+                    }
                 }
             }
         }

@@ -1,2 +1,11 @@
 2026-04-23 00:45:43 [main] INFO  Project.ui.FacultyConsoleHandler - Faculty created successfully. ID: 542303, Name: 'test'
 2026-04-23 00:49:15 [main] WARN  Project.ui.FacultyConsoleHandler - Validation failed during faculty creation: [31mInvalid faculty name: It cannot be empty and should contain only letters and spaces.[0m
+2026-04-23 16:43:25 [main] WARN  Project.service.Impl.AuthServiceImpl - Failed login attempt for username: admin
+2026-04-23 16:44:17 [main] WARN  Project.service.Impl.AuthServiceImpl - Failed login attempt for username: Admin
+2026-04-23 16:44:27 [main] WARN  Project.service.Impl.AuthServiceImpl - Failed login attempt for username: dmin
+2026-04-23 16:44:31 [main] INFO  Project.service.Impl.AuthServiceImpl - User 'admin' successfully logged in with role 'ADMIN'
+2026-04-23 16:45:31 [main] INFO  Project.ui.FacultyConsoleHandler - Faculty ID: 523238 was updated successfully
+2026-04-23 16:45:34 [main] INFO  Project.ui.FacultyConsoleHandler - User requested to view all faculties
+2026-04-23 16:47:37 [main] INFO  Project.service.Impl.AuthServiceImpl - User 'admin' successfully logged in with role 'ADMIN'
+2026-04-23 16:48:46 [main] INFO  Project.ui.StudentConsoleHangler - Student with GradeBookID: 111111 was updated successfully
+2026-04-23 16:48:49 [main] INFO  Project.ui.StudentConsoleHangler - User requested to view all students

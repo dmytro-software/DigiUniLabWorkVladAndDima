@@ -6,7 +6,7 @@
   "faculties" : [ {
     "idFaculty" : 523238,
     "facultyName" : "Faculty of Informatics",
-    "facultyShortName" : "FI",
+    "facultyShortName" : "Fk",
     "headOfFaculty" : "Dr. Smith",
     "contactsOfFaculty" : "0981112233",
     "departments" : [ ]
@@ -24,7 +24,7 @@
       "facultyId" : 669539,
       "students" : [ {
         "idPerson" : 960562,
-        "pib" : "Ivan Petrenko",
+        "pib" : "Dmytro Poplavskyi",
         "birthDate" : [ 2000, 1, 1 ],
         "email" : "ivan@gmail.com",
         "phoneNumber" : 974567890,
