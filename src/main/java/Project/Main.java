@@ -52,6 +52,15 @@ public class Main {
                 .parser(new DefaultParser())
                 .history(new DefaultHistory())
                 .build();
+
+        System.out.println("//  ____  _       _ _   _       _   ____            _     _              \n" +
+                "// |  _ \\(_) __ _(_) | | |_ __ (_) |  _ \\ ___  __ _(_)___| |_ _ __ _   _ \n" +
+                "// | | | | |/ _` | | | | | '_ \\| | | |_) / _ \\/ _` | / __| __| '__| | | |\n" +
+                "// | |_| | | (_| | | |_| | | | | | |  _ <  __/ (_| | \\__ \\ |_| |  | |_| |\n" +
+                "// |____/|_|\\__, |_|\\___/|_| |_|_| |_| \\_\\___|\\__, |_|___/\\__|_|   \\__, |\n" +
+                "//          |___/                             |___/                |___/ ");
+        System.out.println("v 3.0");
+        System.out.println("© made by Vlad and Dima");
     while (true) {
 
         System.out.print(YELLOW + " ❯ " + RESET + "Login: ");
