@@ -82,7 +82,7 @@ public class Main {
     }
     }
 
-    private static void adminMenu(LineReader reader, String role) throws IOException {
+    private static void adminMenu(LineReader reader, String role) throws Exception {
 
         while (true) {
             String line = reader.readLine("Admin>> ").trim();
@@ -139,6 +139,7 @@ public class Main {
 |--------|----------|-------------------------------|
 | ls     | user     | Show all users                |
 | add    | user     | Create a new user account     |
+| rm     | user     | Delete a user account         |
 | block  | user     | Block a user account          |
 | unblock| user     | Unblock a user account        |
 | edit   | role     | Change user's role            |\n""" + CYAN_BOLD + """
@@ -163,6 +164,8 @@ public class Main {
                 case "edit role":
                     userHandler.handleEditRole(reader);
                     break;
+                case "rm user":
+                    userHandler.handleDeleteUser(reader);
 
                 case "ls uni":
                     myUniversity.printInfo();

@@ -33,7 +33,7 @@ public class UserConsoleHandler {
         }
     }
 
-    public void handleDeleteUser(LineReader reader) throws Exception {
+    public void handleDeleteUser(LineReader reader){
         try {
             String userToDelete = reader.readLine(YELLOW + " ❯ " + RESET + "Enter username to block: ");
             authService.deleteUser(userToDelete);
