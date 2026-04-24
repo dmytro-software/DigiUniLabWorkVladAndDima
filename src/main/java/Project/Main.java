@@ -1136,63 +1136,67 @@ public class Main {
 
             switch (line) {
                 case "h":
+                case "help":
                     System.out.println(CYAN_BOLD + """
-============================================================""" + RESET + """
-\n|                     DIGIUNI USER CLI                     |\n""" + CYAN_BOLD + """
-============================================================""" + RESET + """
-\n| COMMAND    | DESCRIPTION                                 |
-|------------|---------------------------------------------|
-| 1          | List all faculties                          |
-| 2          | List all departments                        |
-| 3          | List all students                           |
-| 4          | List all teachers                           |
-|------------|---------------------------------------------|
-| SEARCH STUDENTS                                          |
-| f s -p     | Search student by name                      |
-| f s -c     | Search student by course                    |
-| f s -g     | Search student by group                     |
-|------------|---------------------------------------------|
-| SEARCH TEACHERS                                          |
-| f t -id    | Search teacher by ID                        |
-| f t -p     | Search teacher by name                      |
-|------------|---------------------------------------------|
-| h          | Show this menu                              |\n""" + CYAN_BOLD + """
-| exit       | Exit program                                |
-============================================================""" + RESET);
+=====================================================""" + RESET + """
+\n|                DIGIUNI USER CLI                   |\n""" + CYAN_BOLD + """
+=====================================================""" + RESET + """
+\n| # | List Target | Description                     |
+|---|-------------|---------------------------------|
+| 1 | Uni Info    | Show university details         |
+| 2 | Faculties   | Show all faculties              |
+| 3 | Departments | Show all departments            |
+| 4 | Students    | Show all students               |
+| 5 | Teachers    | Show all teachers               |
+|---|-------------|---------------------------------|
+| Search Commands | Description                     |
+|-----------------|---------------------------------|
+| f s -p          | Find student by PIB             |
+| f s -c          | Find student by course          |
+| f s -g          | Find student by group           |
+| f t -id         | Find teacher by ID              |
+| f t -p          | Find teacher by PIB             |
+|---|-------------|---------------------------------|
+| Report Commands | Description                     |
+|-----------------|---------------------------------|
+| r s -f          | Report students by faculty      |
+| r t -f          | Report teachers by faculty      |
+| r s -c          | Report students by course       |
+| r d -s -c       | Students grouped by course      |
+| r d -s -a       | Students by alphabet            |
+| r d -s -cc      | Students by exact course        |
+| r d -t -a       | Teachers by alphabet            |\n""" + CYAN_BOLD + """
+=====================================================
+| exit            | Logout                          |
+=====================================================""" + RESET);
                     break;
 
-                case "1":
-                    facultyHandler.handleShowAllFaculties();
-                    break;
-                case "2":
-                    deptHandler.handleShowAllDepartments();
-                    break;
-                case "3":
-                    studentHandler.handleShowAllStudents();
-                    break;
-                case "4":
-                    teacherHandler.handleShowAllTeachers();
-                    break;
-                case "f s -p":
-                    studentHandler.handleFindStudentByPib(reader);
-                    break;
-                case"f s -c":
-                    studentHandler.handleFindStudentByCourse(reader);
-                    break;
-                case"f s -g":
-                    studentHandler.handleFindStudentsByGroup(reader);
-                    break;
-                case "f t -id":
-                    teacherHandler.handleFindTeacherById(reader);
-                    break;
-                case "f t -p":
-                    teacherHandler.handelFindTeacherByPib(reader);
-                    break;
+                case "1": myUniversity.printInfo(); break;
+                case "2": facultyHandler.handleShowAllFaculties(); break;
+                case "3": deptHandler.handleShowAllDepartments(); break;
+                case "4": studentHandler.handleShowAllStudents(); break;
+                case "5": teacherHandler.handleShowAllTeachers(); break;
+
+                case "f s -p": studentHandler.handleFindStudentByPib(reader); break;
+                case "f s -c": studentHandler.handleFindStudentByCourse(reader); break;
+                case "f s -g": studentHandler.handleFindStudentsByGroup(reader); break;
+                case "f t -id": teacherHandler.handleFindTeacherById(reader); break;
+                case "f t -p": teacherHandler.handelFindTeacherByPib(reader); break;
+
+                case "r s -f": facultyHandler.handelShowStudentsReportByPibFromFaculty(reader); break;
+                case "r t -f": facultyHandler.handelShowTeacherReportByPibFromFaculty(reader); break;
+                case "r s -c": studentHandler.handleShowStudentsReportByCourse(reader); break;
+                case "r d -s -c": deptHandler.handleShowReportOfStudentGroupingByCourse(reader); break;
+                case "r d -s -a": deptHandler.handleShowReportOfStudentsByAlphabet(reader); break;
+                case "r d -s -cc": deptHandler.handleShowReportOfStudentsByChoosedCourse(reader); break;
+                case "r d -t -a": deptHandler.handleShowReportOfTeachersByAlphabet(reader); break;
+
                 case "exit":
-                    System.out.println(GREEN + " ✓ Bye!" + RESET);
+                    System.out.println(GREEN + " ✓ Logged out. Bye!" + RESET);
                     return;
+
                 default:
-                    System.out.println(RED + " ✗ Unknown command." + RESET);
+                    System.out.println(RED + " ✗ Unknown command. Type 'h' for help." + RESET);
                     break;
             }
         }
