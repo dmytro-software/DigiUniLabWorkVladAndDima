@@ -177,6 +177,7 @@ public class Main {
                     break;
                 case "rm user":
                     userHandler.handleDeleteUser(reader);
+                    break;
 
                 case "ls uni":
                     myUniversity.printInfo();
